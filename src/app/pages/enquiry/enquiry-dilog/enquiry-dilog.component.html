@@ -1,0 +1,132 @@
+<h1 mat-dialog-title><span *ngIf="!user?.id">Add</span><span *ngIf="user?.id">Edit</span> Enquiry
+  <button mat-raised-button color="primary" type="button" (click)="add_form()" style="float: right; color: white;">
+    <mat-icon>add_to_queue</mat-icon>
+  </button>
+</h1>
+
+
+ <!-- <div mat-dialog-content *ngIf="!form_field">
+  <form [formGroup]="form" fxLayout="row wrap" class="user-form">
+    <div fxLayout="column" class="form-field-outer">
+      <div fxFlex="100">
+        <mat-form-field style="width: 24%;">
+          <input matInput placeholder="Enquiry Type" formControlName="enquiry_type">
+        </mat-form-field>
+        <mat-form-field style="width: 24%; padding-left: 1%;">
+          <mat-select placeholder="Customer type" formControlName="customer_type">
+            <mat-option [value]="gender">value</mat-option>
+          </mat-select>
+        </mat-form-field>
+        <mat-form-field style="width: 24%; padding-left: 1%;">
+          <input matInput placeholder="organisation_name" formControlName="organisation_name">
+        </mat-form-field>
+        <mat-form-field style="width: 24%;padding-left: 1%;">
+          <mat-select placeholder="Source" formControlName="source" (selectionChange)="changeuserRole()">
+            <mat-option *ngFor="let source_data of source ; let i = index" [value]="source_data">
+              {{source_data.lead_name}}</mat-option>
+          </mat-select>
+        </mat-form-field>
+      </div>
+      <div fxFlex="100">
+        <mat-form-field style="width: 24%;">
+          <input matInput placeholder="Mobile Number" formControlName="mobile_no">
+        </mat-form-field>
+        <mat-form-field style="width: 24%; padding-left: 1%;">
+          <input matInput placeholder="Fist Name" formControlName="fist_name">
+        </mat-form-field>
+        <mat-form-field style="width: 24%; padding-left: 1%;">
+          <input matInput placeholder="Last Name" formControlName="last_name">
+        </mat-form-field>
+        <mat-form-field style="width: 24%;padding-left: 1%;">
+          <input matInput placeholder="Email*" formControlName="email">
+        </mat-form-field>
+      </div>
+      <div fxFlex="100">
+        <mat-form-field style="width: 32%;">
+          <mat-select placeholder="State" formControlName="state">
+            <mat-option [value]="gender">value</mat-option>
+          </mat-select>
+        </mat-form-field>
+        <mat-form-field style="width: 32%; padding-left: 1%;">
+          <mat-select placeholder="City" formControlName="city">
+            <mat-option [value]="gender">value</mat-option>
+          </mat-select>
+        </mat-form-field>
+        <mat-form-field style="width: 32%;padding-left: 1%;">
+          <input matInput placeholder="Pin Code" formControlName="pin_code">
+        </mat-form-field>
+      </div>
+      <div fxFlex="100">
+        <mat-form-field style="width: 50%;">
+          <textarea matInput placeholder="Address" formControlName="address"></textarea>
+        </mat-form-field>
+        <mat-form-field style="width: 49%; padding-left: 1%;">
+          <textarea matInput placeholder="Requrments/Products" formControlName="requrment_product"></textarea>
+        </mat-form-field>
+      </div>
+    </div>
+  </form>
+</div> -->
+<div mat-dialog-content *ngIf="!form_field">
+  <form [formGroup]="orderForm" fxLayout="row wrap" class="user-form">
+    <div fxLayout="column" class="form-field-outer">
+      <div fxFlex="100" class="fields-container">
+        <div formArrayName="received" >
+          <div>
+            <mat-form-field style="width: 50%;" *ngFor="let item of orderForm.get('received').controls; let i = index;"  [formGroupName]="i">
+              <input matInput placeholder="{{enquiry_field[i]?.field_name}}" type="{{enquiry_field[i]?.field_type}}" formControlName="value">
+            </mat-form-field>
+          </div>
+        </div>
+        <!-- <mat-form-field style="width: 50%;">
+          <input matInput placeholder="country" formControlName="country">
+        </mat-form-field> -->
+      </div>
+    </div>
+  </form>
+</div> 
+
+<div mat-dialog-content *ngIf="form_field">
+  <form [formGroup]="orderForm" fxLayout="row wrap" class="user-form">
+    <div fxLayout="column" class="form-field-outer">
+      <div fxFlex="100" class="fields-container">
+        <!-- <mat-form-field style="width: 50%;">
+          <input matInput placeholder="compony" formControlName="compony">
+        </mat-form-field>
+        <mat-form-field style="width: 50%;">
+          <input matInput placeholder="country" formControlName="country">
+        </mat-form-field> -->
+        <div formArrayName="received" *ngFor="let item of orderForm.get('received').controls; let i = index;">
+          <div [formGroupName]="i">
+            <mat-form-field style="width: 40%;">
+              <input matInput formControlName="field_name" placeholder="Form field Name">
+            </mat-form-field>
+            <mat-form-field style="width: 40%;">
+              <!-- <input matInput formControlName="field_type" placeholder=" Form field type"> -->
+              <mat-select placeholder="Field Type" formControlName="field_type">
+                <mat-option value="{{userRole}}" *ngFor="let userRole of title">{{userRole | titlecase }}</mat-option>
+              </mat-select>
+            </mat-form-field>
+            <span style="width: 10%; margin-left: 1%;">
+              <button mat-raised-button color="primary" type="button" (click)="removePeriod(i)">-</button>
+            </span>
+            <span style="width: 10%; margin-left: 1%;">
+              <button mat-raised-button color="primary" type="button" (click)="addItem()">+</button>
+            </span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </form>
+</div>
+
+<div mat-dialog-actions fxLayout="row" fxLayoutAlign="space-between center" *ngIf="!form_field">
+  <button mat-raised-button color="primary" type="button" (click)="submit()" [mat-dialog-close]="orderForm.value"
+    [disabled]="!orderForm.valid"><span *ngIf="!user?.id">Save</span><span *ngIf="user?.id">Update</span></button>
+  <button mat-raised-button color="warn" (click)="close()">Cancel</button>
+</div>
+<div mat-dialog-actions fxLayout="row" fxLayoutAlign="space-between center" *ngIf="form_field">
+  <button mat-raised-button color="primary" type="button" (click)="create_form()" [mat-dialog-close]="orderForm.value"
+    [disabled]="!orderForm.valid"><span *ngIf="!user?.id">Save Form</span><span *ngIf="user?.id">Update</span></button>
+  <button mat-raised-button color="warn" (click)="close()">Cancel</button>
+</div>
