@@ -5,6 +5,7 @@ import { PaginationPipe} from './pagination/pagination.pipe';
 import { ProfilePicturePipe } from './profilePicture/profilePicture.pipe';
 import { ChatPersonSearchPipe } from './search/chat-person-search.pipe';
 import { UserSearchPipe } from './search/user-search.pipe';
+import { EnquirySerchPipe } from './search/enquiry-search.pipe';
 import { TruncatePipe } from './truncate/truncate.pipe';
 import { MailSearchPipe } from './search/mail-search.pipe';
 
@@ -14,6 +15,7 @@ import { MailSearchPipe } from './search/mail-search.pipe';
     ],
     declarations: [
         PaginationPipe,
+        EnquirySerchPipe,
         ProfilePicturePipe,
         ChatPersonSearchPipe,
         UserSearchPipe,
@@ -25,6 +27,7 @@ import { MailSearchPipe } from './search/mail-search.pipe';
         ProfilePicturePipe,
         ChatPersonSearchPipe,
         UserSearchPipe,
+        EnquirySerchPipe,
         TruncatePipe,
         MailSearchPipe
     ]

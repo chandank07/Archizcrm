@@ -1,4 +1,5 @@
 import { Component, OnInit, ViewEncapsulation } from '@angular/core';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-user-menu',
@@ -8,9 +9,13 @@ import { Component, OnInit, ViewEncapsulation } from '@angular/core';
 })
 export class UserMenuComponent implements OnInit {
   public userImage = '../assets/img/users/user.jpg';
-  constructor() { }
+  constructor(private r : Router) { }
 
   ngOnInit() {
   }
-
+  logout(){
+    localStorage.removeItem('Token');
+    // this.r.navigate(['/login'])
+    window.open('/login', '_self');
+  }
 }

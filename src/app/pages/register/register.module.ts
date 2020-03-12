@@ -4,9 +4,11 @@ import { RouterModule } from '@angular/router';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { SharedModule } from '../../shared/shared.module';
 import { RegisterComponent } from './register.component';
+import { QurcodeFromComponent } from './qurcode-from/qurcode-from.component';
 
 export const routes = [
-  { path: '', component: RegisterComponent, pathMatch: 'full' }
+  { path: '', component: RegisterComponent, pathMatch: 'full' },
+  { path: 'qurcode/:id', component: QurcodeFromComponent, pathMatch: 'register' }
 ];
 
 @NgModule({
@@ -18,7 +20,8 @@ export const routes = [
     SharedModule
   ],
   declarations: [
-    RegisterComponent
+    RegisterComponent,
+    QurcodeFromComponent
   ]
 })
 export class RegisterModule { }

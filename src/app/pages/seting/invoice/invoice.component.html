@@ -1,0 +1,98 @@
+<mat-card class="example-card" style="margin-right: 5%; margin-left: 5%;">
+  <mat-card-header>
+    <div mat-card-avatar class="example-header-image"></div>
+    <mat-card-title (click)="addPeriod(null)">Invoice</mat-card-title>
+  </mat-card-header>
+
+  <mat-card-content>
+    <form [formGroup]="invoiceForm" fxLayout="row wrap" class="user-form">
+      <div fxLayout="column" class="form-field-outer">
+        <div fxFlex="100">
+          <mat-form-field appearance="outline" style="width: 23%;">
+            <mat-label>Start Date</mat-label>
+            <input type="date" matInput formControlName="start_date" placeholder="Start date">
+          </mat-form-field>
+          <mat-form-field appearance="outline" style="width: 23%; padding-left: 2%;">
+            <mat-label>End Date</mat-label>
+            <input type="date" matInput formControlName="due_date" placeholder="End date">
+          </mat-form-field>
+          <mat-form-field appearance="outline" style="width: 23%; padding-left: 2%;">
+            <mat-label>Stage</mat-label>
+            <mat-select placeholder="ctm" formControlName="starge" (selectionChange)="onWriterChange()">
+              <mat-option [value]="0">Enquiry</mat-option>
+              <mat-option [value]="1">Lead</mat-option>
+              <mat-option [value]="2">Client</mat-option>
+            </mat-select>
+          </mat-form-field>
+          <mat-form-field appearance="outline" style="width: 23%; padding-left: 2%;">
+            <mat-label>User</mat-label>
+            <mat-select placeholder="pd" formControlName="enquiry">
+              <mat-option *ngFor="let user of list_user ; let i = index" [value]="user._id">{{user?.fist_name}}
+                {{user?.last_name}}</mat-option>
+            </mat-select>
+          </mat-form-field>
+        </div>
+      </div>
+    </form>
+  </mat-card-content>
+</mat-card>
+
+
+<mat-card class="example-card" style="margin-right: 5%; margin-left: 5%;">
+  <!-- <form [formGroup]="product" class="mx-1 my-1"> -->
+      <!-- <div *ngFor=" let period of invoiceForm.get('product')['controls']; let i = index" [formGroupName]="i"> -->
+      <table mat-table [dataSource]="dataSource" class="mat-elevation-z8" style="width: 100%;">
+
+        <ng-container matColumnDef="position">
+          <th mat-header-cell *matHeaderCellDef> No. </th>
+          <td mat-cell *matCellDef="let element">
+            <input type="text" [(ngModel)]="element.product_name">
+          </td>
+        </ng-container>
+
+        <!-- Name Column -->
+        <ng-container matColumnDef="name">
+          <th mat-header-cell *matHeaderCellDef> price </th>
+          <td mat-cell *matCellDef="let element">{{element.price}}</td>
+        </ng-container>
+
+        <!-- Weight Column -->
+        <ng-container matColumnDef="weight">
+          <th mat-header-cell *matHeaderCellDef> qut </th>
+          <td mat-cell *matCellDef="let element; let i = index;"> 
+            <input type="number" [(ngModel)]="element.qut" (change)="onWriterChange1(element.qut , i)">
+          </td>
+        </ng-container>
+
+        <!-- Symbol Column -->
+        <ng-container matColumnDef="symbol">
+          <th mat-header-cell *matHeaderCellDef> edit </th>
+          <td mat-cell *matCellDef="let element ; let i = index;">
+            <button mat-mini-fab (click)="addPeriod(element)">+</button>
+            <button mat-mini-fab color="warn" (click)="removePeriod(i)">-</button>
+          </td>
+        </ng-container>
+
+        <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+        <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+      </table>
+    <!-- </div> -->
+  <!-- </form> -->
+</mat-card>
+<!-- <mat-grid-list cols="4" style="margin-right: 5%; margin-left: 5%;">
+    <mat-grid-tile [colspan]="1">
+      <mat-card style="width: 90%;">
+        <div>
+          <button mat-stroked-button color="primary">Add Product</button>
+        </div>
+        <hr>
+        <mat-list role="list">
+          <mat-list-item role="listitem">Item 1</mat-list-item>
+          <mat-list-item role="listitem">Item 2</mat-list-item>
+          <mat-list-item role="listitem">Item 3</mat-list-item>
+        </mat-list>
+      </mat-card>
+    </mat-grid-tile>
+    <mat-grid-tile [colspan]="2">2</mat-grid-tile>
+    <mat-grid-tile [colspan]="1">3</mat-grid-tile>
+  </mat-grid-list> -->

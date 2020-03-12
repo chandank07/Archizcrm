@@ -6,6 +6,7 @@ import { SharedModule } from '../../shared/shared.module';
 import { LoginComponent ,DialogOverviewExampleDialog } from './login.component';
 import { LoginService } from './Services/login.service';
 import { HttpClientModule } from '@angular/common/http';
+import { AlertModule } from 'ngx-alerts';
 
 export const routes = [
   { path: '', component: LoginComponent, pathMatch: 'full' }
@@ -18,7 +19,8 @@ export const routes = [
     FormsModule, 
     ReactiveFormsModule,
     HttpClientModule,
-    SharedModule
+    SharedModule,
+    AlertModule
   ],
   declarations: [LoginComponent ,DialogOverviewExampleDialog],
   entryComponents: [

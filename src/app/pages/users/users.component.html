@@ -52,7 +52,7 @@
                 <div fxFlex="30" fxLayout="column" fxLayoutAlign="center center">
                     <div class="user-img">
                         <img *ngIf="user.profile.image" [src]="user.profile.image" class="transition-2" [class.blocked]="user.settings.isDeleted">
-                        <img *ngIf="!user.profile.image" src="assets/img/users/default-user.jpg" class="transition-2" [class.blocked]="user.settings.isDeleted">  
+                        <img *ngIf="!user.profile.image" src="../../../assets/img/avatars/avatar-3.png" class="transition-2" [class.blocked]="user.settings.isDeleted">  
                         <mat-icon *ngIf="user.settings.isDeleted" class="warn-color">block</mat-icon>
                     </div>                                            
                     <div class="user-social">
@@ -62,23 +62,24 @@
                 <div fxFlex="70" fxLayout="column" class="user-details transition-2" [class.blocked]="user.settings.isDeleted">
                     <p fxLayout="row" fxLayoutAlign="start center">
                         <mat-icon class="muted-text">card_membership</mat-icon>
-                        <span>{{user.work.position}}</span>
+                        <!-- <span>{{user?.company?.company_name | titlecase}}</span><br> -->
+                        <span><b>{{user?.company?.company_id | uppercase}}</b></span>
                     </p>
                     <p fxLayout="row" fxLayoutAlign="start center">
                         <mat-icon class="muted-text">mail_outline</mat-icon>
-                        <span>{{user.contacts.email}}</span>
+                        <span>{{user?.contacts?.email}}</span>
                     </p>
                     <p fxLayout="row" fxLayoutAlign="start center">
                         <mat-icon class="muted-text">call</mat-icon>
-                        <span>{{user.contacts.phone}}</span>
+                        <span>{{user?.contacts?.phone}}</span>
                     </p>
                     <p fxLayout="row" fxLayoutAlign="start center">
                         <mat-icon class="muted-text">location_on</mat-icon>
-                        <span>{{user.contacts.address}}</span>
+                        <span>{{user?.contacts?.address}}</span>
                     </p>
                     <p fxLayout="row" fxLayoutAlign="start center">
                         <mat-icon class="muted-text">date_range</mat-icon>
-                        <span>Joined {{user.settings.joinedDate | date:"dd MMMM, yyyy 'at' HH:mm"}}</span>
+                        <span>Role : {{user?.position?.user_role | titlecase}}</span>
                     </p>
                 </div>
             </div>
@@ -90,7 +91,7 @@
     <div *ngFor="let user of users | UserSearchPipe : searchText | paginate: { itemsPerPage: 6, currentPage: page }" fxFlex="100" class="flex-p"> 
         <mat-card class="p-0">  
             <div class="bg-primary" fxLayout="row" fxLayoutAlign="space-between center">
-                <h3 *ngIf="!user.settings.isDeleted" class="user-name">{{user.profile.name}} {{user.profile.surname}}</h3> 
+                <h3 *ngIf="!user.settings.isDeleted" class="user-name">{{user?.profile?.name}} {{user?.profile?.surname}}</h3> 
                 <h3 *ngIf="user.settings.isDeleted" class="user-name">User blocked</h3>
                 <button mat-icon-button [matMenuTriggerFor]="menu" #menuTrigger="matMenuTrigger">
                     <mat-icon>more_vert</mat-icon>
@@ -123,44 +124,44 @@
                     <div fxFlex="30" fxFlex.xs="100" fxLayout="column">
                         <p fxLayout="row" fxLayoutAlign="start center">
                             <mat-icon class="muted-text">business</mat-icon>
-                            <span>{{user.work.company}}</span>
+                            <span>{{user?.company?.company_name}}</span>
                         </p>
                         <p fxLayout="row" fxLayoutAlign="start center">
                             <mat-icon class="muted-text">card_membership</mat-icon>
-                            <span>{{user.work.position}}</span>
+                            <span>{{user?.company?.company_id}}</span>
                         </p>
                         <p fxLayout="row" fxLayoutAlign="start center">
                             <mat-icon class="muted-text">attach_money</mat-icon>
-                            <span>{{user.work.salary}}</span>
+                            <span>{{user?.work?.salary}}</span>
                         </p>                                               
                     </div>
                     <div fxFlex="30" fxFlex.xs="100" fxLayout="column">
                         <p fxLayout="row" fxLayoutAlign="start center">
                             <mat-icon class="muted-text">mail_outline</mat-icon>
-                            <span>{{user.contacts.email}}</span>
+                            <span>{{user?.contacts?.email}}</span>
                         </p> 
                         <p fxLayout="row" fxLayoutAlign="start center">
                             <mat-icon class="muted-text">call</mat-icon>
-                            <span>{{user.contacts.phone}}</span>
+                            <span>{{user?.contacts?.phone}}</span>
                         </p>
                         <p fxLayout="row" fxLayoutAlign="start center">
                             <mat-icon class="muted-text">location_on</mat-icon>
-                            <span>{{user.contacts.address}}</span>
+                            <span>{{user?.contacts?.address}}</span>
                         </p>                        
                     </div>
                     <div fxFlex="40" fxFlex.xs="100" fxLayout="column">
                         <p fxLayout="row" fxLayoutAlign="start center">
                             <mat-icon class="muted-text">event_available</mat-icon>
-                            <span>Registration {{user.settings.registrationDate | date:"dd MMMM, yyyy 'at' HH:mm"}}</span>
+                            <span>Role: {{user?.position?.user_role}}</span>
                         </p>
                         <p fxLayout="row" fxLayoutAlign="start center">
                             <mat-icon class="muted-text">date_range</mat-icon>
-                            <span>Joined {{user.settings.joinedDate | date:"dd MMMM, yyyy 'at' HH:mm"}}</span>
+                            <span>Joined {{user?.createdAt | date:"dd MMMM, yyyy 'at' HH:mm"}}</span>
                         </p> 
                         <p fxLayout="row" fxLayoutAlign="start center">
-                            <mat-icon *ngIf="user.settings.isDeleted" class="muted-text">person_outline</mat-icon>
-                            <mat-icon *ngIf="!user.settings.isDeleted" class="muted-text">person</mat-icon>
-                            <span>{{ (user.settings.isDeleted) ? 'Blocked' : 'Active' }}</span>
+                            <mat-icon *ngIf="user?.settings?.isDeleted" class="muted-text">person_outline</mat-icon>
+                            <mat-icon *ngIf="!user?.settings?.isDeleted" class="muted-text">person</mat-icon>
+                            <span>{{ (user?.settings?.isDeleted) ? 'Blocked' : 'Active' }}</span>
                         </p>                       
                     </div>
                 </div>

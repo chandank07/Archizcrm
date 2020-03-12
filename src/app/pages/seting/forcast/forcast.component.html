@@ -1,0 +1,76 @@
+<div class="mat-elevation-z8">
+  <div fxLayout="row" fxLayoutAlign="space-between center" class="flex-p">
+    <!-- <div fxLayout="row">
+        <mat-button-toggle-group #controls="matButtonToggleGroup" appearance="legacy">
+          <mat-button-toggle value="add" (click)="openSmsDialog(null)" matTooltip="Add Stage">
+            Set Target
+            <mat-icon style="color: rgb(7, 7, 117);">add_box</mat-icon>
+          </mat-button-toggle>
+          </mat-button-toggle-group>
+    </div> -->
+  </div>
+  <table mat-table [dataSource]="dataSource">
+
+    <!-- Position Column -->
+    <ng-container matColumnDef="position">
+      <th mat-header-cell *matHeaderCellDef> User Name </th>
+      <td mat-cell *matCellDef="let element"> {{element?.user?.profile?.name}} {{element?.user?.profile?.surname}}</td>
+    </ng-container>
+
+    <!-- Name Column -->
+    <ng-container matColumnDef="jan">
+      <th mat-header-cell *matHeaderCellDef><b>Year to Date Target </b></th>
+      <td mat-cell *matCellDef="let element">
+        <mat-form-field appearance="outline">
+          <input matInput type="number" [(ngModel)]="element.targets.target_total" [disabled]="true">
+        </mat-form-field>
+      </td>
+    </ng-container>
+    <ng-container matColumnDef="feb">
+      <th mat-header-cell *matHeaderCellDef><b>Year to Date Forcast</b></th>
+      <td mat-cell *matCellDef="let element">
+        <mat-form-field appearance="outline" >
+          <input matInput type="number" [(ngModel)]="element.forcast_total" [disabled]="true">
+        </mat-form-field>
+      </td>
+    </ng-container>
+    <ng-container matColumnDef="mar">
+      <th mat-header-cell *matHeaderCellDef> Current Month Target </th>
+      <td mat-cell *matCellDef="let element">
+        <mat-form-field appearance="outline">
+          <input matInput type="number" [(ngModel)]="element.targets.target[curent_month]" [disabled]="true">
+        </mat-form-field>
+      </td>
+    </ng-container>
+    <ng-container matColumnDef="apr">
+      <th mat-header-cell *matHeaderCellDef>Current Month Forcast </th>
+      <td mat-cell *matCellDef="let element">
+        <mat-form-field appearance="outline">
+          <input matInput type="number" [(ngModel)]="element.forcast[curent_month]" [disabled]="!element.isEditable">
+        </mat-form-field>
+      </td>
+    </ng-container>
+    <ng-container matColumnDef="edit">
+      <th mat-header-cell *matHeaderCellDef> edit </th>
+      <td mat-cell *matCellDef="let element; let i = index;">
+        <button mat-mini-fab color="primary" (click)="edit(element , i)" *ngIf="!element.isEditable">
+          <i class="material-icons">
+            edit
+            </i>
+        </button>
+        <button mat-mini-fab color="warn" (click)="save(element , i)" *ngIf="element.isEditable">
+          <i class="material-icons">
+            save_alt
+            </i>
+        </button>
+      </td>
+    </ng-container>
+
+
+
+    <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+    <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+  </table>
+
+  <mat-paginator [pageSizeOptions]="[5, 10, 20]" showFirstLastButtons></mat-paginator>
+</div>

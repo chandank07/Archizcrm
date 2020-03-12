@@ -4,7 +4,8 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { OverlayContainer } from '@angular/cdk/overlay';
 import { CustomOverlayContainer } from './theme/utils/custom-overlay-container';
-
+import { LocationStrategy,
+  HashLocationStrategy } from '@angular/common';
 // import { AgmCoreModule } from '@agm/core';
 import { PerfectScrollbarModule } from 'ngx-perfect-scrollbar';
 import { PERFECT_SCROLLBAR_CONFIG } from 'ngx-perfect-scrollbar';
@@ -26,7 +27,7 @@ import { SearchComponent } from './pages/search/search.component';
 // import { NotFoundComponent } from './pages/errors/not-found/not-found.component';
 // import { ErrorComponent } from './pages/errors/error/error.component';
 import { AppSettings } from './app.settings';
-
+import { HttpClientModule } from '@angular/common/http';
 import { SidenavComponent } from './theme/components/sidenav/sidenav.component';
 import { VerticalMenuComponent } from './theme/components/menu/vertical-menu/vertical-menu.component';
 import { HorizontalMenuComponent } from './theme/components/menu/horizontal-menu/horizontal-menu.component';
@@ -37,6 +38,7 @@ import { ApplicationsComponent } from './theme/components/applications/applicati
 import { MessagesComponent } from './theme/components/messages/messages.component';
 import { UserMenuComponent } from './theme/components/user-menu/user-menu.component';
 import { MatInputModule } from '@angular/material';
+import { AlertModule } from 'ngx-alerts';
 
 @NgModule({
   imports: [
@@ -45,6 +47,8 @@ import { MatInputModule } from '@angular/material';
     FormsModule, 
     ReactiveFormsModule,
     MatInputModule,
+    HttpClientModule,
+    AlertModule.forRoot({maxMessages: 5, timeout: 1000, position: 'right'}),
     // AgmCoreModule.forRoot({
     //   apiKey: 'AIzaSyAAYi6itRZ0rPgI76O3I83BhhzZHIgMwPg'
     // }), 
@@ -72,7 +76,7 @@ import { MatInputModule } from '@angular/material';
     FullScreenComponent,
     ApplicationsComponent,
     MessagesComponent,
-    UserMenuComponent
+    UserMenuComponent,
   ],
   entryComponents:[
     VerticalMenuComponent
@@ -80,7 +84,8 @@ import { MatInputModule } from '@angular/material';
   providers: [ 
     AppSettings,
     { provide: PERFECT_SCROLLBAR_CONFIG, useValue: DEFAULT_PERFECT_SCROLLBAR_CONFIG },
-    { provide: OverlayContainer, useClass: CustomOverlayContainer }
+    { provide: OverlayContainer, useClass: CustomOverlayContainer },
+    { provide: LocationStrategy, useClass: HashLocationStrategy}
   ],
   bootstrap: [AppComponent]
 })

@@ -1,0 +1,78 @@
+<h1 mat-dialog-title>Data Source Add</h1>
+
+<div mat-dialog-content style="width: 500px;" *ngIf="datasorce">
+  <form [formGroup]="emailForm" fxLayout="row wrap" class="user-form">
+    <div fxLayout="column" class="form-field-outer">
+      <div fxFlex="100">
+        <mat-form-field style="width: 100%;">
+          <input matInput formControlName="source_name" placeholder="Data Source Name">
+        </mat-form-field>
+      </div>
+    </div>
+  </form>
+</div>
+
+<div mat-dialog-content style="width: 500px;" *ngIf="csv">
+  <form [formGroup]="csvForm" fxLayout="row wrap" class="user-form">
+    <div fxLayout="column" class="form-field-outer">
+      <div fxFlex="100">
+        <mat-form-field style="width: 100%;">
+          <mat-label>PD</mat-label>
+            <mat-select placeholder="pd" formControlName="source_name">
+              <mat-option value="normal" *ngFor="let data of datasource ; let i = index" [value]="data._id">{{data?.source_name}}</mat-option>
+            </mat-select>
+        </mat-form-field>
+        
+      </div>
+    </div>
+  </form>
+</div>
+<mat-slide-toggle  *ngIf="datasorce" [(ngModel)]="checked">Active / Inactive</mat-slide-toggle>
+
+<button type="button" mat-raised-button (click)="fileInput.click()"  *ngIf="csv">Choose File <i class="material-icons"> attach_file</i></button>
+<input hidden (change)="uploadCSV($event)" #fileInput type="file" id="file">
+<p style="color: green;">{{parsedCSV?.name}}</p>
+<!-- <button type="button" mat-raised-button (click)="fileInput.click()" *ngIf="csv">Choose File</button>
+<input hidden (change)="onFileSelected()" #fileInput type="file" id="file" *ngIf="csv"> -->
+
+<!-------------List----------------->
+<div mat-dialog-content style="width: 500px;" *ngIf="list">
+  <form [formGroup]="listForm" fxLayout="row wrap" class="user-form">
+    <div fxLayout="column" class="form-field-outer">
+      <div fxFlex="100">
+        <mat-form-field style="width: 50%;">
+          <mat-label>Country</mat-label>
+            <mat-select placeholder="Country" formControlName="country">
+              <mat-option value="normal" *ngFor="let data of country ; let i = index" [value]="data._id" (onSelectionChange)="country_cahange(data._id)">{{data?.country_name}}</mat-option>
+            </mat-select>
+        </mat-form-field>
+        <mat-form-field style="width: 50%;">
+          <mat-label>State</mat-label>
+            <mat-select placeholder="State" formControlName="state">
+              <mat-option value="normal" *ngFor="let data of region ; let i = index" [value]="data._id" (onSelectionChange)="region_cahange(data._id)">{{data?.region_name}}</mat-option>
+            </mat-select>
+        </mat-form-field>
+      </div>
+      <div fxFlex="100">
+        <mat-form-field style="width: 50%;">
+          <mat-label>City</mat-label>
+            <mat-select placeholder="City" formControlName="city">
+              <mat-option value="normal" *ngFor="let data of city ; let i = index" [value]="data._id">{{data?.city_name}}</mat-option>
+            </mat-select>
+        </mat-form-field>
+        <mat-form-field style="width: 50%;">
+          <mat-label>Caompaing Name</mat-label>
+          <input matInput formControlName="caompaing_name" placeholder="caompaing_name">
+        </mat-form-field>
+      </div>
+    </div>
+  </form>
+</div>
+
+
+<div mat-dialog-actions fxLayout="row" fxLayoutAlign="space-between center">
+  <button mat-raised-button color="primary" type="button" (click)="submit()" *ngIf="datasorce">Save</button>
+  <button mat-raised-button color="primary" type="button" (click)="list_add()" *ngIf="list">Save</button>
+  <button mat-raised-button color="primary" type="button" (click)="Uplode()" *ngIf="csv">Uplode</button>
+  <button mat-raised-button color="warn" (click)="close()">Cancel</button>
+</div>

@@ -1,0 +1,25 @@
+<h1 mat-dialog-title>Company Add</h1>
+
+<div mat-dialog-content style="width: 500px;">
+  <form [formGroup]="company" fxLayout="row wrap" class="user-form">
+    <div fxLayout="column" class="form-field-outer">
+      <div fxFlex="100">
+        <mat-form-field style="width: 100%;">
+          <input matInput formControlName="company_name" placeholder="Company Name">
+        </mat-form-field>
+        <mat-form-field style="width: 100%;" *ngIf="!company_option">
+          <mat-select placeholder="Select permission" formControlName="permission" multiple>
+            <mat-option *ngFor="let role of data ; let i = index" [value]="role">{{role}}
+            </mat-option>
+          </mat-select>
+        </mat-form-field>
+      </div>
+    </div>
+  </form>
+</div>
+
+<div mat-dialog-actions fxLayout="row" fxLayoutAlign="space-between center">
+  <button mat-raised-button color="primary" type="button" (click)="submit()" *ngIf="!editing">Save</button>
+  <button mat-raised-button color="primary" type="button" (click)="Uplode()" *ngIf="editing">Update</button>
+  <button mat-raised-button color="warn" (click)="close()">Cancel</button>
+</div>

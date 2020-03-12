@@ -1,0 +1,331 @@
+<div fxLayout="row wrap">
+  <div fxFlex="100" fxFlex.sm="35" fxFlex.md="30" fxFlex.lg="25" class="flex-p">
+    <mat-card class="scrol">
+      <img mat-card-image src="assets/img/users/user-orig.jpg" alt="Photo 1"
+      style="border-radius: 50%; height: 100px; width: 110px; margin-left: 30%;">
+      <mat-card-content>
+        <h2 class="text-center">{{data?.fist_name | titlecase}} {{data?.last_name| titlecase}}</h2>
+        <h3 class="text-center primary-color">{{data?.mobile_no}}</h3>
+        <h3 class="text-center primary-color">{{data?.email}}</h3>
+        <!-- <h4 class="muted-text py-1">About:</h4>
+          <p class="text-justify">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
+          <div fxLayoutAlign="end center">
+              <a href="javascript:void(0);" mat-stroked-button color="primary">
+                  More <mat-icon>arrow_right_alt</mat-icon>
+              </a> 
+          </div>           -->
+      </mat-card-content>
+      <mat-divider></mat-divider>
+
+      <mat-card-actions class="text-center py-1">
+        <button mat-mini-fab color="primary" class="m-1" matTooltip="Send message" [routerLink]="['/Lead/sms', id]">
+          <i class="material-icons">
+            message
+          </i>
+          <!-- <svg class="mat-icon" viewBox="0 0 24 24">
+                <path d="M17,2V2H17V6H15C14.31,6 14,6.81 14,7.5V10H14L17,10V14H14V22H10V14H7V10H10V6A4,4 0 0,1 14,2H17Z" />
+            </svg> -->
+        </button>
+        <button mat-mini-fab color="primary" class="m-1" matTooltip="Send Email" (click)="openSmsDialog(null)">
+          <i class="material-icons">
+            email
+          </i>
+        </button>
+        <button mat-mini-fab color="primary" class="m-1" matTooltip="Add Task" (click)="openScheduleDialog(null)">
+          <i class="material-icons">
+            today
+          </i>
+        </button>
+        <button mat-mini-fab color="primary" class="m-1" matTooltip="Convert Lead" (click)="openUserDialog1()">
+          <i class="material-icons">
+            thumb_up
+          </i>
+        </button>
+        <button mat-mini-fab color="primary" class="m-1" matTooltip="Drop Enquiry">
+          <i class="material-icons">
+            thumb_down
+          </i>
+        </button>
+      </mat-card-actions>
+      
+      <mat-divider></mat-divider>
+      <!-- <div class="py-1">
+        <div fxLayoutAlign="space-between center">
+          <div>Enquiry Id:</div>
+          <strong class="d-inline-block">#_{{data?.enquiry_id}}</strong>
+        </div>
+        <div fxLayoutAlign="space-between center" class="mt-2">
+          <div>State:</div>
+          <strong class="d-inline-block">{{data?.state?.region_name| titlecase}}</strong>
+        </div>
+        <div fxLayoutAlign="space-between center" class="mt-2">
+          <div>City:</div>
+          <strong class="d-inline-block">{{data?.city?.city_name | titlecase}}</strong>
+        </div>
+        <div fxLayoutAlign="space-between center" class="mt-2">
+          <div>Address:</div>
+          <strong class="d-inline-block">{{data?.address | titlecase}}</strong>
+        </div>
+        <div fxLayoutAlign="space-between center" class="mt-2">
+          <div>Source:</div>
+          <strong class="d-inline-block">{{data?.source | titlecase}}</strong>
+        </div>
+        <div fxLayoutAlign="space-between center" class="mt-2">
+          <div>Enquiry Type:</div>
+          <strong class="d-inline-block">{{data?.enquiry_type | titlecase}}</strong>
+        </div>
+      </div> -->
+      <h4 style="text-align: center;">Assign Lead Stage</h4>
+      <div class="py-1">
+        <form [formGroup]="commentform" (ngSubmit)="commentAdd()" fxLayout="row wrap" class="user-form p-1">
+          <div fxFlex="100" class="p-1">
+            <mat-form-field appearance="outline">
+              <mat-label>Stage</mat-label>
+              <mat-select placeholder="Stage" formControlName="stage">
+                <mat-option *ngFor="let stages of stage ; let i = index" [value]="stages._id" (onSelectionChange)="stage_cahange(stages._id)">{{stages?.stage_name}}</mat-option>
+                <!-- <mat-option value="stage2">stage2</mat-option> -->
+              </mat-select>
+            </mat-form-field>
+          </div>
+          <div fxFlex="100" class="p-1">
+            <mat-form-field appearance="outline">
+              <mat-label>Description</mat-label>
+              <mat-select placeholder="Enquiry Type" formControlName="despriction">
+                <mat-option *ngFor="let desp of desprioction ; let i = index" [value]="desp._id">{{desp?.despriction}}</mat-option>
+              </mat-select>
+            </mat-form-field>
+          </div>
+          <div fxFlex="100" class="p-1">
+            <mat-form-field appearance="outline">
+              <mat-label>Comment</mat-label>
+              <textarea matInput placeholder="Comment" formControlName="comment"></textarea>
+            </mat-form-field>
+          </div>
+          <div fxFlex="100" class="p-1 text-center">
+            <button mat-raised-button color="primary" class="uppercase mx-1" type="submit">Save</button>
+          </div>
+        </form>
+      </div>
+    </mat-card>
+  </div>
+  <div fxFlex="100" fxFlex.sm="30" fxFlex.md="40" fxFlex.lg="50" class="flex-p">
+    <mat-tab-group>
+      <mat-tab label="Enquiry Detales">
+
+        <mat-card class="p-0">
+          <div class="bg-primary text-center py-1">
+            <h2>Edit Lead:</h2>
+          </div>
+
+          <form [formGroup]="form" (ngSubmit)="save()" fxLayout="row wrap" class="user-form p-1">
+
+            <div fxFlex="100" fxFlex.gt-sm="33.3" fxFlex.sm="50" class="p-1">
+              <mat-form-field appearance="outline">
+                <mat-label>Enquiry Type</mat-label>
+                <mat-select placeholder="Enquiry Type" formControlName="enquiry_type">
+                  <mat-option value="enquiry_type1">enquiry type1</mat-option>
+                  <mat-option value="enquiry_type2">enquiry type2</mat-option>
+                </mat-select>
+              </mat-form-field>
+            </div>
+
+            <div fxFlex="100" fxFlex.gt-sm="33.3" fxFlex.sm="50" class="p-1">
+              <mat-form-field appearance="outline">
+                <mat-label>Customer type</mat-label>
+                <mat-select placeholder="Customer type" formControlName="customer_type">
+                  <mat-option value="type1">Customer type1</mat-option>
+                  <mat-option value="type2">Customer type2</mat-option>
+                </mat-select>
+              </mat-form-field>
+            </div>
+
+            <div fxFlex="100" fxFlex.gt-sm="33.3" fxFlex.sm="50" class="p-1">
+              <mat-form-field appearance="outline">
+                <mat-label>organisation_name</mat-label>
+                <input matInput placeholder="organisation_name" formControlName="organisation_name">
+                <!-- <mat-error *ngIf="personalForm.controls.lastname.errors?.required">Last Name is required</mat-error>                   -->
+              </mat-form-field>
+            </div>
+
+
+            <div fxFlex="100" fxFlex.gt-sm="33.3" fxFlex.sm="50" class="p-1">
+              <mat-form-field appearance="outline">
+                <mat-label>Source</mat-label>
+                <mat-select placeholder="Source" formControlName="source">
+                  <mat-option value="source_data1">facebook</mat-option>
+                  <mat-option value="source_data2">Email</mat-option>
+                </mat-select>
+              </mat-form-field>
+            </div>
+
+            <div fxFlex="100" fxFlex.gt-sm="33.3" fxFlex.sm="50" class="p-1">
+              <mat-form-field appearance="outline">
+                <mat-label>Mobile Number</mat-label>
+                <input matInput placeholder="Mobile Number" formControlName="mobile_no">
+                <!-- <mat-error *ngIf="personalForm.controls.email.errors?.required">Email is required</mat-error>                  -->
+              </mat-form-field>
+            </div>
+
+            <div fxFlex="100" fxFlex.gt-sm="33.3" fxFlex.sm="50" class="p-1">
+              <mat-form-field appearance="outline">
+                <mat-label>Email</mat-label>
+                <input matInput placeholder="Email*" formControlName="email">
+                <!-- <mat-error *ngIf="personalForm.controls.phone.errors?.required">Phone is required</mat-error>                  -->
+              </mat-form-field>
+            </div>
+
+            <div fxFlex="100" fxFlex.gt-sm="33.3" fxFlex.sm="50" class="p-1">
+              <mat-form-field appearance="outline">
+                <mat-label>Fist Name</mat-label>
+                <input matInput placeholder="Fist Name" formControlName="fist_name">
+                <!-- <mat-error *ngIf="personalForm.controls.zipcode.errors?.required">Zip Code is required</mat-error>                  -->
+              </mat-form-field>
+            </div>
+
+            <div fxFlex="100" fxFlex.gt-sm="33.3" fxFlex.sm="50" class="p-1">
+              <mat-form-field appearance="outline">
+                <mat-label>Last Name</mat-label>
+                <input matInput placeholder="Last Name" formControlName="last_name">
+                <!-- <mat-error *ngIf="personalForm.controls.country.errors?.required">Country is required</mat-error> -->
+              </mat-form-field>
+            </div>
+
+            <div fxFlex="100" fxFlex.gt-sm="33.3" fxFlex.sm="50" class="p-1">
+              <mat-form-field appearance="outline">
+                <mat-label>State</mat-label>
+                <mat-select placeholder="State" formControlName="state" (selectionChange)="onBookChange($event.value)">
+                  <mat-option *ngFor="let region of All_region ; let i = index" [value]="region._id">
+                    {{region?.region_name}}</mat-option>
+                </mat-select>
+              </mat-form-field>
+            </div>
+
+            <div fxFlex="100" fxFlex.gt-sm="50" fxFlex.sm="50" class="p-1">
+              <mat-form-field appearance="outline">
+                <mat-label>City</mat-label>
+                <mat-select placeholder="City" formControlName="city">
+                  <mat-option *ngFor="let city of all_city ; let i = index" [value]="city._id">{{city?.city_name}}
+                  </mat-option>
+                </mat-select>
+              </mat-form-field>
+            </div>
+            <div fxFlex="100" fxFlex.gt-sm="50" fxFlex.sm="50" class="p-1">
+              <mat-form-field appearance="outline">
+                <mat-label>zipcode</mat-label>
+                <input matInput placeholder="Pin Code" formControlName="pin_code">
+              </mat-form-field>
+            </div>
+            <div fxFlex="100" fxFlex.gt-sm="50" fxFlex.sm="50" class="p-1">
+              <mat-form-field appearance="outline">
+                <mat-label>Address</mat-label>
+                <textarea matInput placeholder="Address" formControlName="address"></textarea>
+              </mat-form-field>
+            </div>
+            <div fxFlex="100" fxFlex.gt-sm="50" fxFlex.sm="50" class="p-1">
+              <mat-form-field appearance="outline">
+                <mat-label>Requrments/Products</mat-label>
+                <textarea matInput placeholder="Requrments/Products" formControlName="requrment_product"></textarea>
+              </mat-form-field>
+            </div>
+
+            <div fxFlex="100" class="p-1 text-center">
+              <button mat-raised-button color="primary" class="uppercase mx-1" type="submit">Save</button>
+            </div>
+
+          </form>
+
+        </mat-card>
+
+      </mat-tab>
+      <mat-tab label="Timeline">
+        <ul id='timeline'>
+          <li class='event down' *ngIf="newarr[0]">
+            <div class='content'>
+              <div class="avatar"><b>E</b></div>
+            </div>
+            <div class="dot">
+              <span class='circle'></span>
+            </div>
+            <div class='date'>
+              <mat-chip-list aria-label="Fish selection">
+                <mat-chip>{{newarr[0]?.day}} day {{newarr[0]?.hr}} hr {{newarr[0]?.min}} min</mat-chip>
+              </mat-chip-list>
+            </div>
+          </li>
+          <!-- <li class='event up' *ngIf="newarr[1]">
+            <div class='content'>
+              <div class="avatar"><b>L</b></div>
+            </div>
+            <div class="dot">
+              <span class='circle'></span>
+            </div>
+            <div class='date'><b>{{newarr[1]?.day}} day {{newarr[1]?.hr}} hr {{newarr[1]?.min}} min</b></div>
+          </li>
+          <li class='event down' *ngIf="newarr[2]">
+            <div class='content'>
+              <div class="avatar">C</div>
+            </div>
+            <div class="dot">
+              <span class='circle'></span>
+            </div>
+            <div class='date'>{{newarr[2]?.day}} day {{newarr[2]?.hr}} hr {{newarr[2]?.min}} min</div>
+          </li> -->
+          <!-- <li class='event up'>
+            <div class='content'>
+              <div class="avatar">me</div>
+            </div>
+            <div class="dot">
+              <span class='circle'></span>
+            </div>
+            <div class="date">2011</div>
+          </li> -->
+          <!-- <li class="last">
+            <div class="rectangle">
+              story continuing ...
+            </div>
+          </li> -->
+        </ul>
+      </mat-tab>
+      <mat-tab label="Third"> Content 3 </mat-tab>
+    </mat-tab-group>
+  </div>
+
+  <div fxFlex="100" fxFlex.sm="35" fxFlex.md="30" fxFlex.lg="25" class="flex-p">
+    <mat-card>
+
+      <div class="container">
+        <div class="navbar">
+          <a href="#">
+            <i class="fa fa-bars" aria-hidden="true"></i>
+          </a>
+          <span>Timeline</span>
+        </div>
+        
+        <div class="header">
+          <div class="color-overlay">
+            <div class="day-number">{{dateshow?.date | date:'dd'}}</div>
+            <div class="date-right">
+              <div class="day-name">{{dateshow?.date | date:'EEEE'}}</div>
+              <div class="month">{{dateshow?.date | date}}</div>
+            </div>
+          </div>
+          <!-- <div class="actionbutton">+</div> -->
+        </div>
+        
+        <div class="timeline">
+          <ul>
+            <li *ngFor="let com of comment; index as i;">
+              <div class="bullet pink"></div>
+              <div class="time">{{com?.createdAt | date:'shortTime'}}</div>
+              <div class="desc">
+                <h3 style="margin-right: 2px;" *ngIf="!comment[i]?.isEditable">{{com?.comment | slice:0:30}}<samp style="color: blue;"  matTooltip="{{com?.comment}}" (click)="read_more(i ,com)">  ..More</samp></h3>
+                <h3 style="margin-right: 2px;" (click)="read_more(i)" *ngIf="comment[i]?.isEditable">{{com?.comment}}<samp style="color: rgb(255, 187, 0);"> ..Less</samp></h3>
+                <h4>{{com?.createdAt | date}}</h4>
+              </div>
+            </li>
+          </ul>
+        </div>  
+      </div>
+    </mat-card>
+  </div>
+</div>

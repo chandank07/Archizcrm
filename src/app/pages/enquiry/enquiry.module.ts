@@ -11,17 +11,55 @@ import { EnquiryComponent } from './enquiry/enquiry.component';
 import{EnquiryServiceService} from '../enquiry/enquiry_Service/enquiry-service.service';
 import { EnquiryDilogComponent } from './enquiry-dilog/enquiry-dilog.component'
 import { MatInputModule } from '@angular/material';
+import { LocationService } from '../locations/location.service';
+import {MatBadgeModule} from '@angular/material/badge';
+import { LeadComponent } from './lead/lead.component';
+import { ClientComponent } from './client/client.component';
+import { TaskComponent } from './task/task.component';
+import { CalendarModule } from 'angular-calendar';
+import { TaskDilogComponent } from './task-dilog/task-dilog.component';
+import { EnquiryFormComponent } from './enquiry-form/enquiry-form.component';
+import { LeaddetalsComponent } from './leaddetals/leaddetals.component';
+import { SmsComponent } from './sms/sms.component';
+import { SmsDilogComponent } from './sms-dilog/sms-dilog.component';
+import { EmailComponent } from './email/email.component';
+import { AlertModule } from 'ngx-alerts';
+import { MasterSerchComponent } from './master-serch/master-serch.component';
+import { SettingService } from '../seting/setting.service';
+import { QuillModule } from 'ngx-quill'
+
 export const routes = [
   { path: '', redirectTo: 'EnquiryComponent', pathMatch: 'full'},
   { path: 'enquiry', component: EnquiryComponent, data: { breadcrumb: 'Enquiry' } },
+  { path: 'lead', component: LeadComponent, data: { breadcrumb: 'Lead' } },
+  { path: 'client', component: ClientComponent, data: { breadcrumb: 'Client' } },
+  { path: 'task', component: TaskComponent, data: { breadcrumb: 'Task' } },
+  { path: 'enquiryadd/:id', component: EnquiryFormComponent, data: { breadcrumb: 'Enquiry Detales' } },
+  { path: 'leaddetals/:id', component: LeaddetalsComponent, data: { breadcrumb: 'Lead Detales' } },
+  { path: 'sms', component: SmsComponent, data: { breadcrumb: 'SMS' } },
+  { path: 'email', component: EmailComponent, data: { breadcrumb: 'Email' } },
+  { path: 'serch/:id', component: MasterSerchComponent, data: { breadcrumb: 'Search' } },
 ]
 
 @NgModule({
   declarations: [
     EnquiryComponent,
-    EnquiryDilogComponent
+    EnquiryDilogComponent,
+    LeadComponent,
+    ClientComponent,
+    TaskComponent,
+    TaskDilogComponent,
+    EnquiryFormComponent,
+    LeaddetalsComponent,
+    SmsComponent,
+    SmsDilogComponent,
+    EmailComponent,
+    MasterSerchComponent,
   ],
   imports: [
+    MatBadgeModule,
+    QuillModule,
+    CalendarModule,
     CommonModule,
     HttpClientModule,
     FormsModule,
@@ -31,10 +69,13 @@ export const routes = [
      SharedModule,
      PipesModule,
     RouterModule.forChild(routes),
+    AlertModule.forRoot({maxMessages: 5, timeout: 5000, position: 'left'})
   ],
-  providers: [EnquiryServiceService],
+  providers: [EnquiryServiceService ,LocationService,SettingService],
   entryComponents:[
-    EnquiryDilogComponent
+    EnquiryDilogComponent,
+    TaskDilogComponent,
+    SmsDilogComponent
   ]
 })
 

@@ -1,0 +1,97 @@
+<h1 mat-dialog-title *ngIf="csv">Add Stage</h1>
+<h1 mat-dialog-title *ngIf="list">Add Despriction</h1>
+<h1 mat-dialog-title *ngIf="lead_probility">Add Lead_probility</h1>
+<h1 mat-dialog-title *ngIf="drop_reason">Add Drop Reason</h1>
+<h1 mat-dialog-title *ngIf="enquiry_type">Add Enquiry Type</h1>
+<h1 mat-dialog-title *ngIf="enquiry_source">Add Enquiry Source</h1>
+
+<div mat-dialog-content style="width: 500px;" *ngIf="csv">
+  <form [formGroup]="emailForm" fxLayout="row wrap" class="user-form">
+    <div fxLayout="column" class="form-field-outer">
+      <div fxFlex="100">
+        <mat-form-field style="width: 100%;">
+          <input matInput formControlName="stage_name" placeholder="Stage Name">
+        </mat-form-field>
+      </div>
+    </div>
+  </form>
+</div>
+
+<div mat-dialog-content style="width: 500px;" *ngIf="list">
+  <form [formGroup]="desprictionform" fxLayout="row wrap" class="user-form">
+    <div fxLayout="column" class="form-field-outer">
+      <div fxFlex="100">
+        <mat-form-field style="width: 100%;">
+          <input matInput formControlName="despriction" placeholder="Despriction Name">
+        </mat-form-field>
+        <mat-form-field style="width: 100%;">
+          <mat-select placeholder="Select Stage" formControlName="stage">
+            <mat-option *ngFor="let stage of all_stage ; let i = index" [value]="stage._id">{{stage.stage_name}}</mat-option>
+          </mat-select>
+        </mat-form-field>
+      </div>
+    </div>
+  </form>
+</div>
+<div mat-dialog-content style="width: 500px;" *ngIf="lead_probility">
+  <form [formGroup]="lead_Probility" fxLayout="row wrap" class="user-form">
+    <div fxLayout="column" class="form-field-outer">
+      <div fxFlex="100">
+        <mat-form-field style="width: 49%;" appearance="outline">
+          <input matInput formControlName="Lead_probility_name" placeholder="Lead_probility Name">
+        </mat-form-field>
+        <mat-form-field style="width: 49%; margin-left: 1%;" appearance="outline" >
+          <input matInput formControlName="probility" placeholder="Probility Name">
+        </mat-form-field>
+      </div>
+    </div>
+  </form>
+</div>
+<div mat-dialog-content style="width: 500px;" *ngIf="drop_reason">
+  <form [formGroup]="Drop_reasons" fxLayout="row wrap" class="user-form">
+    <div fxLayout="column" class="form-field-outer">
+      <div fxFlex="100">
+        <mat-form-field style="width: 100%;">
+          <input matInput formControlName="reason" placeholder="Drop Reason">
+        </mat-form-field>
+      </div>
+    </div>
+  </form>
+</div>
+<div mat-dialog-content style="width: 500px;" *ngIf="enquiry_type">
+  <form [formGroup]="enquiry_type_form" fxLayout="row wrap" class="user-form">
+    <div fxLayout="column" class="form-field-outer">
+      <div fxFlex="100">
+        <mat-form-field style="width: 100%;">
+          <input matInput formControlName="enquiry_type" placeholder="Enquiry Type">
+        </mat-form-field>
+      </div>
+    </div>
+  </form>
+</div>
+<div mat-dialog-content style="width: 500px;" *ngIf="enquiry_source">
+  <form [formGroup]="enquiry_source_form" fxLayout="row wrap" class="user-form">
+    <div fxLayout="column" class="form-field-outer">
+      <div fxFlex="100">
+        <mat-form-field style="width: 100%;">
+          <input matInput formControlName="source" placeholder="source Name">
+        </mat-form-field>
+      </div>
+    </div>
+  </form>
+</div>
+<div style="padding-left: 30%;">
+  <mat-slide-toggle [checked]="checked" [(ngModel)]="checked">
+    Active/Inactive!
+  </mat-slide-toggle>
+</div>
+<!-- <button type="button" mat-raised-button (click)="fileInput.click()" *ngIf="csv">Choose File</button>
+<input hidden (change)="onFileSelected()" #fileInput type="file" id="file" *ngIf="csv"> -->
+
+<div mat-dialog-actions fxLayout="row" fxLayoutAlign="space-between center">
+  <button mat-raised-button color="primary" type="button" (click)="submit()" *ngIf="!satege_edit">Save</button>
+  <button mat-raised-button color="primary" type="button" (click)="Uplode()" *ngIf="satege_edit">Uplode</button>
+  <button mat-raised-button color="warn" (click)="close()">Cancel</button>
+</div>
+
+<ngx-alerts></ngx-alerts>

@@ -1,0 +1,68 @@
+<h1 mat-dialog-title *ngIf="country">Add Countery</h1>
+<h1 mat-dialog-title *ngIf="region">Add Region</h1>
+<h1 mat-dialog-title *ngIf="city">Add City</h1>
+<!---country addd form-->
+<div mat-dialog-content *ngIf="country">
+  <form [formGroup]="CountryForm" fxLayout="row wrap" class="user-form">
+    <div fxLayout="column" class="form-field-outer">
+      <div style="width: 500px;">
+        <mat-form-field style="width: 100%;">
+          <input matInput placeholder="countery name" formControlName="country_name">
+        </mat-form-field>
+      </div>
+    </div>
+  </form>
+</div>
+<!--region add form-->
+<div mat-dialog-content *ngIf="region">
+  <form [formGroup]="regionForm" fxLayout="row wrap" class="user-form">
+    <div fxLayout="column" class="form-field-outer">
+      <div style="width: 500px;">
+        <mat-form-field style="width: 100%;">
+          <input matInput placeholder="Region name" formControlName="region_name">
+        </mat-form-field>
+        <mat-form-field style="width: 100%;">
+          <mat-select placeholder="Select Country" formControlName="country">
+            <mat-option *ngFor="let country of allcountry ; let i = index" [value]="country._id">{{country.country_name}}</mat-option>
+          </mat-select>
+        </mat-form-field>
+      </div>
+    </div>
+  </form>
+</div>
+
+<!--city add form-->
+<div mat-dialog-content *ngIf="city">
+  <form [formGroup]="cityForm" fxLayout="row wrap" class="user-form">
+    <div fxLayout="column" class="form-field-outer">
+      <div style="width: 500px;">
+        <mat-form-field style="width: 100%;">
+          <input matInput placeholder="City name" formControlName="city_name">
+        </mat-form-field>
+        <mat-form-field style="width: 100%;">
+          <mat-select placeholder="Select Region" formControlName="region">
+            <mat-option *ngFor="let region of allregion ; let i = index" [value]="region._id">{{region.region_name}}</mat-option>
+          </mat-select>
+        </mat-form-field>
+      </div>
+    </div>
+  </form>
+</div>
+
+<div style="padding-left: 30%;">
+  <mat-slide-toggle [checked]="checked" [(ngModel)]="checked">
+    Active/Inactive!
+  </mat-slide-toggle>
+</div>
+
+<div mat-dialog-actions fxLayout="row" fxLayoutAlign="space-between center">
+  <button mat-raised-button color="primary" type="button" (click)="submit()" *ngIf="!editing && country">Save</button>
+  <button mat-raised-button color="primary" type="button" (click)="resion_submit()" *ngIf="!editing && region">Save</button>
+  <button mat-raised-button color="primary" type="button" (click)="city_submit()" *ngIf="!editing && city">Save</button>
+  <button mat-raised-button color="primary" type="button" (click)="submit()" *ngIf="editing && country">Update</button>
+  <button mat-raised-button color="primary" type="button" (click)="resion_submit()" *ngIf="editing && region">Update</button>
+  <button mat-raised-button color="primary" type="button" (click)="city_submit()" *ngIf="editing && city">Update</button>
+  <button mat-raised-button color="warn" (click)="close()">Cancel</button>
+</div>
+
+<ngx-alerts></ngx-alerts>

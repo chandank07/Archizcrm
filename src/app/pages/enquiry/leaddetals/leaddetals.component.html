@@ -1,0 +1,760 @@
+<div fxLayout="row wrap">
+  <div fxFlex="100" fxFlex.sm="35" fxFlex.md="30" fxFlex.lg="25" class="flex-p">
+    <mat-card class="scrol">
+      <img mat-card-image src="assets/img/users/user-orig.jpg" alt="Photo 1"
+        style="border-radius: 50%; height: 100px; width: 110px; margin-left: 30%;">
+      <mat-card-content>
+        <h2 class="text-center">{{data?.fist_name | titlecase}} {{data?.last_name| titlecase}}</h2>
+        <h3 class="text-center primary-color">{{data?.mobile_no}}</h3>
+        <h3 class="text-center primary-color">{{data?.email}}</h3>
+        <!-- <h4 class="muted-text py-1">About:</h4>
+          <p class="text-justify">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
+          <div fxLayoutAlign="end center">
+              <a href="javascript:void(0);" mat-stroked-button color="primary">
+                  More <mat-icon>arrow_right_alt</mat-icon>
+              </a> 
+          </div>           -->
+      </mat-card-content>
+      <mat-divider></mat-divider>
+
+      <mat-card-actions class="text-center py-1">
+        <button mat-mini-fab color="primary" class="m-1" matTooltip="Send message" [routerLink]="['/Lead/sms']">
+          <i class="material-icons">
+            message
+          </i>
+          <!-- <svg class="mat-icon" viewBox="0 0 24 24">
+                <path d="M17,2V2H17V6H15C14.31,6 14,6.81 14,7.5V10H14L17,10V14H14V22H10V14H7V10H10V6A4,4 0 0,1 14,2H17Z" />
+            </svg> -->
+        </button>
+        <button mat-mini-fab color="primary" class="m-1" matTooltip="Send Email" [routerLink]="['/Lead/email']">
+          <i class="material-icons">
+            email
+          </i>
+        </button>
+
+        <button mat-mini-fab color="primary" class="m-1" matTooltip="Add Comment">
+          <i class="material-icons">
+            add_comment
+          </i>
+        </button>
+        <button mat-mini-fab color="primary" class="m-1" matTooltip="Add Task">
+          <i class="material-icons">
+            today
+          </i>
+        </button>
+        <button mat-mini-fab color="primary" class="m-1" matTooltip="Convert to client">
+          <i class="material-icons">
+            supervisor_account
+          </i>
+        </button>
+        <button mat-mini-fab color="primary" class="m-1" matTooltip="Drop Enquiry">
+          <i class="material-icons">
+            thumb_down
+          </i>
+        </button>
+      </mat-card-actions>
+      <mat-divider></mat-divider>
+      <h4 style="text-align: center;">Assign Lead Stage</h4>
+      <div class="py-1">
+        <form [formGroup]="commentform" (ngSubmit)="commentAdd()" fxLayout="row wrap" class="user-form p-1">
+          <div fxFlex="100" class="p-1">
+            <mat-form-field appearance="outline">
+              <mat-label>Stage</mat-label>
+              <mat-select placeholder="Stage" formControlName="stage">
+                <mat-option *ngFor="let stages of stage ; let i = index" [value]="stages._id" (onSelectionChange)="stage_cahange(stages._id)">{{stages?.stage_name}}</mat-option>
+              </mat-select>
+            </mat-form-field>
+          </div>
+          <div fxFlex="100" class="p-1">
+            <mat-form-field appearance="outline">
+              <mat-label>Despriction</mat-label>
+              <mat-select placeholder="Enquiry Type" formControlName="despriction">
+                <mat-option *ngFor="let desp of desprioction ; let i = index" [value]="desp._id">{{desp?.despriction}}</mat-option>
+              </mat-select>
+            </mat-form-field>
+          </div>
+          <div fxFlex="100" class="p-1">
+            <mat-form-field appearance="outline" (click)="tuch()">
+              <mat-label>Comment</mat-label>
+              <textarea matInput placeholder="Comment" formControlName="comment"></textarea>
+            </mat-form-field>
+          </div>
+          <div fxFlex="100" class="p-1 text-center">
+            <button mat-raised-button color="primary" class="uppercase mx-1" type="submit">Save</button>
+          </div>
+        </form>
+      </div>
+
+    </mat-card>
+  </div>
+  <div fxFlex="100" fxFlex.sm="30" fxFlex.md="40" fxFlex.lg="50" class="flex-p">
+    <mat-tab-group>
+      <mat-tab label="Basic">
+
+        <mat-card class="p-0">
+          <div class="bg-primary text-center py-1">
+            <h2>Basic</h2>
+          </div>
+
+          <form [formGroup]="form" (ngSubmit)="save()" fxLayout="row wrap" class="user-form p-1">
+
+            <div fxFlex="100" fxFlex.gt-sm="33.3" fxFlex.sm="50" class="p-1">
+              <mat-form-field appearance="outline">
+                <mat-label>Enquiry Type</mat-label>
+                <mat-select placeholder="Enquiry Type" formControlName="enquiry_type">
+                  <mat-option value="enquiry_type1">enquiry type1</mat-option>
+                  <mat-option value="enquiry_type2">enquiry type2</mat-option>
+                </mat-select>
+              </mat-form-field>
+            </div>
+
+            <div fxFlex="100" fxFlex.gt-sm="33.3" fxFlex.sm="50" class="p-1">
+              <mat-form-field appearance="outline">
+                <mat-label>Customer type</mat-label>
+                <mat-select placeholder="Customer type" formControlName="customer_type">
+                  <mat-option value="type1">Customer type1</mat-option>
+                  <mat-option value="type2">Customer type2</mat-option>
+                </mat-select>
+              </mat-form-field>
+            </div>
+
+            <div fxFlex="100" fxFlex.gt-sm="33.3" fxFlex.sm="50" class="p-1">
+              <mat-form-field appearance="outline">
+                <mat-label>organisation_name</mat-label>
+                <input matInput placeholder="organisation_name" formControlName="organisation_name">
+                <!-- <mat-error *ngIf="personalForm.controls.lastname.errors?.required">Last Name is required</mat-error>                   -->
+              </mat-form-field>
+            </div>
+
+
+            <div fxFlex="100" fxFlex.gt-sm="33.3" fxFlex.sm="50" class="p-1">
+              <mat-form-field appearance="outline">
+                <mat-label>Source</mat-label>
+                <mat-select placeholder="Source" formControlName="source">
+                  <mat-option value="source_data1">facebook</mat-option>
+                  <mat-option value="source_data2">Email</mat-option>
+                </mat-select>
+              </mat-form-field>
+            </div>
+
+            <div fxFlex="100" fxFlex.gt-sm="33.3" fxFlex.sm="50" class="p-1">
+              <mat-form-field appearance="outline">
+                <mat-label>Mobile Number</mat-label>
+                <input matInput placeholder="Mobile Number" formControlName="mobile_no">
+                <!-- <mat-error *ngIf="personalForm.controls.email.errors?.required">Email is required</mat-error>                  -->
+              </mat-form-field>
+            </div>
+
+            <div fxFlex="100" fxFlex.gt-sm="33.3" fxFlex.sm="50" class="p-1">
+              <mat-form-field appearance="outline">
+                <mat-label>Email</mat-label>
+                <input matInput placeholder="Email*" formControlName="email">
+                <!-- <mat-error *ngIf="personalForm.controls.phone.errors?.required">Phone is required</mat-error>                  -->
+              </mat-form-field>
+            </div>
+
+            <div fxFlex="100" fxFlex.gt-sm="33.3" fxFlex.sm="50" class="p-1">
+              <mat-form-field appearance="outline">
+                <mat-label>Fist Name</mat-label>
+                <input matInput placeholder="Fist Name" formControlName="fist_name">
+                <!-- <mat-error *ngIf="personalForm.controls.zipcode.errors?.required">Zip Code is required</mat-error>                  -->
+              </mat-form-field>
+            </div>
+
+            <div fxFlex="100" fxFlex.gt-sm="33.3" fxFlex.sm="50" class="p-1">
+              <mat-form-field appearance="outline">
+                <mat-label>Last Name</mat-label>
+                <input matInput placeholder="Last Name" formControlName="last_name">
+                <!-- <mat-error *ngIf="personalForm.controls.country.errors?.required">Country is required</mat-error> -->
+              </mat-form-field>
+            </div>
+
+            <div fxFlex="100" fxFlex.gt-sm="33.3" fxFlex.sm="50" class="p-1">
+              <mat-form-field appearance="outline">
+                <mat-label>State</mat-label>
+                <mat-select placeholder="State" formControlName="state" (selectionChange)="onBookChange($event.value)">
+                  <mat-option *ngFor="let region of All_region ; let i = index" [value]="region._id">
+                    {{region?.region_name}}</mat-option>
+                </mat-select>
+              </mat-form-field>
+            </div>
+
+            <div fxFlex="100" fxFlex.gt-sm="50" fxFlex.sm="50" class="p-1">
+              <mat-form-field appearance="outline">
+                <mat-label>City</mat-label>
+                <mat-select placeholder="City" formControlName="city">
+                  <mat-option *ngFor="let city of all_city ; let i = index" [value]="city._id">{{city?.city_name}}
+                  </mat-option>
+                </mat-select>
+              </mat-form-field>
+            </div>
+            <div fxFlex="100" fxFlex.gt-sm="50" fxFlex.sm="50" class="p-1">
+              <mat-form-field appearance="outline">
+                <mat-label>zipcode</mat-label>
+                <input matInput placeholder="Pin Code" formControlName="pin_code">
+              </mat-form-field>
+            </div>
+            <div fxFlex="100" fxFlex.gt-sm="50" fxFlex.sm="50" class="p-1">
+              <mat-form-field appearance="outline">
+                <mat-label>Address</mat-label>
+                <textarea matInput placeholder="Address" formControlName="address"></textarea>
+              </mat-form-field>
+            </div>
+            <div fxFlex="100" fxFlex.gt-sm="50" fxFlex.sm="50" class="p-1">
+              <mat-form-field appearance="outline">
+                <mat-label>Requrments/Products</mat-label>
+                <textarea matInput placeholder="Requrments/Products" formControlName="requrment_product"></textarea>
+              </mat-form-field>
+            </div>
+
+            <div fxFlex="100" class="p-1 text-center">
+              <button mat-raised-button color="primary" class="uppercase mx-1" type="submit">Save</button>
+            </div>
+
+          </form>
+
+        </mat-card>
+
+      </mat-tab>
+      <mat-tab label="Timeline">
+        <ul id='timeline'>
+          <li class='event down' *ngIf="newarr[0]">
+            <div class='content'>
+              <div class="avatar"><b>E</b></div>
+            </div>
+            <div class="dot">
+              <span class='circle'></span>
+            </div>
+            <div class='date'>
+              <mat-chip-list aria-label="Fish selection">
+                <mat-chip>{{newarr[0]?.day}} day {{newarr[0]?.hr}} hr {{newarr[0]?.min}} min</mat-chip>
+              </mat-chip-list>
+            </div>
+          </li>
+          <li class='event up' *ngIf="newarr[1]">
+            <div class='content'>
+              <div class="avatar"><b>L</b></div>
+            </div>
+            <div class="dot">
+              <span class='circle'></span>
+            </div>
+            <div class='date'>
+              <mat-chip-list aria-label="Fish selection">
+                <mat-chip>{{newarr[1]?.day}} day {{newarr[1]?.hr}} hr {{newarr[1]?.min}} min</mat-chip>
+              </mat-chip-list>
+            </div>
+          </li>
+          <li class='event down' *ngIf="newarr[2]">
+            <div class='content'>
+              <div class="avatar">C</div>
+            </div>
+            <div class="dot">
+              <span class='circle'></span>
+            </div>
+            <div class='date'>
+              <mat-chip-list aria-label="Fish selection">
+                <mat-chip color="accent" selected>{{newarr[2]?.day}} day {{newarr[2]?.hr}} hr {{newarr[2]?.min}} min</mat-chip>
+              </mat-chip-list>
+            </div>
+          </li>
+          <!-- <li class='event up'>
+            <div class='content'>
+              <div class="avatar">me</div>
+            </div>
+            <div class="dot">
+              <span class='circle'></span>
+            </div>
+            <div class="date">2011</div>
+          </li> -->
+          <!-- <li class="last">
+            <div class="rectangle">
+              story continuing ...
+            </div>
+          </li> -->
+        </ul>
+      </mat-tab>
+      <!---prosnal tabs -->
+      <mat-tab label="Personal">
+        <mat-card class="p-0">
+          <div class="bg-primary text-center py-1">
+            <h2>Prasnal</h2>
+          </div>
+          <form [formGroup]="personalForm" (ngSubmit)="add_persnolform(personalForm.value)" fxLayout="row wrap"
+            class="user-form p-1">
+
+            <div fxFlex="100" fxFlex.gt-sm="33.3" fxFlex.sm="50" class="p-1">
+              <mat-form-field appearance="outline">
+                <mat-label>Date Of Birth</mat-label>
+                <input matInput [matDatepicker]="picker" formControlName="DOB" placeholder="Date Of Birth*">
+                <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+                <mat-datepicker #picker></mat-datepicker>
+              </mat-form-field>
+            </div>
+
+            <div fxFlex="100" fxFlex.gt-sm="33.3" fxFlex.sm="50" class="p-1">
+              <mat-form-field appearance="outline">
+                <mat-label>Material Status</mat-label>
+                <mat-select placeholder="material_status" formControlName="material_status">
+                  <mat-option value="type1">Customer type1</mat-option>
+                  <mat-option value="type2">Customer type2</mat-option>
+                </mat-select>
+              </mat-form-field>
+            </div>
+
+            <div fxFlex="100" fxFlex.gt-sm="33.3" fxFlex.sm="50" class="p-1">
+              <mat-form-field appearance="outline">
+                <mat-label>last_comunication</mat-label>
+                <input matInput [matDatepicker]="picker1" formControlName="last_comunication"
+                  placeholder="last_comunication">
+                <mat-datepicker-toggle matSuffix [for]="picker1"></mat-datepicker-toggle>
+                <mat-datepicker #picker1></mat-datepicker>
+              </mat-form-field>
+            </div>
+
+
+            <div fxFlex="100" fxFlex.gt-sm="33.3" fxFlex.sm="50" class="p-1">
+              <mat-form-field appearance="outline">
+                <mat-label>mode_of_comunication</mat-label>
+                <input matInput placeholder="mode_of_comunication" formControlName="mode_of_comunication">
+              </mat-form-field>
+            </div>
+
+            <div fxFlex="100" fxFlex.gt-sm="33.3" fxFlex.sm="50" class="p-1">
+              <mat-form-field appearance="outline">
+                <mat-label>remark</mat-label>
+                <input matInput placeholder="remark" formControlName="remark">
+                <!-- <mat-error *ngIf="personalForm.controls.email.errors?.required">Email is required</mat-error>                  -->
+              </mat-form-field>
+            </div>
+
+            <div fxFlex="100" fxFlex.gt-sm="33.3" fxFlex.sm="50" class="p-1">
+              <mat-form-field appearance="outline">
+                <mat-label>mpther_toung</mat-label>
+                <input matInput placeholder="mpther_toung" formControlName="mpther_toung">
+                <!-- <mat-error *ngIf="personalForm.controls.phone.errors?.required">Phone is required</mat-error>                  -->
+              </mat-form-field>
+            </div>
+
+            <div fxFlex="100" fxFlex.gt-sm="33.3" fxFlex.sm="50" class="p-1">
+              <mat-form-field appearance="outline">
+                <mat-label>outher_language</mat-label>
+                <input matInput placeholder="outher_language" formControlName="outher_language">
+                <!-- <mat-error *ngIf="personalForm.controls.zipcode.errors?.required">Zip Code is required</mat-error>                  -->
+              </mat-form-field>
+            </div>
+
+            <div fxFlex="100" fxFlex.gt-sm="33.3" fxFlex.sm="50" class="p-1">
+              <mat-form-field appearance="outline">
+                <mat-label>correpondence_address</mat-label>
+                <input matInput placeholder="correpondence_address" formControlName="correpondence_address">
+                <!-- <mat-error *ngIf="personalForm.controls.country.errors?.required">Country is required</mat-error> -->
+              </mat-form-field>
+            </div>
+
+            <div fxFlex="100" fxFlex.gt-sm="33.3" fxFlex.sm="50" class="p-1">
+              <mat-form-field appearance="outline">
+                <mat-label>correpondence_address1</mat-label>
+                <input matInput placeholder="correpondence_address1" formControlName="correpondence_address1">
+              </mat-form-field>
+            </div>
+
+
+            <div fxFlex="100" fxFlex.gt-sm="33.3" fxFlex.sm="50" class="p-1">
+              <mat-form-field appearance="outline">
+                <mat-label>correpondence_country</mat-label>
+                <mat-select placeholder="correpondence_country" formControlName="correpondence_country">
+                  <mat-option value="enquiry_type1">enquiry type1</mat-option>
+                  <mat-option value="enquiry_type2">enquiry type2</mat-option>
+                </mat-select>
+              </mat-form-field>
+            </div>
+
+            <div fxFlex="100" fxFlex.gt-sm="33.3" fxFlex.sm="50" class="p-1">
+              <mat-form-field appearance="outline">
+                <mat-label>correpondence_state</mat-label>
+                <mat-select placeholder="correpondence_state" formControlName="correpondence_state">
+                  <mat-option value="type1">Customer type1</mat-option>
+                  <mat-option value="type2">Customer type2</mat-option>
+                </mat-select>
+              </mat-form-field>
+            </div>
+
+            <div fxFlex="100" fxFlex.gt-sm="33.3" fxFlex.sm="50" class="p-1">
+              <mat-form-field appearance="outline">
+                <mat-label>correpondence_District</mat-label>
+                <mat-select placeholder="correpondence_District" formControlName="correpondence_District">
+                  <mat-option value="type1">Customer type1</mat-option>
+                  <mat-option value="type2">Customer type2</mat-option>
+                </mat-select>
+              </mat-form-field>
+            </div>
+
+
+            <div fxFlex="100" fxFlex.gt-sm="33.3" fxFlex.sm="50" class="p-1">
+              <mat-form-field appearance="outline">
+                <mat-label>correpondence_Pincode</mat-label>
+                <input matInput placeholder="correpondence_Pincode" formControlName="correpondence_Pincode">
+              </mat-form-field>
+            </div>
+
+            <div fxFlex="100" fxFlex.gt-sm="33.3" fxFlex.sm="50" class="p-1">
+              <mat-form-field appearance="outline">
+                <mat-label>correpondence_landmark</mat-label>
+                <input matInput placeholder="correpondence_landmark" formControlName="correpondence_landmark">
+              </mat-form-field>
+            </div>
+
+            <div fxFlex="100" fxFlex.gt-sm="33.3" fxFlex.sm="50" class="p-1">
+              <mat-form-field appearance="outline">
+                <mat-label>permanent_address</mat-label>
+                <input matInput placeholder="permanent_address*" formControlName="permanent_address">
+              </mat-form-field>
+            </div>
+
+            <div fxFlex="100" fxFlex.gt-sm="33.3" fxFlex.sm="50" class="p-1">
+              <mat-form-field appearance="outline">
+                <mat-label>permanent_address1</mat-label>
+                <input matInput placeholder="permanent_address1*" formControlName="permanent_address1">
+              </mat-form-field>
+            </div>
+
+            <div fxFlex="100" fxFlex.gt-sm="33.3" fxFlex.sm="50" class="p-1">
+              <mat-form-field appearance="outline">
+                <mat-label>permanent_address2</mat-label>
+                <input matInput placeholder="permanent_address2*" formControlName="permanent_address2">
+              </mat-form-field>
+            </div>
+
+            <div fxFlex="100" fxFlex.gt-sm="33.3" fxFlex.sm="50" class="p-1">
+              <mat-form-field appearance="outline">
+                <mat-label>permanent_country</mat-label>
+                <mat-select placeholder="permanent_country" formControlName="permanent_country">
+                  <mat-option value="type1">Customer type1</mat-option>
+                  <mat-option value="type2">Customer type2</mat-option>
+                </mat-select>
+              </mat-form-field>
+            </div>
+            <div fxFlex="100" fxFlex.gt-sm="50" fxFlex.sm="50" class="p-1">
+              <mat-form-field appearance="outline">
+                <mat-label>permanent_state</mat-label>
+                <mat-select placeholder="permanent_state" formControlName="permanent_state">
+                  <mat-option value="type1">Customer type1</mat-option>
+                  <mat-option value="type2">Customer type2</mat-option>
+                </mat-select>
+              </mat-form-field>
+            </div>
+
+            <div fxFlex="100" fxFlex.gt-sm="50" fxFlex.sm="50" class="p-1">
+              <mat-form-field appearance="outline">
+                <mat-label>permanent_District</mat-label>
+                <mat-select placeholder="permanent_District" formControlName="permanent_District">
+                  <mat-option value="type1">Customer type1</mat-option>
+                  <mat-option value="type2">Customer type2</mat-option>
+                </mat-select>
+              </mat-form-field>
+            </div>
+            <div fxFlex="100" fxFlex.gt-sm="50" fxFlex.sm="50" class="p-1">
+              <mat-form-field appearance="outline">
+                <mat-label>permanent_Pincode</mat-label>
+                <input matInput placeholder="permanent_Pincode" formControlName="permanent_Pincode">
+              </mat-form-field>
+            </div>
+
+            <div fxFlex="100" fxFlex.gt-sm="50" fxFlex.sm="50" class="p-1">
+              <mat-form-field appearance="outline">
+                <mat-label>permanent_landmark</mat-label>
+                <input matInput placeholder="permanent_landmark" formControlName="permanent_landmark">
+              </mat-form-field>
+            </div>
+
+            <!-- <div fxFlex="100" fxFlex.gt-sm="50" fxFlex.sm="50" class="p-1">
+            <mat-form-field appearance="outline">
+              <mat-label>Address</mat-label>
+              <textarea matInput placeholder="Address" formControlName="address"></textarea>
+            </mat-form-field>
+          </div>
+          <div fxFlex="100" fxFlex.gt-sm="50" fxFlex.sm="50" class="p-1">
+            <mat-form-field appearance="outline">
+              <mat-label>Requrments/Products</mat-label>
+              <textarea matInput placeholder="Requrments/Products" formControlName="requrment_product"></textarea>
+            </mat-form-field>
+          </div> -->
+
+            <div fxFlex="100" class="p-1 text-center">
+              <button mat-raised-button color="primary" class="uppercase mx-1" type="submit">Save</button>
+            </div>
+
+          </form>
+        </mat-card>
+      </mat-tab>
+      <!--prasnal tabs end-->
+      <mat-tab label="KYC">
+        <mat-card class="p-0">
+          <div class="bg-primary text-center py-1">
+            <h2>KYC</h2>
+          </div>
+          <form [formGroup]="kycform" (ngSubmit)="add_persnolform(kycform.value)" fxLayout="row wrap"
+          class="user-form p-1">
+            <div fxFlex="100" fxFlex.gt-sm="50" fxFlex.sm="50" class="p-1">
+              <mat-form-field appearance="outline">
+                <mat-label>document_name</mat-label>
+                <input matInput placeholder="document_name" formControlName="document_name">
+              </mat-form-field>
+            </div>
+            <div fxFlex="100" fxFlex.gt-sm="50" fxFlex.sm="50" class="p-1">
+              <mat-form-field appearance="outline">
+                <mat-label>document_No</mat-label>
+                <input matInput placeholder="document_No" formControlName="document_No">
+              </mat-form-field>
+            </div>
+            <div fxFlex="100" fxFlex.gt-sm="50" fxFlex.sm="50" class="p-1">
+              <mat-form-field appearance="outline">
+                <mat-label>valid_up_to</mat-label>
+                <input matInput placeholder="valid_up_to" formControlName="valid_up_to">
+              </mat-form-field>
+            </div>
+            <div fxFlex="100" fxFlex.gt-sm="50" fxFlex.sm="50" class="p-1">
+              <mat-form-field appearance="outline">
+                <mat-label>choose File</mat-label>
+                <input matInput placeholder="valid_up_to">
+              </mat-form-field>
+            </div>
+            <div fxFlex="100" class="p-1 text-center">
+              <button mat-raised-button color="primary" class="uppercase mx-1" type="submit">Save</button>
+            </div>
+          </form>
+        </mat-card>
+      </mat-tab>
+      <!--work home-->
+      <mat-tab label="Work History">
+        <mat-card class="p-0">
+          <div class="bg-primary text-center py-1">
+            <h2>Work History</h2>
+          </div>
+          <form [formGroup]="workhistoryform" (ngSubmit)="Add_workhistoryform(workhistoryform.value)"
+            fxLayout="row wrap" class="user-form p-1">
+
+            <div fxFlex="100" fxFlex.gt-sm="50" fxFlex.sm="50" class="p-1">
+              <mat-form-field appearance="outline">
+                <mat-label>company_name</mat-label>
+                <input matInput placeholder="company_name" formControlName="company_name">
+              </mat-form-field>
+            </div>
+            <div fxFlex="100" fxFlex.gt-sm="50" fxFlex.sm="50" class="p-1">
+              <mat-form-field appearance="outline">
+                <mat-label>desigination</mat-label>
+                <input matInput placeholder="desigination" formControlName="desigination">
+              </mat-form-field>
+            </div>
+            <div fxFlex="100" fxFlex.gt-sm="50" fxFlex.sm="50" class="p-1">
+              <mat-form-field appearance="outline">
+                <mat-label>start_date</mat-label>
+                <input matInput [matDatepicker]="picker3" formControlName="start_date" placeholder="start_date">
+                <mat-datepicker-toggle matSuffix [for]="picker3"></mat-datepicker-toggle>
+                <mat-datepicker #picker3></mat-datepicker>
+              </mat-form-field>
+            </div>
+            <div fxFlex="100" fxFlex.gt-sm="50" fxFlex.sm="50" class="p-1">
+              <mat-form-field appearance="outline">
+                <mat-label>end_date</mat-label>
+                <input matInput [matDatepicker]="picker4" formControlName="end_date" placeholder="end_date">
+                <mat-datepicker-toggle matSuffix [for]="picker4"></mat-datepicker-toggle>
+                <mat-datepicker #picker4></mat-datepicker>
+              </mat-form-field>
+            </div>
+            <div fxFlex="100" class="p-1">
+              <mat-form-field appearance="outline">
+                <mat-label>current_ctc</mat-label>
+                <input matInput formControlName="current_ctc" placeholder="current_ctc">
+              </mat-form-field>
+            </div>
+            <div fxFlex="100" class="p-1 text-center">
+              <button mat-raised-button color="primary" class="uppercase mx-1" type="submit">Save</button>
+            </div>
+          </form>
+        </mat-card>
+      </mat-tab>
+      <mat-tab label="Education">
+        <mat-card class="p-0">
+          <div class="bg-primary text-center py-1">
+            <h2>EDUCATION</h2>
+          </div>
+          <form [formGroup]="educationform" (ngSubmit)="Add_educationform()"
+            fxLayout="row wrap" class="user-form p-1">
+            <div fxFlex="100" fxFlex.gt-sm="50" fxFlex.sm="50" class="p-1">
+              <mat-form-field appearance="outline">
+                <mat-label>title_education</mat-label>
+                <input matInput formControlName="title_education" placeholder="title_education">
+              </mat-form-field>
+            </div>
+            <div fxFlex="100" fxFlex.gt-sm="50" fxFlex.sm="50" class="p-1">
+              <mat-form-field appearance="outline">
+                <mat-label>university_name</mat-label>
+                <input matInput formControlName="university_name" placeholder="university_name">
+              </mat-form-field>
+            </div>
+            <div fxFlex="100" class="p-1">
+              <mat-form-field appearance="outline">
+                <mat-label>passing_year</mat-label>
+                <input matInput formControlName="passing_year" placeholder="passing_year">
+              </mat-form-field>
+            </div>
+            <div fxFlex="100" class="p-1 text-center">
+              <button mat-raised-button color="primary" class="uppercase mx-1" type="submit">Save</button>
+            </div>
+          </form>
+        </mat-card>
+      </mat-tab>
+      <!---social-->
+      <mat-tab label="Social Profile">
+        <mat-card class="p-0">
+          <div class="bg-primary text-center py-1">
+            <h2>SOCIAL PROFILE</h2>
+          </div>
+          <form [formGroup]="socialform" (ngSubmit)="Add_socialform()"
+            fxLayout="row wrap" class="user-form p-1">
+            <div fxFlex="100" fxFlex.gt-sm="50" fxFlex.sm="50" class="p-1">
+              <mat-form-field appearance="outline">
+                <mat-label>social_name</mat-label>
+                <input matInput formControlName="social_name" placeholder="social_name">
+              </mat-form-field>
+            </div>
+            <div fxFlex="100" fxFlex.gt-sm="50" fxFlex.sm="50" class="p-1">
+              <mat-form-field appearance="outline">
+                <mat-label>social_url</mat-label>
+                <input matInput formControlName="social_url" placeholder="social_url">
+              </mat-form-field>
+            </div>
+            <div fxFlex="100" class="p-1 text-center">
+              <button mat-raised-button color="primary" class="uppercase mx-1" type="submit">Save</button>
+            </div>
+          </form>
+        </mat-card>
+      </mat-tab>
+      <!--Travael HIstory-->
+      <mat-tab label="Travel History">
+        <mat-card class="p-0">
+          <div class="bg-primary text-center py-1">
+            <h2>Travel History</h2>
+          </div>
+          <form [formGroup]="trevalform" (ngSubmit)="Add_socialform()"
+            fxLayout="row wrap" class="user-form p-1">
+            <div fxFlex="100" fxFlex.gt-sm="50" fxFlex.sm="50" class="p-1">
+              <mat-form-field appearance="outline">
+                <mat-label>country</mat-label>
+                <mat-select placeholder="country" formControlName="country">
+                  <mat-option value="enquiry_type1">enquiry type1</mat-option>
+                  <mat-option value="enquiry_type2">enquiry type2</mat-option>
+                </mat-select>
+              </mat-form-field>
+            </div>
+            <div fxFlex="100" fxFlex.gt-sm="50" fxFlex.sm="50" class="p-1">
+              <mat-form-field appearance="outline">
+                <mat-label>treval_date</mat-label>
+                <input matInput [matDatepicker]="picker6" formControlName="treval_date"
+                placeholder="treval_date">
+              <mat-datepicker-toggle matSuffix [for]="picker6"></mat-datepicker-toggle>
+              <mat-datepicker #picker6></mat-datepicker>
+              </mat-form-field>
+            </div>
+            <div fxFlex="100" fxFlex.gt-sm="50" fxFlex.sm="50" class="p-1">
+              <mat-form-field appearance="outline">
+                <mat-label>visa_type</mat-label>
+                <input matInput formControlName="visa_type" placeholder="visa_type">
+              </mat-form-field>
+            </div>
+            <div fxFlex="100" fxFlex.gt-sm="50" fxFlex.sm="50" class="p-1">
+              <mat-form-field appearance="outline">
+                <mat-label>from_date</mat-label>
+                <input matInput [matDatepicker]="picker7" formControlName="from_date"
+                placeholder="from_date">
+              <mat-datepicker-toggle matSuffix [for]="picker7"></mat-datepicker-toggle>
+              <mat-datepicker #picker7></mat-datepicker>
+              </mat-form-field>
+            </div>
+            <div fxFlex="100" fxFlex.gt-sm="50" fxFlex.sm="50" class="p-1">
+              <mat-form-field appearance="outline">
+                <mat-label>to_date</mat-label>
+                <input matInput [matDatepicker]="picker8" formControlName="to_date"
+                placeholder="to_date">
+              <mat-datepicker-toggle matSuffix [for]="picker8"></mat-datepicker-toggle>
+              <mat-datepicker #picker8></mat-datepicker>
+              </mat-form-field>
+            </div>
+            <div fxFlex="100" fxFlex.gt-sm="50" fxFlex.sm="50" class="p-1">
+              <mat-form-field appearance="outline">
+                <mat-label>is_rejected</mat-label>
+                <mat-select placeholder="is_rejected" formControlName="is_rejected">
+                  <mat-option value="enquiry_type1">enquiry type1</mat-option>
+                  <mat-option value="enquiry_type2">enquiry type2</mat-option>
+                </mat-select>
+              </mat-form-field>
+            </div>
+            <div fxFlex="100"  class="p-1">
+              <mat-form-field appearance="outline">
+                <mat-label>rejected_remark</mat-label>
+                <input matInput formControlName="rejected_remark" placeholder="rejected_remark">
+              </mat-form-field>
+            </div>
+            <div fxFlex="100" class="p-1 text-center">
+              <button mat-raised-button color="primary" class="uppercase mx-1" type="submit">Save</button>
+            </div>
+          </form>
+        </mat-card>
+      </mat-tab>
+      <mat-tab label="Travel History">Travel History</mat-tab>
+      <mat-tab label="Travel History">Travel History</mat-tab>
+    </mat-tab-group>
+  </div>
+
+  <div fxFlex="100" fxFlex.sm="35" fxFlex.md="30" fxFlex.lg="25" class="flex-p">
+    <mat-card>
+
+      <div class="container">
+        <div class="navbar">
+          <a href="#">
+            <i class="fa fa-bars" aria-hidden="true"></i>
+          </a>
+          <span>Timeline</span>
+        </div>
+
+        <div class="header">
+          <div class="color-overlay">
+            <div class="day-number">{{dateshow?.date | date:'dd'}}</div>
+            <div class="date-right">
+              <div class="day-name">{{dateshow?.date | date:'EEEE'}}</div>
+              <div class="month">{{dateshow?.date | date}}</div>
+            </div>
+          </div>
+          <!-- <div class="actionbutton" (click)="openUserDialog1()">+</div> -->
+        </div>
+
+        <div class="timeline">
+          <ul>
+            <li *ngFor="let com of comment">
+              <div class="bullet pink"></div>
+              <div class="time">{{com?.createdAt | date:'shortTime'}}</div>
+              <div class="desc">
+                <h3>{{com?.comment}}</h3>
+                <h4>{{com?.createdAt | date}}</h4>
+              </div>
+            </li>
+            <li [hidden]="!typing">
+              <div class="bullet pink"></div>
+              <div class="time">typing..</div>
+              <!-- <div class="desc">
+                <h3>{{com?.comment}}</h3>
+                <h4>{{com?.createdAt | date}}</h4>
+              </div> -->
+            </li>
+          </ul>
+        </div>
+      </div>
+    </mat-card>
+  </div>
+</div>
+
+
+<div *ngIf="!data" fxLayout="column" fxLayoutAlign="center center" class="user-spinner">
+  <mat-spinner color="primary"></mat-spinner>
+</div>

@@ -1,29 +1,32 @@
-<h1 mat-dialog-title><span *ngIf="!user?.id">Add</span><span *ngIf="user?.id">Edit</span> Enquiry
-  <button mat-raised-button color="primary" type="button" (click)="add_form()" style="float: right; color: white;">
+<h1 mat-dialog-title><span *ngIf="enquiry && !comment">Add Enquiry</span><span *ngIf="!enquiry && !comment">Add Lead</span>
+  <span *ngIf="!enquiry && comment">Add Comment</span>
+  <!-- <button mat-raised-button color="primary" type="button" (click)="add_form()" style="float: right; color: white;">
     <mat-icon>add_to_queue</mat-icon>
-  </button>
+  </button> -->
 </h1>
 
 
- <!-- <div mat-dialog-content *ngIf="!form_field">
+<div mat-dialog-content *ngIf="enquiry && !comment">
   <form [formGroup]="form" fxLayout="row wrap" class="user-form">
     <div fxLayout="column" class="form-field-outer">
       <div fxFlex="100">
         <mat-form-field style="width: 24%;">
-          <input matInput placeholder="Enquiry Type" formControlName="enquiry_type">
+          <mat-select placeholder="Enquiry Type" formControlName="enquiry_type">
+            <mat-option *ngFor="let type of enquiry_type ; let i = index" [value]="type._id">{{type?.enquiry_type}}</mat-option>
+          </mat-select>
         </mat-form-field>
         <mat-form-field style="width: 24%; padding-left: 1%;">
           <mat-select placeholder="Customer type" formControlName="customer_type">
-            <mat-option [value]="gender">value</mat-option>
+            <mat-option value="type1">Customer type1</mat-option>
+            <mat-option value="type2">Customer type2</mat-option>
           </mat-select>
         </mat-form-field>
         <mat-form-field style="width: 24%; padding-left: 1%;">
           <input matInput placeholder="organisation_name" formControlName="organisation_name">
         </mat-form-field>
         <mat-form-field style="width: 24%;padding-left: 1%;">
-          <mat-select placeholder="Source" formControlName="source" (selectionChange)="changeuserRole()">
-            <mat-option *ngFor="let source_data of source ; let i = index" [value]="source_data">
-              {{source_data.lead_name}}</mat-option>
+          <mat-select placeholder="Source" formControlName="source">
+            <mat-option *ngFor="let type of enquiry_source ; let i = index" [value]="type._id">{{type?.source}}</mat-option>
           </mat-select>
         </mat-form-field>
       </div>
@@ -43,13 +46,13 @@
       </div>
       <div fxFlex="100">
         <mat-form-field style="width: 32%;">
-          <mat-select placeholder="State" formControlName="state">
-            <mat-option [value]="gender">value</mat-option>
+          <mat-select placeholder="State" formControlName="state" (selectionChange)="onBookChange($event.value)">
+            <mat-option *ngFor="let region of All_region ; let i = index" [value]="region._id">{{region?.region_name}}</mat-option>
           </mat-select>
         </mat-form-field>
         <mat-form-field style="width: 32%; padding-left: 1%;">
           <mat-select placeholder="City" formControlName="city">
-            <mat-option [value]="gender">value</mat-option>
+            <mat-option *ngFor="let city of all_city ; let i = index" [value]="city._id">{{city?.city_name}}</mat-option>
           </mat-select>
         </mat-form-field>
         <mat-form-field style="width: 32%;padding-left: 1%;">
@@ -66,8 +69,59 @@
       </div>
     </div>
   </form>
-</div> -->
-<div mat-dialog-content *ngIf="!form_field">
+</div>
+
+
+<div mat-dialog-content *ngIf="!enquiry && !comment" style="width: 500px;">
+  <form [formGroup]="form" fxLayout="row wrap" class="user-form">
+    <div fxLayout="column" class="form-field-outer" formGroupName="lead">
+      <div fxFlex="100">
+        <mat-form-field style="width: 50%;">
+          <input matInput [matDatepicker]="picker" formControlName="expected_closer_date" placeholder="Expected Closer Date*">
+          <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+          <mat-datepicker #picker></mat-datepicker>
+        </mat-form-field>
+        <mat-form-field style="width: 49%; padding-left: 1%;">
+          <mat-select placeholder="Conversion Probability" formControlName="conversion_probability">
+            <mat-option *ngFor="let type of probility ; let i = index" [value]="type._id">{{type?.Lead_probility_name}} ( {{type?.probility}} )</mat-option>
+          </mat-select>
+        </mat-form-field>
+      </div>
+      <div fxFlex="100">
+        <mat-form-field style="width: 50%;">
+          <mat-select placeholder="Lead Stage*" formControlName="lead_stage">
+            <mat-option *ngFor="let type of stage ; let i = index" [value]="type._id" (onSelectionChange) ="stage_chnage(type._id)">{{type?.stage_name}}</mat-option>
+          </mat-select>
+        </mat-form-field>
+        <mat-form-field style="width: 49%; padding-left: 1%;">
+          <mat-select placeholder="Lead Description" formControlName="lead_discripton">
+            <mat-option *ngFor="let type of discription ; let i = index" [value]="type._id">{{type?.despriction}}</mat-option>
+          </mat-select>
+        </mat-form-field>
+      </div>
+      <div fxFlex="100">
+        <mat-form-field style="width: 100%;">
+          <textarea matInput placeholder="Comment" formControlName="comment"></textarea>
+        </mat-form-field>
+      </div>
+    </div>
+  </form>
+</div>
+
+
+<div mat-dialog-content *ngIf="!enquiry && comment" style="width: 500px;">
+  <form [formGroup]="commentform" fxLayout="row wrap" class="user-form">
+    <div fxLayout="column" class="form-field-outer">
+      <div fxFlex="100">
+        <mat-form-field style="width: 100%;">
+          <textarea matInput placeholder="Comment" formControlName="comment"></textarea>
+        </mat-form-field>
+      </div>
+    </div>
+  </form>
+</div>
+
+<!-- <div mat-dialog-content *ngIf="!form_field">
   <form [formGroup]="orderForm" fxLayout="row wrap" class="user-form">
     <div fxLayout="column" class="form-field-outer">
       <div fxFlex="100" class="fields-container">
@@ -78,31 +132,21 @@
             </mat-form-field>
           </div>
         </div>
-        <!-- <mat-form-field style="width: 50%;">
-          <input matInput placeholder="country" formControlName="country">
-        </mat-form-field> -->
       </div>
     </div>
   </form>
-</div> 
+</div>  -->
 
-<div mat-dialog-content *ngIf="form_field">
+<!-- <div mat-dialog-content *ngIf="form_field">
   <form [formGroup]="orderForm" fxLayout="row wrap" class="user-form">
     <div fxLayout="column" class="form-field-outer">
       <div fxFlex="100" class="fields-container">
-        <!-- <mat-form-field style="width: 50%;">
-          <input matInput placeholder="compony" formControlName="compony">
-        </mat-form-field>
-        <mat-form-field style="width: 50%;">
-          <input matInput placeholder="country" formControlName="country">
-        </mat-form-field> -->
         <div formArrayName="received" *ngFor="let item of orderForm.get('received').controls; let i = index;">
           <div [formGroupName]="i">
             <mat-form-field style="width: 40%;">
               <input matInput formControlName="field_name" placeholder="Form field Name">
             </mat-form-field>
             <mat-form-field style="width: 40%;">
-              <!-- <input matInput formControlName="field_type" placeholder=" Form field type"> -->
               <mat-select placeholder="Field Type" formControlName="field_type">
                 <mat-option value="{{userRole}}" *ngFor="let userRole of title">{{userRole | titlecase }}</mat-option>
               </mat-select>
@@ -118,15 +162,20 @@
       </div>
     </div>
   </form>
-</div>
+</div> -->
 
-<div mat-dialog-actions fxLayout="row" fxLayoutAlign="space-between center" *ngIf="!form_field">
-  <button mat-raised-button color="primary" type="button" (click)="submit()" [mat-dialog-close]="orderForm.value"
-    [disabled]="!orderForm.valid"><span *ngIf="!user?.id">Save</span><span *ngIf="user?.id">Update</span></button>
+<div mat-dialog-actions fxLayout="row" fxLayoutAlign="space-between center">
+  <button mat-raised-button color="primary" type="button" (click)="submit()"  *ngIf="enquiry && !comment">Save</button>
+  <button mat-raised-button color="primary" type="button" (click)="Lead_conv()"  *ngIf="!enquiry && !comment">Lead Convert</button>
+  <button mat-raised-button color="primary" type="button" (click)="comment_add()"  *ngIf="!enquiry && comment">Add Comment</button>
   <button mat-raised-button color="warn" (click)="close()">Cancel</button>
 </div>
-<div mat-dialog-actions fxLayout="row" fxLayoutAlign="space-between center" *ngIf="form_field">
+<!-- <div mat-dialog-actions fxLayout="row" fxLayoutAlign="space-between center" >
+  <button mat-raised-button color="primary" type="button" (click)="submit()" [mat-dialog-close]="orderForm.value">Save</button>
+  <button mat-raised-button color="warn" (click)="close()">Cancel</button>
+</div> -->
+<!-- <div mat-dialog-actions fxLayout="row" fxLayoutAlign="space-between center" >
   <button mat-raised-button color="primary" type="button" (click)="create_form()" [mat-dialog-close]="orderForm.value"
     [disabled]="!orderForm.valid"><span *ngIf="!user?.id">Save Form</span><span *ngIf="user?.id">Update</span></button>
   <button mat-raised-button color="warn" (click)="close()">Cancel</button>
-</div>
+</div> -->

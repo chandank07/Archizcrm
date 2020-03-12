@@ -1,0 +1,30 @@
+table {
+    width: 100%;
+  }
+  .mat-cell {
+    padding: 8px 20px 8px 0;
+  }
+  .mat-form-field {
+    font-size: 14px;
+    width: 100%;
+  }
+  .user-search{
+    width: 0;
+    overflow: hidden;
+    transition: 0.3s;
+    .mat-form-field{
+        width: 100% !important;
+        text-align: center !important;
+        height: 36px;        
+    }
+    .mat-form-field-infix{
+        padding: 5px;
+    }
+    .mat-input-element{
+        text-align: center;
+    }
+    &.show{
+        width: 100%;
+        overflow: visible;
+    }
+}

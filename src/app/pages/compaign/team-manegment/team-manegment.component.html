@@ -1,0 +1,73 @@
+<mat-card class="example-card" style="margin-right: 5%; margin-left: 5%;">
+  <mat-card-header>
+    <div mat-card-avatar class="example-header-image"></div>
+    <mat-card-title>Team Mangmant</mat-card-title>
+  </mat-card-header>
+
+  <mat-card-content>
+    <form [formGroup]="form" fxLayout="row wrap" class="user-form">
+      <div fxLayout="column" class="form-field-outer">
+        <div fxFlex="100">
+          <mat-form-field appearance="outline" style="width: 30%; padding-left: 2%;">
+            <mat-label>CEO</mat-label>
+            <mat-select placeholder="ceo" formControlName="ceo">
+              <mat-option value="normal">Normal</mat-option>
+              <mat-option value="auto">Auto</mat-option>
+            </mat-select>
+          </mat-form-field>
+          <mat-form-field appearance="outline" style="width: 30%; padding-left: 2%;">
+            <mat-label>CTM</mat-label>
+            <mat-select placeholder="ctm" formControlName="ctm">
+              <mat-option value="normal">Normal</mat-option>
+              <mat-option value="auto">Auto</mat-option>
+            </mat-select>
+          </mat-form-field>
+          <mat-form-field appearance="outline" style="width: 30%; padding-left: 2%;">
+            <mat-label>PD</mat-label>
+            <mat-select placeholder="pd" formControlName="pd">
+              <mat-option value="normal">Normal</mat-option>
+              <mat-option value="auto">Auto</mat-option>
+            </mat-select>
+          </mat-form-field>
+        </div>
+        <div fxFlex="100">
+          <mat-form-field appearance="outline" style="width: 30%; padding-left: 2%;">
+            <mat-label>Team Name</mat-label>
+            <input matInput formControlName="team_name" placeholder="team_name">
+          </mat-form-field>
+        </div>
+      </div>
+    </form>
+  </mat-card-content>
+
+  <div cdkDropListGroup style="padding-left: 2%;">
+    <div class="example-container">
+      <h2>Member Name</h2>
+  
+      <div
+        cdkDropList
+        [cdkDropListData]="items"
+        class="example-list"
+        cdkDropListSortingDisabled
+        (cdkDropListDropped)="drop($event)">
+        <div class="example-box" *ngFor="let item of items" cdkDrag>{{item.name}}</div>
+      </div>
+    </div>
+  
+    <div class="example-container">
+      <h2>Selected Member</h2>
+  
+      <div
+        cdkDropList
+        [cdkDropListData]="basket"
+        class="example-list"
+        (cdkDropListDropped)="drop($event)">
+        <div class="example-box" *ngFor="let item of basket" cdkDrag >{{item.name}}</div>
+      </div>
+    </div>
+  </div>
+  <mat-card-actions style="margin-left: 43%;">
+    <button mat-raised-button color="primary" type="button" (click) ="save()">Save</button>
+    <button mat-raised-button color="warn" type="button" (click) ="cencel()">Cancel</button>
+  </mat-card-actions>
+</mat-card>

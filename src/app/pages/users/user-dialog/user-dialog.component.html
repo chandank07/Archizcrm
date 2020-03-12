@@ -1,21 +1,30 @@
 <h1 mat-dialog-title><span *ngIf="!user.id">Add</span><span *ngIf="user.id">Edit</span> user</h1>
-<div mat-dialog-content>
-    <form [formGroup]="form" class="user-form">      
+
+
+<div mat-dialog-content *ngIf="!role">
+    <form [formGroup]="form" class="user-form">
         <mat-tab-group class="vertical-tabs">
             <mat-tab label="Basic">
                 <div fxLayout="column" class="form-field-outer">
                     <mat-form-field class="w-100">
-                        <mat-placeholder><mat-icon>person</mat-icon> Username</mat-placeholder>
+                        <mat-placeholder>
+                            <mat-icon>person</mat-icon> Username
+                        </mat-placeholder>
                         <input matInput formControlName="username" required>
                         <mat-error *ngIf="form.controls.username.errors?.required">Username is required</mat-error>
-                        <mat-error *ngIf="form.controls.username.hasError('minlength')">Username isn't long enough, minimum of 5 characters</mat-error>
+                        <mat-error *ngIf="form.controls.username.hasError('minlength')">Username isn't long enough,
+                            minimum of 5 characters</mat-error>
                     </mat-form-field>
                     <mat-form-field class="w-100">
-                        <mat-placeholder><mat-icon>vpn_key</mat-icon> Password</mat-placeholder>
+                        <mat-placeholder>
+                            <mat-icon>vpn_key</mat-icon> Password
+                        </mat-placeholder>
                         <input matInput formControlName="password" required [type]="passwordHide ? 'password' : 'text'">
-                        <mat-icon matSuffix (click)="passwordHide = !passwordHide">{{passwordHide ? 'visibility' : 'visibility_off'}}</mat-icon>
+                        <mat-icon matSuffix (click)="passwordHide = !passwordHide">
+                            {{passwordHide ? 'visibility' : 'visibility_off'}}</mat-icon>
                         <mat-error *ngIf="form.controls.password.errors?.required">Password is required</mat-error>
-                        <mat-error *ngIf="form.controls.password.hasError('minlength')">Password isn't long enough, minimum of 6 characters</mat-error>
+                        <mat-error *ngIf="form.controls.password.hasError('minlength')">Password isn't long enough,
+                            minimum of 6 characters</mat-error>
                     </mat-form-field>
                 </div>
             </mat-tab>
@@ -41,7 +50,15 @@
                     </mat-form-field>
                 </div>
             </mat-tab>
-            <mat-tab label="Work" formGroupName="work">
+            <mat-tab label="work">
+                <div fxLayout="column" class="form-field-outer">
+                    <mat-select placeholder="Select Company" formControlName="company">
+                        <mat-option *ngFor="let company of all_comapny ; let i = index" [value]="company._id">{{company?.company_name}}
+                        </mat-option>
+                    </mat-select>
+                </div>
+            </mat-tab>
+            <!-- <mat-tab label="Work" formGroupName="work">
                 <div fxLayout="column" class="form-field-outer">
                     <mat-form-field class="w-100">
                         <input matInput placeholder="Company" formControlName="company">
@@ -55,7 +72,7 @@
                         <span matSuffix>.00</span>
                     </mat-form-field>
                 </div>
-            </mat-tab>
+            </mat-tab> -->
             <mat-tab label="Contacts" formGroupName="contacts">
                 <div fxLayout="column" class="form-field-outer">
                     <mat-form-field class="w-100">
@@ -86,14 +103,251 @@
                 <div fxLayout="column" class="form-field-outer">
                     <mat-checkbox formControlName="isActive">Active</mat-checkbox>
                     <mat-checkbox formControlName="isDeleted">Blocked</mat-checkbox>
-                    <p *ngIf="user.id"><span>Registration date:</span> <i>{{user.settings.registrationDate | date:"dd MMMM, yyyy 'at' HH:mm" }}</i></p> 
-                    <p *ngIf="user.id"><span>Last joined date:</span> <i>{{user.settings.joinedDate | date:"dd MMMM, yyyy 'at' HH:mm" }}</i> </p>     
+                    <p *ngIf="user.id"><span>Registration date:</span>
+                        <i>{{user.settings.registrationDate | date:"dd MMMM, yyyy 'at' HH:mm" }}</i></p>
+                    <p *ngIf="user.id"><span>Last joined date:</span>
+                        <i>{{user.settings.joinedDate | date:"dd MMMM, yyyy 'at' HH:mm" }}</i> </p>
+                </div>
+            </mat-tab>
+            <mat-tab label="position">
+                <div fxLayout="column" class="form-field-outer">
+                    <mat-select placeholder="Select Role" formControlName="position">
+                        <mat-option *ngFor="let role of userRole ; let i = index" [value]="role._id">{{role?.user_role}}
+                        </mat-option>
+                    </mat-select>
                 </div>
             </mat-tab>
         </mat-tab-group>
     </form>
 </div>
-<div mat-dialog-actions fxLayout="row" fxLayoutAlign="space-between center">
-    <button mat-raised-button color="primary" [mat-dialog-close]="form.value" [disabled]="!form.valid"><span *ngIf="!user.id">Save</span><span *ngIf="user.id">Update</span></button>
+
+<mat-card-content *ngIf="role">
+    <form [formGroup]="roleForm" fxLayout="row wrap" class="user-form">
+        <div fxLayout="column" class="form-field-outer" style="width: 900px; height: 500px;">
+            <mat-grid-list cols="3" rowHeight="5:1">
+                    <mat-form-field style="width: 33%;">
+                        <input matInput placeholder="Role Name" formControlName="user_role">
+                    </mat-form-field>
+                    <mat-form-field style="width: 33%;">
+                        <input matInput placeholder="Function" formControlName="function">
+                    </mat-form-field>
+                    <mat-select placeholder="Select Parents" formControlName="parent_id" style="width: 33%;">
+                        <mat-option *ngFor="let role of userRole ; let i = index" [value]="role._id">{{role?.user_role}}
+                        </mat-option>
+                    </mat-select>
+            </mat-grid-list>
+            <mat-grid-list cols="1" rowHeight="15:1" *ngIf="user_active">
+                <mat-grid-tile>
+                    <h5 style="text-align: left;">Users</h5>
+                    <mat-checkbox [(ngModel)]="can_access_user_list" [ngModelOptions]="{standalone: true}">User view
+                    </mat-checkbox>
+                    <mat-checkbox [(ngModel)]="can_access_role" [ngModelOptions]="{standalone: true}">User Add
+                    </mat-checkbox>
+                    <mat-checkbox [(ngModel)]="can_access_role" [ngModelOptions]="{standalone: true}">User Edit
+                    </mat-checkbox>
+                    <mat-checkbox [(ngModel)]="can_access_role" [ngModelOptions]="{standalone: true}">User Delete
+                    </mat-checkbox>
+                </mat-grid-tile>
+            </mat-grid-list>
+            <hr>
+            <mat-grid-list cols="1" rowHeight="15:1" *ngIf="user_active">
+                <mat-grid-tile>
+                    <h5 style="text-align: left;">User Role</h5>
+                    <mat-checkbox [(ngModel)]="can_access_user_list" [ngModelOptions]="{standalone: true}">User Role View
+                    </mat-checkbox>
+                    <mat-checkbox [(ngModel)]="can_access_role" [ngModelOptions]="{standalone: true}">User Role Add
+                    </mat-checkbox>
+                    <mat-checkbox [(ngModel)]="can_access_role" [ngModelOptions]="{standalone: true}">User Role Edit
+                    </mat-checkbox>
+                    <mat-checkbox [(ngModel)]="can_access_role" [ngModelOptions]="{standalone: true}">User Role Delete
+                    </mat-checkbox>
+                </mat-grid-tile>
+            </mat-grid-list>
+            <hr>
+            <mat-grid-list cols="1" rowHeight="15:1" *ngIf="user_active">
+                <mat-grid-tile>
+                    <h5 style="text-align: left;">Users Activeti</h5>
+                    <mat-checkbox [(ngModel)]="can_access_user_list" [ngModelOptions]="{standalone: true}">User
+                    </mat-checkbox>
+                    <mat-checkbox [(ngModel)]="can_access_role" [ngModelOptions]="{standalone: true}">User Role
+                    </mat-checkbox>
+                </mat-grid-tile>
+            </mat-grid-list>
+            <hr>
+            <mat-grid-list cols="1" rowHeight="15:1" *ngIf="user_active">
+                <mat-grid-tile>
+                    <h5 style="text-align: left;">Enquiry</h5>
+                    <mat-checkbox [(ngModel)]="can_access_user_list" [ngModelOptions]="{standalone: true}">Enquiry view
+                    </mat-checkbox>
+                    <mat-checkbox [(ngModel)]="can_access_role" [ngModelOptions]="{standalone: true}">Enquiry Add
+                    </mat-checkbox>
+                    <mat-checkbox [(ngModel)]="can_access_role" [ngModelOptions]="{standalone: true}">Enquiry Edit
+                    </mat-checkbox>
+                    <mat-checkbox [(ngModel)]="can_access_role" [ngModelOptions]="{standalone: true}">Enquiry Delete
+                    </mat-checkbox>
+                </mat-grid-tile>
+            </mat-grid-list>
+            <hr>
+            <mat-grid-list cols="1" rowHeight="15:1" *ngIf="user_active">
+                <mat-grid-tile>
+                    <h5 style="text-align: left;">Lead</h5>
+                    <mat-checkbox [(ngModel)]="can_access_user_list" [ngModelOptions]="{standalone: true}">Lead View
+                    </mat-checkbox>
+                </mat-grid-tile>
+            </mat-grid-list>
+            <hr>
+            <mat-grid-list cols="1" rowHeight="15:1" *ngIf="user_active">
+                <mat-grid-tile>
+                    <h5 style="text-align: left;">Client</h5>
+                    <mat-checkbox [(ngModel)]="can_access_user_list" [ngModelOptions]="{standalone: true}">Client View
+                    </mat-checkbox>
+                </mat-grid-tile>
+            </mat-grid-list>
+            <hr>
+            <mat-grid-list cols="1" rowHeight="15:1" *ngIf="user_active">
+                <mat-grid-tile>
+                    <h5 style="text-align: left;">Country</h5>
+                    <mat-checkbox [(ngModel)]="can_access_user_list" [ngModelOptions]="{standalone: true}">Country view
+                    </mat-checkbox>
+                    <mat-checkbox [(ngModel)]="can_access_role" [ngModelOptions]="{standalone: true}">Country Add
+                    </mat-checkbox>
+                    <mat-checkbox [(ngModel)]="can_access_role" [ngModelOptions]="{standalone: true}">Country Edit
+                    </mat-checkbox>
+                    <mat-checkbox [(ngModel)]="can_access_role" [ngModelOptions]="{standalone: true}">Country Delete
+                    </mat-checkbox>
+                </mat-grid-tile>
+            </mat-grid-list>
+            <hr>
+            <mat-grid-list cols="1" rowHeight="15:1" *ngIf="user_active">
+                <mat-grid-tile>
+                    <h5 style="text-align: left;">Region</h5>
+                    <mat-checkbox [(ngModel)]="can_access_user_list" [ngModelOptions]="{standalone: true}">Region view
+                    </mat-checkbox>
+                    <mat-checkbox [(ngModel)]="can_access_role" [ngModelOptions]="{standalone: true}">Region Add
+                    </mat-checkbox>
+                    <mat-checkbox [(ngModel)]="can_access_role" [ngModelOptions]="{standalone: true}">Region Edit
+                    </mat-checkbox>
+                    <mat-checkbox [(ngModel)]="can_access_role" [ngModelOptions]="{standalone: true}">Region Delete
+                    </mat-checkbox>
+                </mat-grid-tile>
+            </mat-grid-list>
+            <hr>
+            <mat-grid-list cols="1" rowHeight="15:1" *ngIf="user_active">
+                <mat-grid-tile>
+                    <h5 style="text-align: left;">City</h5>
+                    <mat-checkbox [(ngModel)]="can_access_user_list" [ngModelOptions]="{standalone: true}">City view
+                    </mat-checkbox>
+                    <mat-checkbox [(ngModel)]="can_access_role" [ngModelOptions]="{standalone: true}">City Add
+                    </mat-checkbox>
+                    <mat-checkbox [(ngModel)]="can_access_role" [ngModelOptions]="{standalone: true}">City Edit
+                    </mat-checkbox>
+                    <mat-checkbox [(ngModel)]="can_access_role" [ngModelOptions]="{standalone: true}">City Delete
+                    </mat-checkbox>
+                </mat-grid-tile>
+            </mat-grid-list>
+            <hr>
+            <mat-grid-list cols="1" rowHeight="15:1" *ngIf="user_active">
+                <mat-grid-tile>
+                    <h5 style="text-align: left;">Users</h5>
+                    <mat-checkbox [(ngModel)]="can_access_user_list" [ngModelOptions]="{standalone: true}">User
+                    </mat-checkbox>
+                    <mat-checkbox [(ngModel)]="can_access_role" [ngModelOptions]="{standalone: true}">User Role
+                    </mat-checkbox>
+                </mat-grid-tile>
+            </mat-grid-list>
+            <hr>
+            <mat-grid-list cols="1" rowHeight="15:1" *ngIf="user_active">
+                <mat-grid-tile>
+                    <h5 style="text-align: left;">Users</h5>
+                    <mat-checkbox [(ngModel)]="can_access_user_list" [ngModelOptions]="{standalone: true}">User
+                    </mat-checkbox>
+                    <mat-checkbox [(ngModel)]="can_access_role" [ngModelOptions]="{standalone: true}">User Role
+                    </mat-checkbox>
+                </mat-grid-tile>
+            </mat-grid-list>
+            <hr>
+
+            <mat-grid-list cols="1" rowHeight="15:1" *ngIf="enquiry">
+                <mat-grid-tile>
+                    <h5 style="text-align: left;">Lead Management</h5>
+                    <mat-checkbox [(ngModel)]="can_access_enquiry" [ngModelOptions]="{standalone: true}">Enquiry
+                    </mat-checkbox>
+                    <mat-checkbox [(ngModel)]="can_access_lead" [ngModelOptions]="{standalone: true}">Lead
+                    </mat-checkbox>
+                    <mat-checkbox [(ngModel)]="can_access_client" [ngModelOptions]="{standalone: true}">Client
+                    </mat-checkbox>
+                    <mat-checkbox [(ngModel)]="can_access_task" [ngModelOptions]="{standalone: true}">Task
+                    </mat-checkbox>
+                </mat-grid-tile>
+            </mat-grid-list>
+            <hr>
+            <mat-grid-list cols="1" rowHeight="15:1">
+                <mat-grid-tile>
+                    <h5>Locations</h5>
+                    <mat-checkbox [(ngModel)]="can_access_country" [ngModelOptions]="{standalone: true}">Country
+                    </mat-checkbox>
+                    <mat-checkbox [(ngModel)]="can_access_region" [ngModelOptions]="{standalone: true}">Region
+                    </mat-checkbox>
+                    <mat-checkbox [(ngModel)]="can_access_city" [ngModelOptions]="{standalone: true}">City
+                    </mat-checkbox>
+                </mat-grid-tile>
+            </mat-grid-list>
+            <!-- <mat-tab-group>
+                <mat-tab label="Users" class="mat-tab-body-content"> 
+                    <mat-checkbox [(ngModel)]="can_access_user_list" [ngModelOptions]="{standalone: true}">User
+                    </mat-checkbox>   
+                    <mat-checkbox [(ngModel)]="can_access_role" [ngModelOptions]="{standalone: true}">User Role
+                    </mat-checkbox> 
+                </mat-tab>
+                <mat-tab label="Lead Management">
+                    <mat-checkbox [(ngModel)]="can_access_enquiry" [ngModelOptions]="{standalone: true}">Enquiry
+                    </mat-checkbox>
+                    <mat-checkbox [(ngModel)]="can_access_lead" [ngModelOptions]="{standalone: true}">Lead
+                    </mat-checkbox>
+                    <mat-checkbox [(ngModel)]="can_access_client" [ngModelOptions]="{standalone: true}">Client
+                    </mat-checkbox>
+                    <mat-checkbox [(ngModel)]="can_access_task" [ngModelOptions]="{standalone: true}">Task
+                    </mat-checkbox>
+                    
+                    </mat-tab>
+                <mat-tab label="Locations"> 
+                    <mat-checkbox [(ngModel)]="can_access_country" [ngModelOptions]="{standalone: true}">Country
+                    </mat-checkbox>
+                    <mat-checkbox [(ngModel)]="can_access_region" [ngModelOptions]="{standalone: true}">Region
+                    </mat-checkbox>
+                    <mat-checkbox [(ngModel)]="can_access_city" [ngModelOptions]="{standalone: true}">City
+                    </mat-checkbox>
+                   
+                </mat-tab>
+              </mat-tab-group> -->
+              <div mat-dialog-actions fxLayout="row" fxLayoutAlign="space-between center" *ngIf="role">
+                <button mat-raised-button color="primary" [mat-dialog-close]="roleForm.value" [disabled]="!roleForm.valid"
+                    (click)="user_role()"><span *ngIf="editing">Update</span> <span *ngIf="!editing">Save</span></button>
+                <button mat-raised-button color="warn" (click)="close()">Cancel</button>
+            </div>
+        </div>
+    </form>
+</mat-card-content>
+<!-- <div mat-dialog-content *ngIf="city">
+  <form [formGroup]="roleForm" fxLayout="row wrap" class="user-form">
+    <div fxLayout="column" class="form-field-outer">
+      <div style="width: 500px;">
+        <mat-form-field style="width: 100%;">
+          <input matInput placeholder="City name" formControlName="city_name">
+        </mat-form-field>
+        <mat-form-field style="width: 100%;">
+          <mat-select placeholder="Select Region" formControlName="region">
+            <mat-option *ngFor="let region of allregion ; let i = index" [value]="region._id">{{region.region_name}}</mat-option>
+          </mat-select>
+        </mat-form-field>
+      </div>
+    </div>
+  </form>
+</div> -->
+
+
+<div mat-dialog-actions fxLayout="row" fxLayoutAlign="space-between center" *ngIf="!role">
+    <button mat-raised-button color="primary" [mat-dialog-close]="form.value" [disabled]="!form.valid"
+        (click)="user_list()"><span *ngIf="!user.id">Save</span><span *ngIf="user.id">Update</span></button>
     <button mat-raised-button color="warn" (click)="close()">Cancel</button>
 </div>

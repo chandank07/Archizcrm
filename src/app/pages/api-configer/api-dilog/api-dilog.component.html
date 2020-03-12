@@ -1,0 +1,26 @@
+<h1 mat-dialog-title>Add Stage</h1>
+
+<div mat-dialog-content style="width: 500px;">
+  <form [formGroup]="desprictionform" fxLayout="row wrap" class="user-form">
+    <div fxLayout="column" class="form-field-outer">
+      <div fxFlex="100">
+        <mat-form-field style="width: 100%;">
+          <input matInput formControlName="despriction" placeholder="Intergration Name">
+        </mat-form-field>
+        <mat-form-field style="width: 100%;">
+          <mat-select placeholder="Assing to" formControlName="stage">
+            <mat-option *ngFor="let user of Alluser ; let i = index" [value]="user._id">{{user?.profile?.name}} {{user?.profile?.surname}}</mat-option>
+          </mat-select>
+        </mat-form-field>
+      </div>
+    </div>
+  </form>
+</div>
+<!-- <button type="button" mat-raised-button (click)="fileInput.click()" *ngIf="csv">Choose File</button>
+<input hidden (change)="onFileSelected()" #fileInput type="file" id="file" *ngIf="csv"> -->
+
+<div mat-dialog-actions fxLayout="row" fxLayoutAlign="space-between center">
+  <button mat-raised-button color="primary" type="button" (click)="submit()">Save</button>
+  <!-- <button mat-raised-button color="primary" type="button" (click)="Uplode()" *ngIf="satege_edit">Uplode</button> -->
+  <button mat-raised-button color="warn" (click)="close()">Cancel</button>
+</div>
