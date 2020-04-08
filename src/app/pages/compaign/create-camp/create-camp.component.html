@@ -1,4 +1,4 @@
-<div class="mat-elevation-z8" style="margin-left: 5%; margin-right: 5%;" *ngIf="!addform">
+<div class="mat-elevation-z8" style="margin-left: 5%; margin-right: 5%;" *ngIf="addform">
   <div fxLayout="row" fxLayoutAlign="space-between center" class="flex-p">
     <div fxLayout="row">
       <mat-button-toggle-group #controls="matButtonToggleGroup" appearance="legacy">
@@ -13,14 +13,30 @@
 
     <!-- Position Column -->
     <ng-container matColumnDef="source_name">
-      <th mat-header-cell *matHeaderCellDef style="width: 30%;"> Caompaing Name </th>
-      <td mat-cell *matCellDef="let element"> {{element?.caompaing_name}} </td>
+      <th mat-header-cell *matHeaderCellDef style="width: 20%;"> Team Name </th>
+      <td mat-cell *matCellDef="let element"> {{element?.team_mangement?.team_name}} </td>
     </ng-container>
-
+    <ng-container matColumnDef="Count">
+      <th mat-header-cell *matHeaderCellDef style="width: 20%;"> Count </th>
+      <td mat-cell *matCellDef="let element"><b>{{element?.data_source?.count}}</b> </td>
+    </ng-container>
     <!-- Symbol Column -->
     <ng-container matColumnDef="company">
-      <th mat-header-cell *matHeaderCellDef style="width: 20%;"> Company </th>
-      <td mat-cell *matCellDef="let element"><b>{{element?.company?.company_id}}</b> </td>
+      <th mat-header-cell *matHeaderCellDef style="width: 20%;"> Source Name </th>
+      <td mat-cell *matCellDef="let element"><b>{{element?.data_source?.source_name}}</b> </td>
+    </ng-container>
+
+    <ng-container matColumnDef="memeber">
+      <th mat-header-cell *matHeaderCellDef style="width: 20%;"> Memeber </th>
+      <td mat-cell *matCellDef="let element"> 
+      <ul *ngFor="let item of element.team_mangement.selectd_member; let i = index" [attr.data-index]="i">
+        <li>{{item?.id?.profile?.name}} {{item?.id?.profile?.surname}}</li>
+      </ul>
+      </td>
+    </ng-container>
+    <ng-container matColumnDef="camp_list">
+      <th mat-header-cell *matHeaderCellDef style="width: 20%;"> Caompaing Name </th>
+      <td mat-cell *matCellDef="let element"> {{element?.camp_list?.caompaing_name}} </td>
     </ng-container>
 
     <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
@@ -30,48 +46,59 @@
   <mat-paginator [pageSizeOptions]="[5, 10, 20]" showFirstLastButtons></mat-paginator>
 </div>
 
-<div class="mat-elevation-z8" style="margin-left: 20%; margin-right: 20%;" *ngIf="addform">
-  <h2 style="text-align: center; margin-top: 2%;">Assing Compaing</h2>
+<div class="mat-elevation-z8" style="margin-left: 20%; margin-right: 20%; width: 820px;" *ngIf="!addform">
   <div fxLayout="row" fxLayoutAlign="space-between center" class="flex-p">
+    <div fxLayout="row">
+      <mat-button-toggle-group #controls="matButtonToggleGroup" appearance="legacy">
+        <mat-button-toggle value="add" (click)="openSmsDialog(null)" matTooltip="Add Compaing List">
+          View Compaing List
+          <mat-icon style="color: rgb(7, 7, 117);">visibility</mat-icon>
+        </mat-button-toggle>
+      </mat-button-toggle-group>
+      <h2 style="text-align: center; margin-left: 150px;">Assing Compaing</h2>
+    </div>
   </div>
   <div fxLayout="row" fxLayoutAlign="space-between center" class="flex-p">
     <mat-card>
-  <div mat-dialog-content style="width: 830px;">
-    <form [formGroup]="listForm" fxLayout="row wrap" class="user-form">
-      <div fxLayout="column" class="form-field-outer">
-        <div fxFlex="100">
-          <mat-form-field style="width: 50%;">
-            <mat-label>Team Manegment</mat-label>
-              <mat-select placeholder="Team Manegment" formControlName="team_mangement">
-                <mat-option value="normal" *ngFor="let data of team ; let i = index" [value]="data._id">{{data?.team_name}}</mat-option>
-              </mat-select>
-          </mat-form-field>
-          <mat-form-field style="width: 50%;">
-            <mat-label>Data Source</mat-label>
-              <mat-select placeholder="Data Source" formControlName="data_source">
-                <mat-option value="normal" *ngFor="let data of data_source ; let i = index" [value]="data._id">{{data?.source_name}}</mat-option>
-              </mat-select>
-          </mat-form-field>
-        </div>
-        <div fxFlex="100">
-          <mat-form-field style="width: 50%;">
-            <mat-label>Compaing List</mat-label>
-              <mat-select placeholder="Compaing List" formControlName="camp_list">
-                <mat-option value="normal" *ngFor="let data of datasource ; let i = index" [value]="data._id">{{data?.caompaing_name}}</mat-option>
-              </mat-select>
-          </mat-form-field>
-          <!-- <mat-form-field style="width: 50%;">
+      <div mat-dialog-content style="width: 830px;">
+        <form [formGroup]="listForm" fxLayout="row wrap" class="user-form">
+          <div fxLayout="column" class="form-field-outer">
+            <div fxFlex="100">
+              <mat-form-field style="width: 45%;">
+                <mat-label>Team Manegment</mat-label>
+                <mat-select placeholder="Team Manegment" formControlName="team_mangement">
+                  <mat-option value="normal" *ngFor="let data of team ; let i = index" [value]="data._id">
+                    {{data?.team_name}}</mat-option>
+                </mat-select>
+              </mat-form-field>
+              <mat-form-field style="width: 45%;">
+                <mat-label>Data Source</mat-label>
+                <mat-select placeholder="Data Source" formControlName="data_source">
+                  <mat-option value="normal" *ngFor="let data of data_source ; let i = index" [value]="data._id">
+                    {{data?.source_name}}</mat-option>
+                </mat-select>
+              </mat-form-field>
+            </div>
+            <div fxFlex="100">
+              <mat-form-field style="width: 45%;">
+                <mat-label>Compaing List</mat-label>
+                <mat-select placeholder="Compaing List" formControlName="camp_list">
+                  <mat-option value="normal" *ngFor="let data of camp_list ; let i = index" [value]="data._id">
+                    {{data?.caompaing_name}}</mat-option>
+                </mat-select>
+              </mat-form-field>
+              <!-- <mat-form-field style="width: 50%;">
             <mat-label>Caompaing Name</mat-label>
             <input matInput formControlName="caompaing_name" placeholder="caompaing_name">
           </mat-form-field> -->
-        </div>
+            </div>
+          </div>
+        </form>
       </div>
-    </form>
-  </div>
-  <div mat-dialog-actions fxLayout="row" fxLayoutAlign="space-between center">
-    <button mat-raised-button color="primary" type="button" (click)="submit()">Save</button>
-    <button mat-raised-button color="warn" (click)="openSmsDialog()">Cancel</button>
-  </div>
-  </mat-card>
+      <div mat-dialog-actions fxLayout="row" fxLayoutAlign="space-between center">
+        <button mat-raised-button color="primary" type="button" (click)="submit()">Save</button>
+        <button mat-raised-button color="warn" (click)="openSmsDialog()">Cancel</button>
+      </div>
+    </mat-card>
   </div>
 </div>

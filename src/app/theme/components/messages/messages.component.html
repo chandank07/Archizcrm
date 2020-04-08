@@ -10,14 +10,15 @@
                 </ng-template>
                 <mat-card class="content" perfectScrollbar>
                   <div fxLayout="column" fxLayoutAlign="none">
-                      <button mat-button *ngFor="let message of messages">
-                          <img src="{{ ( message.image || (message.name | profilePicture)) }}" width="50">   
+                      <button mat-button *ngFor="let message of newarr | slice:0:6;">
+                          <!-- <img src="{{ ( message.image || (message.name | profilePicture)) }}" width="50">    -->
+                          <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn%3AANd9GcSTRJxncjV2A5ciZwN4vVYyS-kX0PF88PtAH2dppQVnU-nx9O7B&usqp=CAU" width="45">
                           <div fxLayout="column" fxLayoutAlign="none" class="w-100">
                               <div fxLayout="row" fxLayoutAlign="space-between start">
-                                  <span class="name">{{message.name}}</span>
-                                  <span class="info"><mat-icon>access_time</mat-icon> {{message.time}}</span>
+                                  <span class="name">{{message?.name}}</span>
+                                  <span class="info"><mat-icon>access_time</mat-icon> {{message.date_time | date}}</span>
                               </div>
-                              <span class="text muted-text">{{message.text}}</span>
+                              <span class="text muted-text">{{message.message}}</span>
                           </div>
                       </button>
                     </div>             
@@ -52,14 +53,14 @@
                 </ng-template>
                 <mat-card class="content" perfectScrollbar>
                   <div fxLayout="column" fxLayoutAlign="none">
-                      <button mat-button *ngFor="let meeting of meetings">  
+                      <button mat-button *ngFor="let meeting of newarry2">  
                           <div fxLayout="column" fxLayoutAlign="center center" class="row-1">
-                              <span class="name">{{meeting.day}}</span>
-                              <span class="name">{{meeting.month}}</span>
+                              <span class="name">{{meeting?.date_time | date:'dd'}}</span>
+                              <span class="name">{{meeting?.date_time | date: 'LLL'}}</span>
                           </div>
                           <div fxLayout="column" fxLayoutAlign="none">
-                              <span class="name">{{meeting.title}}</span>
-                              <span class="text muted-text">{{meeting.text}}</span>
+                              <span class="name">{{user_name}}</span>
+                              <span class="text muted-text">{{meeting?.message}}</span>
                           </div>
                       </button>
                     </div>             

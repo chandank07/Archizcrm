@@ -2,11 +2,11 @@
   <div fxFlex="100" fxFlex.sm="35" fxFlex.md="30" fxFlex.lg="25" class="flex-p">
     <mat-card class="scrol">
       <img mat-card-image src="assets/img/users/user-orig.jpg" alt="Photo 1"
-      style="border-radius: 50%; height: 100px; width: 110px; margin-left: 30%;">
+      style="border-radius: 50%; height: 80px; width: 100px; margin-left: 35%;">
       <mat-card-content>
-        <h2 class="text-center">{{data?.fist_name | titlecase}} {{data?.last_name| titlecase}}</h2>
-        <h3 class="text-center primary-color">{{data?.mobile_no}}</h3>
-        <h3 class="text-center primary-color">{{data?.email}}</h3>
+        <h4 class="text-center"><strong>{{data?.fist_name | titlecase}} {{data?.last_name| titlecase}}</strong></h4>
+        <h4 class="text-center primary-color">{{data?.mobile_no}}</h4>
+        <h4 class="text-center primary-color">{{data?.email}}</h4>
         <!-- <h4 class="muted-text py-1">About:</h4>
           <p class="text-justify">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
           <div fxLayoutAlign="end center">
@@ -18,7 +18,7 @@
       <mat-divider></mat-divider>
 
       <mat-card-actions class="text-center py-1">
-        <button mat-mini-fab color="primary" class="m-1" matTooltip="Send message" [routerLink]="['/Lead/sms', id]">
+        <button mat-mini-fab color="primary" class="m-1" matTooltip="Send message" (click)="openemailDialog()">
           <i class="material-icons">
             message
           </i>
@@ -29,6 +29,11 @@
         <button mat-mini-fab color="primary" class="m-1" matTooltip="Send Email" (click)="openSmsDialog(null)">
           <i class="material-icons">
             email
+          </i>
+        </button>
+        <button mat-mini-fab color="primary" class="m-1" matTooltip="Set Remainder" (click)="remainder(null)">
+          <i class="material-icons">
+            alarm_add
           </i>
         </button>
         <button mat-mini-fab color="primary" class="m-1" matTooltip="Add Task" (click)="openScheduleDialog(null)">
@@ -46,6 +51,11 @@
             thumb_down
           </i>
         </button>
+        <!-- <button mat-mini-fab color="primary" class="m-1" matTooltip="Drop Enquiry" label="Timeline">
+          <i class="material-icons">
+            thumb_down
+          </i>
+        </button> -->
       </mat-card-actions>
       
       <mat-divider></mat-divider>
@@ -76,9 +86,9 @@
         </div>
       </div> -->
       <h4 style="text-align: center;">Assign Lead Stage</h4>
-      <div class="py-1">
+      <div class="py-1" style="margin-top: -10px;">
         <form [formGroup]="commentform" (ngSubmit)="commentAdd()" fxLayout="row wrap" class="user-form p-1">
-          <div fxFlex="100" class="p-1">
+          <div fxFlex="100" class="p-1" style="font-size: 12px">
             <mat-form-field appearance="outline">
               <mat-label>Stage</mat-label>
               <mat-select placeholder="Stage" formControlName="stage">
@@ -87,7 +97,7 @@
               </mat-select>
             </mat-form-field>
           </div>
-          <div fxFlex="100" class="p-1">
+          <div fxFlex="100" class="p-1" style="font-size: 12px">
             <mat-form-field appearance="outline">
               <mat-label>Description</mat-label>
               <mat-select placeholder="Enquiry Type" formControlName="despriction">
@@ -95,7 +105,7 @@
               </mat-select>
             </mat-form-field>
           </div>
-          <div fxFlex="100" class="p-1">
+          <div fxFlex="100" class="p-1" style="font-size: 15px">
             <mat-form-field appearance="outline">
               <mat-label>Comment</mat-label>
               <textarea matInput placeholder="Comment" formControlName="comment"></textarea>
@@ -117,14 +127,13 @@
             <h2>Edit Lead:</h2>
           </div>
 
-          <form [formGroup]="form" (ngSubmit)="save()" fxLayout="row wrap" class="user-form p-1">
+          <form [formGroup]="form" (ngSubmit)="save()" fxLayout="row wrap" class="user-form p-1" style="font-size: 12px">
 
             <div fxFlex="100" fxFlex.gt-sm="33.3" fxFlex.sm="50" class="p-1">
               <mat-form-field appearance="outline">
                 <mat-label>Enquiry Type</mat-label>
                 <mat-select placeholder="Enquiry Type" formControlName="enquiry_type">
-                  <mat-option value="enquiry_type1">enquiry type1</mat-option>
-                  <mat-option value="enquiry_type2">enquiry type2</mat-option>
+                  <mat-option *ngFor="let type of enquiry_type ; let i = index" [value]="type._id">{{type?.enquiry_type}}</mat-option>
                 </mat-select>
               </mat-form-field>
             </div>
@@ -133,8 +142,7 @@
               <mat-form-field appearance="outline">
                 <mat-label>Customer type</mat-label>
                 <mat-select placeholder="Customer type" formControlName="customer_type">
-                  <mat-option value="type1">Customer type1</mat-option>
-                  <mat-option value="type2">Customer type2</mat-option>
+                  <mat-option *ngFor="let type of customer_type ; let i = index" [value]="type._id">{{type?.customer_type}}</mat-option>
                 </mat-select>
               </mat-form-field>
             </div>
@@ -152,8 +160,7 @@
               <mat-form-field appearance="outline">
                 <mat-label>Source</mat-label>
                 <mat-select placeholder="Source" formControlName="source">
-                  <mat-option value="source_data1">facebook</mat-option>
-                  <mat-option value="source_data2">Email</mat-option>
+                  <mat-option *ngFor="let type of source ; let i = index" [value]="type._id">{{type?.source}}</mat-option>
                 </mat-select>
               </mat-form-field>
             </div>
@@ -217,25 +224,36 @@
             </div>
             <div fxFlex="100" fxFlex.gt-sm="50" fxFlex.sm="50" class="p-1">
               <mat-form-field appearance="outline">
+                <mat-label>Product</mat-label>
+                <mat-select placeholder="Product" formControlName="product" style="height: 20px;">
+                  <mat-option *ngFor="let city of product ; let i = index" [value]="city._id">{{city?.product_name}}
+                  </mat-option>
+                </mat-select>
+              </mat-form-field>
+            </div>
+            <div fxFlex="100" fxFlex.gt-sm="50" fxFlex.sm="50" class="p-1">
+              <mat-form-field appearance="outline">
+                <mat-label>Remark</mat-label>
+                <input matInput placeholder="Remark" formControlName="remark">
+              </mat-form-field>
+            </div>
+            <div fxFlex="100" fxFlex.gt-sm="50" fxFlex.sm="50" class="p-1">
+              <mat-form-field appearance="outline">
                 <mat-label>Address</mat-label>
                 <textarea matInput placeholder="Address" formControlName="address"></textarea>
               </mat-form-field>
             </div>
             <div fxFlex="100" fxFlex.gt-sm="50" fxFlex.sm="50" class="p-1">
               <mat-form-field appearance="outline">
-                <mat-label>Requrments/Products</mat-label>
-                <textarea matInput placeholder="Requrments/Products" formControlName="requrment_product"></textarea>
+                <mat-label>Requrments</mat-label>
+                <textarea matInput placeholder="Requrments" formControlName="requrment_product"></textarea>
               </mat-form-field>
             </div>
-
             <div fxFlex="100" class="p-1 text-center">
-              <button mat-raised-button color="primary" class="uppercase mx-1" type="submit">Save</button>
+              <button mat-raised-button color="primary" class="uppercase mx-1" type="submit">Update</button>
             </div>
-
           </form>
-
         </mat-card>
-
       </mat-tab>
       <mat-tab label="Timeline">
         <ul id='timeline'>
@@ -318,9 +336,18 @@
               <div class="bullet pink"></div>
               <div class="time">{{com?.createdAt | date:'shortTime'}}</div>
               <div class="desc">
-                <h3 style="margin-right: 2px;" *ngIf="!comment[i]?.isEditable">{{com?.comment | slice:0:30}}<samp style="color: blue;"  matTooltip="{{com?.comment}}" (click)="read_more(i ,com)">  ..More</samp></h3>
-                <h3 style="margin-right: 2px;" (click)="read_more(i)" *ngIf="comment[i]?.isEditable">{{com?.comment}}<samp style="color: rgb(255, 187, 0);"> ..Less</samp></h3>
+                <!-- <h3 style="margin-right: 2px;" *ngIf="!comment[i]?.isEditable" style="color: purple;">{{com?.stage?.stage_name}}</h3>
+                <h4 style="margin-right: 2px;" *ngIf="!comment[i]?.isEditable">{{com?.despriction?.despriction}}</h4> -->
+                <div class="bubble left" (dblclick)="comment_delete(i)">
+                  <h3 style="margin-right: 2px;" *ngIf="!comment[i]?.isEditable" style="color: rgb(251, 248, 251);">{{com?.stage?.stage_name}}</h3>
+                  <h4 style="margin-right: 2px;" *ngIf="!comment[i]?.isEditable" style="color: rgb(251, 255, 17);">{{com?.despriction?.despriction}}</h4>
+                  <p *ngIf="!comment[i]?.isEditable">{{com?.comment | slice:0:30}}<samp style="color: blue;"  matTooltip="{{com?.comment}}" (click)="read_more(i ,com)">  ..More</samp></p>
+                  <p *ngIf="comment[i]?.isEditable" (click)="read_more(i)" style="color: white;">{{com?.comment}}<samp style="color: rgb(160, 118, 4);"> ..Less</samp></p>
+                </div>
+                <!-- <h3 style="margin-right: 2px;" *ngIf="!comment[i]?.isEditable">{{com?.comment | slice:0:30}}<samp style="color: blue;"  matTooltip="{{com?.comment}}" (click)="read_more(i ,com)">  ..More</samp></h3> -->
+                <!-- <h3 style="margin-right: 2px;" (click)="read_more(i)" *ngIf="comment[i]?.isEditable">{{com?.comment}}<samp style="color: rgb(255, 187, 0);"> ..Less</samp></h3> -->
                 <h4>{{com?.createdAt | date}}</h4>
+                <h3 style="color: rgb(170, 126, 7);"><i>{{com?.user_id?.profile?.name}} {{com?.user_id?.profile?.surname}}</i></h3>
               </div>
             </li>
           </ul>
@@ -329,3 +356,4 @@
     </mat-card>
   </div>
 </div>
+<ngx-alerts></ngx-alerts>

@@ -14,6 +14,9 @@ import { UsersroleComponent } from './usersrole/usersrole.component';
 import { UsersService } from './users.service';
 import { UserActivityComponent } from './user-activity/user-activity.component';
 import { AlertModule } from 'ngx-alerts';
+import { SocketService } from '../../socket.service';
+import { CompanyService } from '../../pages/companys/company.service'; 
+
 
 export const routes = [
   { path: '', component: UsersComponent, pathMatch: 'full' },
@@ -33,7 +36,7 @@ export const routes = [
     NgxPaginationModule,
     AlertModule,
     SharedModule,
-    PipesModule    
+    PipesModule,  
   ],
   declarations: [
     UsersComponent,
@@ -44,6 +47,6 @@ export const routes = [
   entryComponents:[
     UserDialogComponent
   ],
-  providers: [UsersService],
+  providers: [UsersService ,SocketService,CompanyService],
 })
 export class UsersModule { }

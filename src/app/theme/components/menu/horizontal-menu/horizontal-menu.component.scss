@@ -1,32 +1,133 @@
-@import "../../../styles/variables";
-.horizontal-menu-item{
+// @import "../../../styles/variables";
+// .horizontal-menu-item{
+//     position: relative;
+//     .mat-button{
+//         height: $horizontal-menu-height;
+//         font-weight: 400;
+//     }
+//     .horizontal-menu-icon{
+//         margin-right: 5px;
+//     }
+//     .horizontal-sub-menu{
+//         position: absolute;
+//         width: 190px;
+//         max-height: 0;
+//         overflow: hidden;
+//         -webkit-transition: max-height 0.25s ease-out;  
+//         -moz-transition: max-height 0.25s ease-out;  
+//         transition: max-height 0.25s ease-out;    
+//         .mat-button{
+//             width: 100%;
+//             height: 36px; 
+//         }
+//     }
+// }
+// .horizontal-menu-item:hover > .horizontal-sub-menu{
+//     max-height: 500px;
+//     overflow: visible;
+// }
+// .horizontal-sub-menu .horizontal-sub-menu{
+//     left: 100%;
+//     top: 0;
+// }
+
+// a {
+//     text-decoration: none;
+//   }
+  
+//   nav {
+//       font-family: monospace;
+//   }
+  
+//   ul {
+//     // background: darkorange;
+//       list-style: none;
+//       margin: 0;
+//       padding-left: 0;
+//   }
+  
+//   li {
+//       color: #fff;
+//     background: rgb(64, 3, 121);
+//       display: block;
+//       float: left;
+//       padding: 1rem;
+//       position: relative;
+//       text-decoration: none;
+//     transition-duration: 0.5s;
+//   }
+    
+//   li a {
+//     color: #fff;
+//   }
+  
+//   li:hover {
+//       background: rgb(54, 2, 102);
+//       cursor: pointer;
+//   }
+  
+//   ul li ul {
+//       background: rgb(5, 3, 117);
+//       visibility: hidden;
+//     opacity: 0;
+//     min-width: 5rem;
+//       position: absolute;
+//     transition: all 0.5s ease;
+//     margin-top: 1rem;
+//       left: 0;
+//     display: none;
+//   }
+  
+//   ul li:hover > ul,
+//   ul li ul:hover {
+//     visibility: visible;
+//     opacity: 1;
+//     display: block;
+//   }
+  
+//   ul li ul li {
+//       clear: both;
+//     width: 100%;
+//   }
+
+.dropbtn {
+    background-color: transparent;
+    color: white;
+    padding: 16px;
+    font-size: 15px;
+    border: none;
+    cursor: pointer;
+  }
+  a {
+    font-size: 15px;
+  }
+  .dropdown {
     position: relative;
-    .mat-button{
-        height: $horizontal-menu-height;
-        font-weight: 400;
-    }
-    .horizontal-menu-icon{
-        margin-right: 5px;
-    }
-    .horizontal-sub-menu{
-        position: absolute;
-        width: 190px;
-        max-height: 0;
-        overflow: hidden;
-        -webkit-transition: max-height 0.25s ease-out;  
-        -moz-transition: max-height 0.25s ease-out;  
-        transition: max-height 0.25s ease-out;    
-        .mat-button{
-            width: 100%;
-            height: 36px; 
-        }
-    }
-}
-.horizontal-menu-item:hover > .horizontal-sub-menu{
-    max-height: 500px;
-    overflow: visible;
-}
-.horizontal-sub-menu .horizontal-sub-menu{
-    left: 100%;
-    top: 0;
-}
+    display: inline-block;
+  }
+  
+  .dropdown-content {
+    display: none;
+    position: absolute;
+    background-color: #2e037c;
+    min-width: 160px;
+    box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+    z-index: 1;
+  }
+  
+  .dropdown-content a {
+    color: rgb(247, 238, 238);
+    padding: 5px 15px;
+    text-decoration: none;
+    display: block;
+  }
+  
+  .dropdown-content a:hover {background-color: #1b028a}
+  
+  .dropdown:hover .dropdown-content {
+    display: block;
+  }
+  
+  .dropdown:hover .dropbtn {
+    background-color: #1426c5;
+  }

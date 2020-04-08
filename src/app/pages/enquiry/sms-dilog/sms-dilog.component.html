@@ -1,5 +1,6 @@
-<h1 mat-dialog-title *ngIf="!send_email">Send SMS Notification </h1>
+<h1 mat-dialog-title *ngIf="send_sms">Send SMS Notification </h1>
 <h1 mat-dialog-title *ngIf="send_email">Send Email Notification </h1>
+<h1 mat-dialog-title *ngIf="remainder">Set Remainder </h1>
 
 <div mat-dialog-content style="width: 500px;" *ngIf="intrigation">
   <form [formGroup]="form" fxLayout="row wrap" class="user-form">
@@ -124,13 +125,50 @@
     </div>
   </form>
 </div>
+<div mat-dialog-content style="width: 550px; height: 250px;" *ngIf="send_sms">
+  <form [formGroup]="sms_send_form" fxLayout="row wrap" class="user-form">
+    <div fxLayout="column" class="form-field-outer">
+      <div fxFlex="100">
+        <mat-form-field style="width: 100%;" appearance="outline">
+          <mat-select placeholder="Email Template" formControlName="sms_template">
+            <mat-option *ngFor="let type of sms_tem ; let i = index" [value]="type._id"
+              (onSelectionChange)="stage_chnage(type.message)">{{type?.template_name}}</mat-option>
 
+          </mat-select>
+        </mat-form-field>
+      </div>
+      <div fxFlex="100">
+        <mat-form-field style="width: 100%;" appearance="outline">
+          <textarea matInput formControlName="message" placeholder="message" style=" height: 110px;"
+            [disabled]="true"></textarea>
+        </mat-form-field>
+      </div>
+    </div>
+  </form>
+</div>
+
+<div mat-dialog-content style="width: 500px;" *ngIf="remainder">
+  <form [formGroup]="remainders" fxLayout="row wrap" class="user-form">
+    <div fxLayout="column" class="form-field-outer">
+      <div fxFlex="100">
+        <mat-form-field style="width: 100%;">
+          <input type="datetime-local" matInput formControlName="date_time" placeholder="date">
+        </mat-form-field>
+        <mat-form-field style="width: 100%;">
+          <input matInput formControlName="message" placeholder="message">
+        </mat-form-field>
+      </div>
+    </div>
+  </form>
+</div>
 
 <div mat-dialog-actions fxLayout="row" fxLayoutAlign="space-between center">
   <button mat-raised-button color="primary" type="button" (click)="submit()" *ngIf="intrigation">Save</button>
   <button mat-raised-button color="primary" type="button" (click)="template_Add()" *ngIf="template">Save</button>
   <button mat-raised-button color="primary" type="button" (click)="email_from()" *ngIf="email">Save</button>
   <button mat-raised-button color="primary" type="button" (click)="send_email_add()" *ngIf="send_email">Save</button>
+  <button mat-raised-button color="primary" type="button" (click)="send_sms_add()" *ngIf="send_sms">Save</button>
+  <button mat-raised-button color="primary" type="button" (click)="set_remainder()" *ngIf="remainder">Save</button>
   <button mat-raised-button color="primary" type="button" (click)="template_email_add()"
     *ngIf="template_email">Save</button>
   <button mat-raised-button color="warn" (click)="close()">Cancel</button>

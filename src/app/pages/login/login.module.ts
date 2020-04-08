@@ -7,6 +7,7 @@ import { LoginComponent ,DialogOverviewExampleDialog } from './login.component';
 import { LoginService } from './Services/login.service';
 import { HttpClientModule } from '@angular/common/http';
 import { AlertModule } from 'ngx-alerts';
+import { SocketService } from '../../socket.service';
 
 export const routes = [
   { path: '', component: LoginComponent, pathMatch: 'full' }
@@ -26,6 +27,6 @@ export const routes = [
   entryComponents: [
     DialogOverviewExampleDialog,
   ],
-  providers: [LoginService]
+  providers: [LoginService ,SocketService]
 })
 export class LoginModule { }

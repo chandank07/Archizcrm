@@ -5,6 +5,7 @@ import { Settings } from '../../app.settings.model';
 import { User, UserProfile, UserWork, UserContacts, UserSocial, UserSettings } from './user.model';
 import { UsersService } from './users.service';
 import { UserDialogComponent } from './user-dialog/user-dialog.component';
+import { SocketService } from '../../socket.service';
 
 @Component({
     selector: 'app-users',
@@ -18,25 +19,45 @@ export class UsersComponent implements OnInit {
     public searchText: string;
     public page: any;
     public settings: Settings;
+    me:any;
+    mess:any[] =[];
     constructor(public appSettings: AppSettings,
         public dialog: MatDialog,
-        public usersService: UsersService) {
+        public usersService: UsersService ,private soc:SocketService) {
         this.settings = this.appSettings.settings;
     }
 
     ngOnInit() {
         this.getUsers();
+        this.get_me()
     }
-
+    get_me(){
+        this.usersService.get_me().subscribe((res:any) =>{
+            this.me = res.data;
+            console.log(this.me)
+        })
+    }
+    clcikmessage(data){
+        this.mess.length = 0;
+        console.log(data ,"sdfsdfd")
+        let obj ={
+            user_id: this.me._id,
+            sender_id:data._id
+        }
+        this.soc.listen2(obj).subscribe((res:any) =>{
+            this.mess = res;
+            console.log(this.mess[0])
+        })
+    }
     public getUsers(): void {
         this.users = null; //for show spinner each time
         // this.usersService.getUsers().subscribe(users => this.users = users);    
-        this.usersService.get_user().subscribe((res: any) => {
+        this.usersService.get_user_role().subscribe((res: any) => {
             console.log(res.data)
             this.users = res.data;
-            this.usersService.user_activity({routes:"/user" , activity:"get_user"}).subscribe(res =>{
-                console.log(res)
-            })
+            // this.usersService.user_activity({routes:"/user" , activity:"get_user"}).subscribe(res =>{
+            //     console.log(res)
+            // })
         })
     }
     // public addUser(user:User){
@@ -81,7 +102,7 @@ export class UsersComponent implements OnInit {
 
         dialogRef.afterClosed().subscribe(user => {
             if (user) {
-                this.ngOnInit()
+                this.getUsers()
                 // (user.id) ? this.updateUser(user) : this.addUser(user);
             }
         });

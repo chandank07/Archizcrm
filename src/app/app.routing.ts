@@ -4,7 +4,7 @@ import { ModuleWithProviders } from '@angular/core';
 import { PagesComponent } from './pages/pages.component';
 import { BlankComponent } from './pages/blank/blank.component';
 import { SearchComponent } from './pages/search/search.component';
-
+import { AuthGuardService } from './guards/auth-guard.service';
 // import { NotFoundComponent } from './pages/errors/not-found/not-found.component';
 // import { ErrorComponent } from './pages/errors/error/error.component';
 
@@ -13,15 +13,16 @@ export const routes: Routes = [
     { 
         path: '', 
         component: PagesComponent, children: [
-            { path: 'dashboard', loadChildren: () => import('./pages/dashboard/dashboard.module').then(m => m.DashboardModule), data: { breadcrumb: 'Dashboard' } },
-            { path: 'users', loadChildren: () => import('./pages/users/users.module').then(m => m.UsersModule), data: { breadcrumb: 'Users' } },
-            { path: 'Lead', loadChildren: () => import('./pages/enquiry/enquiry.module').then(m => m.EnquiryModule), data: { breadcrumb: 'Enquiry' }},
-            { path: 'Location', loadChildren: () => import('./pages/locations/locations.module').then(m => m.LocationsModule), data: { breadcrumb: 'Location' }},
-            { path: 'Company', loadChildren: () => import('./pages/companys/companys.module').then(m => m.CompanysModule), data: { breadcrumb: 'Company' }},
-            { path: 'Compaign', loadChildren: () => import('./pages/compaign/compaign.module').then(m => m.CompaignModule), data: { breadcrumb: 'Compaign' } },
-            { path: 'Setting', loadChildren: () => import('./pages/seting/seting.module').then(m => m.SetingModule), data: { breadcrumb: 'Setting' }},
-            { path: 'api-confrigation', loadChildren: () => import('./pages/api-configer/api-configer.module').then(m => m.ApiConfigerModule), data: { breadcrumb: 'Api Configuration' }},
-            // { path: 'tables', loadChildren: () => import('./pages/tables/tables.module').then(m => m.TablesModule), data: { breadcrumb: 'Tables' } },
+            { path: 'dashboard', loadChildren: () => import('./pages/dashboard/dashboard.module').then(m => m.DashboardModule), data: { breadcrumb: 'Dashboard' } ,canActivate: [AuthGuardService]},
+            { path: 'users', loadChildren: () => import('./pages/users/users.module').then(m => m.UsersModule), data: { breadcrumb: 'Users' },canActivate: [AuthGuardService] },
+            { path: 'Lead', loadChildren: () => import('./pages/enquiry/enquiry.module').then(m => m.EnquiryModule), data: { breadcrumb: 'Enquiry' },canActivate: [AuthGuardService]},
+            { path: 'Location', loadChildren: () => import('./pages/locations/locations.module').then(m => m.LocationsModule), data: { breadcrumb: 'Location' },canActivate: [AuthGuardService]},
+            { path: 'Company', loadChildren: () => import('./pages/companys/companys.module').then(m => m.CompanysModule), data: { breadcrumb: 'Company' },canActivate: [AuthGuardService]},
+            { path: 'Compaign', loadChildren: () => import('./pages/compaign/compaign.module').then(m => m.CompaignModule), data: { breadcrumb: 'Compaign' },canActivate: [AuthGuardService] },
+            { path: 'Setting', loadChildren: () => import('./pages/seting/seting.module').then(m => m.SetingModule), data: { breadcrumb: 'Setting' },canActivate: [AuthGuardService]},
+            { path: 'api-confrigation', loadChildren: () => import('./pages/api-configer/api-configer.module').then(m => m.ApiConfigerModule), data: { breadcrumb: 'Api Configuration' },canActivate: [AuthGuardService]},
+            { path: 'reports', loadChildren: () => import('./pages/reports/reports.module').then(m => m.ReportsModule), data: { breadcrumb: 'Reports' },canActivate: [AuthGuardService] },
+            { path: 'chat', loadChildren: () => import('./pages/chats/chats.module').then(m => m.ChatsModule), data: { breadcrumb: 'Chats' },canActivate: [AuthGuardService] },
             // { path: 'icons', loadChildren: () => import('./pages/icons/icons.module').then(m => m.IconsModule), data: { breadcrumb: 'Material Icons' } },
             // { path: 'drag-drop', loadChildren: () => import('./pages/drag-drop/drag-drop.module').then(m => m.DragDropModule), data: { breadcrumb: 'Drag & Drop' } },
             // { path: 'schedule', loadChildren: () => import('./pages/schedule/schedule.module').then(m => m.ScheduleModule), data: { breadcrumb: 'Schedule' } },

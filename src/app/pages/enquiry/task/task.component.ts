@@ -9,6 +9,7 @@ import { Settings } from '../../../app.settings.model';
 import { Subject } from 'rxjs';
 import { blockTransition } from '../../../theme/utils/app-animation';
 import { EnquiryServiceService } from '../enquiry_Service/enquiry-service.service';
+import { CookieService } from 'ngx-cookie-service';
 
 const colors: any = {
   red: {
@@ -34,6 +35,9 @@ const colors: any = {
   }
 })
 export class TaskComponent implements OnInit {
+  all_selct_camp:any[] =[];
+  comp:any;
+  buttonshow:Boolean = false;
   task:any;
   view: string = 'month';
   viewDate: Date = new Date();
@@ -88,18 +92,35 @@ export class TaskComponent implements OnInit {
 
   public settings: Settings;
   constructor(public appSettings: AppSettings,
-    public dialog: MatDialog,
+    public dialog: MatDialog,private CookieService:CookieService,
     public snackBar: MatSnackBar, public enquiryService: EnquiryServiceService, ) {
     this.settings = this.appSettings.settings;
   }
 
   ngOnInit() {
     console.log(this.events)
-    this.get_task();
+    this.get_assing();
+  }
+  get_assing() {
+    this.all_selct_camp.length = 0;
+    this.comp = JSON.parse(this.CookieService.get('compain'))
+    console.log(this.comp);
+    this.comp.forEach(element => {
+      if(element.active == true){
+        this.all_selct_camp.push(element._id);
+      }
+    });
+    console.log(this.all_selct_camp,"active arrr")
+    this.get_task(this.all_selct_camp)
+    if(this.all_selct_camp.length > 1 || this.all_selct_camp.length == 0){
+      this.buttonshow = false;
+    }else{
+      this.buttonshow = true;
+    }
   }
 
-  get_task() {
-    this.enquiryService.get_task().subscribe((doc: any) => {
+  get_task(data) {
+    this.enquiryService.get_team_wise_task(data).subscribe((doc: any) => {
       doc.data.forEach(element => {
         element.start = new Date(element.start);
         element.end = new Date(element.end);
@@ -117,13 +138,14 @@ export class TaskComponent implements OnInit {
         }
       });
       this.events = doc.data;
+      console.log(this.events);
     })
   }
 
   delete_task(id){
     this.enquiryService.delete_task(id).subscribe((res:any)=>{
       console.log(res)
-      this.get_task();
+      this.get_task(this.all_selct_camp);
     })
   }
 
@@ -149,6 +171,7 @@ export class TaskComponent implements OnInit {
         if (!result.isEdit) {
           result.color = colors.blue;
           result.actions = this.actions;
+          result.camp_list =this.all_selct_camp[0]
           this.enquiryService.task_create(result).subscribe((res: any) => {
           })
           this.events.push(result);
@@ -156,7 +179,7 @@ export class TaskComponent implements OnInit {
         } else {
           result.color = colors.yellow;
           this.enquiryService.update_task(this.task._id , result).subscribe((res:any)=>{
-            this.get_task();
+            this.get_task(this.all_selct_camp);
           })
           // this.events.push(result);
           this.refresh.next();

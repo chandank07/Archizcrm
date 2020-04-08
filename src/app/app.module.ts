@@ -39,6 +39,9 @@ import { MessagesComponent } from './theme/components/messages/messages.componen
 import { UserMenuComponent } from './theme/components/user-menu/user-menu.component';
 import { MatInputModule } from '@angular/material';
 import { AlertModule } from 'ngx-alerts';
+import { UsersService } from './pages/users/users.service';
+import { AuthGuardService } from './guards/auth-guard.service';
+import { CookieService } from 'ngx-cookie-service';
 
 @NgModule({
   imports: [
@@ -82,7 +85,7 @@ import { AlertModule } from 'ngx-alerts';
     VerticalMenuComponent
   ],
   providers: [ 
-    AppSettings,
+    AppSettings,UsersService,AuthGuardService,CookieService,
     { provide: PERFECT_SCROLLBAR_CONFIG, useValue: DEFAULT_PERFECT_SCROLLBAR_CONFIG },
     { provide: OverlayContainer, useClass: CustomOverlayContainer },
     { provide: LocationStrategy, useClass: HashLocationStrategy}

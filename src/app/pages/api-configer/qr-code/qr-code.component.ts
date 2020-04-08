@@ -58,6 +58,7 @@ export class QrCodeComponent implements OnInit {
     dialogRef.afterClosed().subscribe((data: any) => {
       console.log(data)
       if (data != null) {
+        this.get_qr_code();
       }
     })
 

@@ -12,7 +12,7 @@ import { CompaignServiceService } from '../compaign-service.service';
   styleUrls: ['./create-camp.component.scss']
 })
 export class CreateCampComponent implements OnInit {
-  displayedColumns: string[] = ['company', 'source_name'];
+  displayedColumns: string[] = ['company','Count', 'source_name','memeber' ,'camp_list'];
   dataSource: any;
   panelOpenState = false;
   show_form: Boolean = false;
@@ -22,6 +22,7 @@ export class CreateCampComponent implements OnInit {
   datasource: any;
   data_source: any;
   team: any;
+  camp_list:any;
   @ViewChild(MatPaginator, { static: true }) paginator: MatPaginator;
   constructor(private fb: FormBuilder, public dialog: MatDialog,
     private CompaignServiceService: CompaignServiceService, ) { }
@@ -46,14 +47,18 @@ export class CreateCampComponent implements OnInit {
   get_datasource() {
     this.CompaignServiceService.get_camp_list().subscribe((data: any) => {
       console.log(data);
-      this.datasource = data.data
-      this.dataSource = new MatTableDataSource(data.data)
-      this.dataSource.paginator = this.paginator;
+      this.camp_list = data.data;
+      // this.datasource = data.data
+      // this.dataSource = new MatTableDataSource(data.data)
+      // this.dataSource.paginator = this.paginator;
     })
   }
   get_assing() {
     this.CompaignServiceService.get_assing_camp().subscribe((res: any) => {
       this.assing_comp = res.data;
+      this.datasource = res.data
+      this.dataSource = new MatTableDataSource(res.data)
+      this.dataSource.paginator = this.paginator;
       console.log(this.assing_comp)
     })
   }
@@ -89,6 +94,10 @@ export class CreateCampComponent implements OnInit {
     console.log(this.listForm.value);
     this.CompaignServiceService.create_assing_camp(this.listForm.value).subscribe((res: any) => {
       console.log(res);
+      if(res){
+        this.get_assing()
+        this.addform = true
+      }
     })
   }
 }

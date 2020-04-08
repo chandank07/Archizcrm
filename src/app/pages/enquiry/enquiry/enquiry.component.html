@@ -1,7 +1,8 @@
+
 <div fxLayout="row" fxLayoutAlign="space-between center" class="flex-p">
     <div fxLayout="row">
         <mat-button-toggle-group #controls="matButtonToggleGroup" appearance="legacy">
-            <mat-button-toggle value="add" (click)="openUserDialog(null)" matTooltip="Add enquiry">
+            <mat-button-toggle value="add" (click)="openUserDialog(null)" matTooltip="Add enquiry" *ngIf="buttonshow">
                 <!-- <mat-button-toggle value="add" routerLink ="/Lead/enquiryadd"> -->
                 <mat-icon>person_add</mat-icon>
             </mat-button-toggle>
@@ -9,13 +10,14 @@
                 <mat-icon>search</mat-icon>
             </mat-button-toggle>
             <mat-button-toggle value="Active" matTooltip="Active enquiry" (click)="active_enquiry()">
-                <span style="color: blue;"><b>{{acgive_enquiry_length}}</b></span><mat-icon>spellcheck</mat-icon>
+                <span style="color: blue;"><b>{{acgive_enquiry_length}}</b></span>
+                <mat-icon>spellcheck</mat-icon>
             </mat-button-toggle>
             <mat-button-toggle value="today" matTooltip="All enquiry" (click)="all_enquiry()">
                 <span style="color: blue;"><b>{{all_enquiry_length}}</b></span>
                 <mat-icon>ballot</mat-icon>
             </mat-button-toggle>
-            <mat-button-toggle value="today" matTooltip="Today Create enquiry" (click)="today_enquiry()">
+            <mat-button-toggle value="today" matTooltip="Today Created Enquiry" (click)="today_enquiry()">
                 <span style="color: blue;"><b>{{enquiry_langth}} </b></span>
                 <mat-icon>today</mat-icon>
             </mat-button-toggle>
@@ -27,9 +29,16 @@
                 <span style="color: blue;"><b>{{all_drop_enquiry_length}} </b></span>
                 <mat-icon>thumb_down</mat-icon>
             </mat-button-toggle>
-            <mat-button-toggle value="today" matTooltip="All enquiry Select" (click)="select_all()">
+            <mat-button-toggle value="today" matTooltip="Select All Enquiry" (click)="select_all()">
                 <mat-icon>done_all</mat-icon>
             </mat-button-toggle>
+
+            <!-- <mat-form-field>
+                <mat-label>caompaing</mat-label>
+                <mat-select multiple (selectionChange)="someMethod($event.value)">
+                    <mat-option *ngFor="let topping of comp" [value]="topping">{{topping?.caompaing_name}}</mat-option>
+                </mat-select>
+            </mat-form-field> -->
 
             <mat-button-toggle mat-icon-button [matMenuTriggerFor]="menu" #menuTrigger="matMenuTrigger"
                 matTooltip="Enqury Filters!" matTooltip="All Drop enquiry">
@@ -55,8 +64,15 @@
                     </button>
                 </span>
             </mat-menu>
-
-
+            
+           
+            <!-- <button mat-button [matMenuTriggerFor]="menu2">Menu</button>
+            <mat-menu #menu2="matMenu">
+                <button mat-menu-item *ngFor="let topping of get_camps" (click)="check12(topping)">
+                    <mat-checkbox [checked]="topping.active" [(ngModel)]="topping.active"> {{topping?.caompaing_name}}
+                    </mat-checkbox>
+                </button>
+            </mat-menu> -->
         </mat-button-toggle-group>
     </div>
     <form class="user-search" [class.show]="controls.value == 'search'">
@@ -72,10 +88,74 @@
             <mat-button-toggle value="list">
                 <mat-icon>view_list</mat-icon>
             </mat-button-toggle>
+            <button mat-button [matMenuTriggerFor]="menu1" color="warn">
+                <span class="material-icons">
+                filter_list
+                </span>
+            </button>
+            <mat-menu #menu1="matMenu">
+                <button mat-menu-item (click)="show1()">Enquiry Type</button>
+                <button mat-menu-item (click)="show2()">Customer Type</button>
+                <button mat-menu-item (click)="show3()">Source</button>
+                <button mat-menu-item (click)="show4()">State</button>
+                <button mat-menu-item (click)="show5()">City</button>
+                <button mat-menu-item (click)="show6()">Mobile Number</button>
+            </mat-menu>
         </mat-button-toggle-group>
     </div>
 </div>
-
+<!-- <form class="user-search" [class.show]="controls.value == 'search'">
+    <mat-form-field class="user-search-input">
+        <input matInput placeholder="Search user by name..." [(ngModel)]="searchText" name="search">
+    </mat-form-field>
+</form> -->
+<div [hidden]="!enq_type">
+    <mat-form-field class="user-search-input" style="margin-left: 3%;">
+        <mat-select placeholder="Select Enquiry Type" (selectionChange)="enqu($event.value)">
+            <mat-option *ngFor="let region of enquiry_type ; let i = index" [value]="region._id">{{region.enquiry_type}}
+            </mat-option>
+        </mat-select>
+    </mat-form-field>
+</div>
+<div [hidden]="!cus_type">
+    <mat-form-field class="user-search-input" style="margin-left: 3%;">
+        <mat-select placeholder="Select Customer Type" (selectionChange)="cust($event.value)">
+            <mat-option *ngFor="let region of customer_type ; let i = index" [value]="region._id">
+                {{region.customer_type}}
+            </mat-option>
+        </mat-select>
+    </mat-form-field>
+</div>
+<div [hidden]="!source1">
+    <mat-form-field class="user-search-input" style="margin-left: 3%;">
+        <mat-select placeholder="Select Source" (selectionChange)="sour($event.value)">
+            <mat-option *ngFor="let region of enquiry_source ; let i = index" [value]="region._id">{{region.source}}
+            </mat-option>
+        </mat-select>
+    </mat-form-field>
+</div>
+<div [hidden]="!state">
+    <mat-form-field class="user-search-input" style="margin-left: 3%;">
+        <mat-select placeholder="Select State" (selectionChange)="state_select($event.value)">
+            <mat-option *ngFor="let region of state_data ; let i = index" [value]="region._id">{{region.region_name}}
+            </mat-option>
+        </mat-select>
+    </mat-form-field>
+</div>
+<div [hidden]="!city1">
+    <mat-form-field class="user-search-input" style="margin-left: 3%;">
+        <mat-select placeholder="Select City" (selectionChange)="city_select($event.value)">
+            <mat-option *ngFor="let region of city_data ; let i = index" [value]="region._id">{{region.city_name}}
+            </mat-option>
+        </mat-select>
+    </mat-form-field>
+</div>
+<div [hidden]="!mob_no">
+    <mat-form-field class="user-search-input" style="margin-left: 3%;">
+        <input type="number" matInput placeholder="Search enquiry by mobile_no" [(ngModel)]="searchText1" name="search"
+            (keyup.enter)="mobile_data()">
+    </mat-form-field>
+</div>
 <!-- <mat-expansion-panel style="margin-left: 1%; margin-right: 1%;">
     <mat-expansion-panel-header>
       <mat-panel-title>
@@ -158,7 +238,7 @@
                     </p>
                     <p fxLayout="row" fxLayoutAlign="start center">
                         <mat-icon class="muted-text">date_range</mat-icon>
-                        <span>Type : {{user?.enquiry_type | titlecase}}</span>
+                        <span>Type : {{user?.enquiry_type?.enquiry_type | titlecase}}</span>
                     </p>
                 </div>
             </div>

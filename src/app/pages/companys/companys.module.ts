@@ -11,13 +11,17 @@ import { NgxPaginationModule } from 'ngx-pagination';
 import { PipesModule } from '../../theme/pipes/pipes.module';
 import { CompanysDiolgComponent } from './companys-diolg/companys-diolg.component';
 import { UsersService } from '../.../../users/users.service';
+import { AlertModule } from 'ngx-alerts';
+import { SocketService } from '../../../app/socket.service';
+import { EnquiryformfieldComponent } from './enquiryformfield/enquiryformfield.component';
 
 export const routes = [
   { path: '', redirectTo: 'CompanyComponent', pathMatch: 'full'},
   { path: '', component: CompanyComponent, data: { breadcrumb: 'Company' } },
+  { path: 'enquiryform/:id', component: EnquiryformfieldComponent, data: { breadcrumb: 'Company' } },
 ]
 @NgModule({
-  declarations: [CompanyComponent, CompanysDiolgComponent],
+  declarations: [CompanyComponent, CompanysDiolgComponent, EnquiryformfieldComponent],
   imports: [
     CommonModule,
     RouterModule.forChild(routes),
@@ -27,9 +31,10 @@ export const routes = [
     HttpClientModule,
     SharedModule,
     PipesModule,
-    NgxPaginationModule
+    NgxPaginationModule,
+    AlertModule
   ],
-  providers: [CompanyService ,UsersService],
+  providers: [CompanyService ,UsersService,SocketService],
   entryComponents:[
     CompanysDiolgComponent
   ]

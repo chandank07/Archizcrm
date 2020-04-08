@@ -13,10 +13,11 @@ export class UsersService {
       });
       
     public url = "api/users";
-    public url1 = "http://localhost:5000/api/userrole";
-    public url2 = "http://localhost:5000/api/user";
+    public image_uplode = "https://newmeanstrakapi.herokuapp.com/api/image_uplode/profile"
+    public url1 = "https://newmeanstrakapi.herokuapp.com/api/userrole";
+    public url2 = "https://newmeanstrakapi.herokuapp.com/api/user";
     public url3 = "https://newmeanstrakapi.herokuapp.com/api/company";
-   public User_activity = "http://localhost:5000/api/user_activity"
+   public User_activity = "https://newmeanstrakapi.herokuapp.com/api/user_activity"
 
     constructor(public http:HttpClient) { }
     
@@ -79,4 +80,23 @@ export class UsersService {
     get_me(){
         return this.http.get(this.url2 + "/me/" , {headers:this.headers})
     }
+    update_user(id , data){
+        return this.http.put(this.url2 + "/upadte_user/" + id , data , {headers:this.headers})
+    }
+    get_user_role(){
+        return this.http.get(this.url2 + "/get_all_user/" ,{headers:this.headers})
+    }
+    getUrl() {
+        return this.http.get(this.image_uplode, { headers: this.headers });
+      }
+ sendUrl(url, file) {
+        return fetch(url, {
+          method: 'PUT',
+          body: file,
+          headers: {
+            'Content-Type': 'jpeg,png'
+          }
+        });
+      }
+
 } 

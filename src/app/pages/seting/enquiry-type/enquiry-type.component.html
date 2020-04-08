@@ -31,8 +31,8 @@
     </ng-container>
     <!-- Position Column -->
     <ng-container matColumnDef="Position">
-      <th mat-header-cell *matHeaderCellDef style="width:25%;">  Enquiry Type </th>
-      <td mat-cell *matCellDef="let element"> <b *ngIf="element?.active">Active</b><b *ngIf="!element?.active">inActive</b> </td>
+      <th mat-header-cell *matHeaderCellDef style="width:25%;">  Status </th>
+      <td mat-cell *matCellDef="let element"> <b *ngIf="element?.active">Active</b><b *ngIf="!element?.active">Inactive</b> </td>
     </ng-container>
 
     <!-- Name Column -->

@@ -43,6 +43,12 @@ export class CompaignServiceService {
   uplode_data_source(data){
     return this.http.post(this.url2 + "/file", data, { headers: this.headers1 });
   }
+  delete_data_sorce(id){
+    return this.http.delete(this.url2 + "/delete/" +id ,{ headers: this.headers })
+  }
+  update_data_source(id, data){
+    return this.http.put(this.url2 +"/" +id , data,{ headers: this.headers })
+  }
   //=====================csamp list================
   create_camp_list(data){
     return this.http.post(this.url4 + "/create_Camp_list/" ,data ,{ headers: this.headers })
@@ -50,11 +56,20 @@ export class CompaignServiceService {
   get_camp_list(){ 
     return this.http.get(this.url4 + "/get_camp_list" ,{ headers: this.headers })
   }
+  delete_camp(id){
+    return this.http.delete(this.url4 + "/delete/" +id ,{ headers: this.headers })
+  }
   //assing camp=================================
   create_assing_camp(data){
     return this.http.post(this.url5 + "/create_assing_camp/" ,data ,{ headers: this.headers })
   }
   get_assing_camp(){ 
     return this.http.get(this.url5 + "/get_assing_camp" ,{ headers: this.headers })
+  }
+  get_assing_comp(){
+    return this.http.get(this.url1 + "/get_all_camp" ,{ headers: this.headers })
+  }
+  get_enquiry_camp(data){
+    return this.http.post(this.url1 + "/get_all_user_id/", data, { headers: this.headers })
   }
 }

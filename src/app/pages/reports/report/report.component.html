@@ -1,0 +1,108 @@
+<div fxLayout="row" fxLayoutAlign="space-between center" class="flex-p">
+  <!-- <div fxLayout="row">
+    <mat-button-toggle-group  appearance="legacy">
+      <mat-button-toggle value="add" (click)="openUserDialog(null)">
+        <mat-icon>add_location</mat-icon>
+      </mat-button-toggle>
+      <mat-button-toggle value="search">
+        <mat-icon>search</mat-icon>
+      </mat-button-toggle>
+    </mat-button-toggle-group>
+  </div> -->
+  <!-- <form class="user-search" [class.show]="controls.value == 'search'">
+      <mat-form-field class="user-search-input">
+          <input matInput placeholder="Search user by name..." [(ngModel)]="searchText" name="search">
+      </mat-form-field>
+  </form> -->
+  <!-- <div fxLayout="row" fxLayoutAlign="space-between center">
+    <mat-button-toggle-group #viewType="matButtonToggleGroup" appearance="legacy">
+      <mat-button-toggle value="grid" checked="true">
+        <mat-icon>view_module</mat-icon>
+      </mat-button-toggle>
+      <mat-button-toggle value="list">
+        <mat-icon>view_list</mat-icon>
+      </mat-button-toggle>
+    </mat-button-toggle-group>
+  </div> -->
+</div>
+
+<div class="mat-elevation-z8" style="margin-left: 5%; margin-right: 5%;">
+  <div fxLayout="row">
+    <mat-form-field appearance="outline" style="margin-left: 1%; margin-top: 1%;">
+      <mat-label>Type</mat-label>
+      <mat-select placeholder="Laed Mangement" (selectionChange)="select_type($event.value)">
+        <mat-option [value]="0" aria-selected="0">Enquiry</mat-option>
+        <mat-option [value]="1">Lead</mat-option>
+        <mat-option [value]="2">Client</mat-option>
+      </mat-select>
+    </mat-form-field>
+
+    <mat-form-field appearance="outline" style="margin-left: 1%;margin-top: 1%;">
+      <mat-label>From Date</mat-label>
+      <input matInput [matDatepicker]="picker" [(ngModel)]="roomsFilter.From">
+      <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+      <mat-datepicker #picker></mat-datepicker>
+    </mat-form-field>
+    <mat-form-field appearance="outline" style="margin-left: 1%; margin-top: 1%;">
+      <mat-label>To Date</mat-label>
+      <input matInput [matDatepicker]="picker1" [(ngModel)]="roomsFilter.to" (dateChange)="EndDateChange($event)">
+      <mat-datepicker-toggle matSuffix [for]="picker1"></mat-datepicker-toggle>
+      <mat-datepicker #picker1></mat-datepicker>
+    </mat-form-field>
+    <mat-form-field appearance="outline" style="margin-left: 1%; margin-top: 1%;">
+      <mat-label>{{type_name}}</mat-label>
+      <mat-select placeholder="Enquiry Name" [(ngModel)]="select_enquiry" (selectionChange)="enquiry_name_cahange($event.value)">
+        <mat-option *ngFor="let stages of selet_enq ; let i = index" [value]="stages._id">{{stages?.fist_name}} {{stages?.last_name}}</mat-option>
+      </mat-select>
+    </mat-form-field>
+  </div>
+  <table mat-table [dataSource]="dataSource">
+    <ng-container matColumnDef="company" style="margin-left: 20%;">
+      <th mat-header-cell *matHeaderCellDef> Enquiry ID </th>
+      <td mat-cell *matCellDef="let element"> {{element?.enquiry_id | uppercase}} </td>
+    </ng-container>
+
+
+    <ng-container matColumnDef="name">
+      <th mat-header-cell *matHeaderCellDef> Enquiry Name </th>
+      <td mat-cell *matCellDef="let element"> {{element?.fist_name}} {{element?.last_name}} </td>
+    </ng-container>
+
+    <!-- Position Column -->
+    <ng-container matColumnDef="position" style="margin-left: 20%;">
+      <th mat-header-cell *matHeaderCellDef> Email </th>
+      <td mat-cell *matCellDef="let element"> {{element.email}} </td>
+    </ng-container>
+
+    <!-- Name Column -->
+    <ng-container matColumnDef="country" style="margin-left: 20%;">
+      <th mat-header-cell *matHeaderCellDef> Region Name </th>
+      <td mat-cell *matCellDef="let element"> {{element?.state?.region_name}} </td>
+    </ng-container>
+
+    <!-- Weight Column -->
+    <ng-container matColumnDef="weight">
+      <th mat-header-cell *matHeaderCellDef> Mobile No </th>
+      <td mat-cell *matCellDef="let element"> {{element?.mobile_no}} </td>
+    </ng-container>
+
+    <!-- Symbol Column -->
+    <ng-container matColumnDef="symbol">
+      <th mat-header-cell *matHeaderCellDef> City </th>
+      <td mat-cell *matCellDef="let element">
+      {{element?.city?.city_name}}
+      </td>
+    </ng-container>
+
+    <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+    <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+  </table>
+
+
+
+  <mat-paginator [pageSizeOptions]="[5, 10, 20]" showFirstLastButtons></mat-paginator>
+</div>
+
+<div *ngIf="!dataSource " fxLayout="column" fxLayoutAlign="center center" class="user-spinner">
+  <mat-spinner color="primary"></mat-spinner>
+</div>

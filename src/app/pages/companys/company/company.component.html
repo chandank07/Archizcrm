@@ -1,18 +1,19 @@
 <div fxLayout="row" fxLayoutAlign="space-between center" class="flex-p">
     <div fxLayout="row">
       <mat-button-toggle-group #controls="matButtonToggleGroup" appearance="legacy">
-        <!-- <mat-button-toggle value="add" (click)="openUserDialog(null)">
-          <mat-icon>person_add</mat-icon>
-        </mat-button-toggle> -->
-        <mat-button-toggle value="today" matTooltip="All Client" (click)="openSmsDialog()">
+        <mat-button-toggle value="back" *ngIf="show_tree" (click)="editenquiry()">
+          <mat-icon>arrow_back</mat-icon>
+        </mat-button-toggle>
+        <mat-button-toggle value="today" matTooltip="All Client" (click)="openSmsDialog(null)" *ngIf="!company_option">
           <mat-icon>ballot</mat-icon>
         </mat-button-toggle>
         <mat-button-toggle value="search">
           <mat-icon>search</mat-icon>
         </mat-button-toggle>
         <mat-menu #menu="matMenu" xPosition="before" overlapTrigger="true">
-          <span (mouseleave)="menuTrigger.closeMenu()">
-            <button mat-menu-item (click)="delete_all_client();">
+          <!-- <span (mouseleave)="menuTrigger.closeMenu()"> -->
+            <span>
+            <button mat-menu-item>
               <mat-chip-list>
                 <i class="material-icons"> delete_forever </i> <span> Delete Client</span>
               </mat-chip-list>
@@ -28,7 +29,7 @@
     </form>
   </div>
 
-  <div fxLayout="row wrap">
+  <div fxLayout="row wrap" *ngIf="!show_tree">
     <div
       *ngFor="let user of users ; index as i"
       fxFlex="100" fxFlex.gt-md="33.3" fxFlex.md="50" class="flex-p">
@@ -46,15 +47,15 @@
               <mat-icon>mode_edit</mat-icon>
               <span>Edit</span>
             </button>
-            <button mat-menu-item (click)="delete_company(user._id);">
+            <button mat-menu-item (click)="delete_company(user._id);"  *ngIf="!company_option">
               <mat-icon>delete</mat-icon>
               <span>Delete</span>
             </button>
           </span>
         </mat-menu>
-        <div class="user-content" fxLayout="row" fxLayoutAlign="space-around center">
+        <div class="user-content" fxLayout="row" fxLayoutAlign="space-around center" (click)="editenquiry(i)">
           <div fxFlex="30" fxLayout="column" fxLayoutAlign="center center">
-            <div class="user-img ponter" (click)="editenquiry(user)">
+            <div class="user-img ponter">
               <img src="../../../../assets/img/app/no-image.png" class="transition-2"[class.blocked]="user?.settings?.isDeleted">
             </div>
           </div>
@@ -67,6 +68,12 @@
             <p fxLayout="row" fxLayoutAlign="start center">
               <mat-icon class="material-icons">business</mat-icon>
               <span>{{user?.company_name}}</span>
+            </p>
+            <p fxLayout="row" fxLayoutAlign="start center">
+              <mat-icon class="material-icons">supervised_user_circle</mat-icon>
+              <mat-chip-list aria-label="Fish selection">
+                <mat-chip color="primary" selected>{{user?.user.length}} Users</mat-chip>
+              </mat-chip-list>
             </p>
             <p fxLayout="row" fxLayoutAlign="start center">
               <mat-icon class="muted-text">date_range</mat-icon>
@@ -85,4 +92,46 @@
         </pagination-controls>
       </mat-card>
     </div>
+  </div>
+
+  <div class="tree" style="margin-left: 10%;" *ngIf="show_tree">
+    <ul>
+      <li *ngFor="let user of user_lists ; index as i">
+        <a (click)="editenquiry()"><b>{{user?.company_name}}</b></a>
+        <ul>
+          <li *ngFor="let user1 of user.user; index as i">
+            <a>Mr. {{user1?.profile?.name}} {{user1?.profile?.surname}} <br>
+            {{user1?.contacts?.email}}<br>
+            {{user1?.contacts?.phone}}
+            </a>
+            <!-- <ul>
+              <li>
+                <a href="#">Grand Child</a>
+              </li>
+            </ul> -->
+          </li>
+          <!-- <li>
+            <a href="#">Child</a>
+            <ul>
+              <li><a href="#">Grand Child</a></li>
+              <li>
+                <a href="#">Grand Child</a>
+                <ul>
+                  <li>
+                    <a href="#">Great Grand Child</a>
+                  </li>
+                  <li>
+                    <a href="#">Great Grand Child</a>
+                  </li>
+                  <li>
+                    <a href="#">Great Grand Child</a>
+                  </li>
+                </ul>
+              </li>
+              <li><a href="#">Grand Child</a></li>
+            </ul>
+          </li> -->
+        </ul>
+      </li>
+    </ul>
   </div>

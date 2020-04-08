@@ -1,4 +1,4 @@
-<div *ngFor="let menu of parentMenu" class="menu-item">
+<!-- <div *ngFor="let menu of parentMenu" class="menu-item">
     <a *ngIf="menu.routerLink && !menu.hasSubMenu" mat-button 
         fxLayout="row" [fxLayoutAlign]="(settings.menuType=='default') ? 'start center' : 'center center'"
         [routerLink]="[menu.routerLink]" routerLinkActive="active-link" [routerLinkActiveOptions]="{exact:true}"
@@ -27,4 +27,133 @@
     <div *ngIf="menu.hasSubMenu" class="sub-menu" [id]="'sub-menu-'+menu.id">
         <app-vertical-menu [menuItems]="menuItems" [menuParentId]="menu.id"></app-vertical-menu>
     </div>
+</div> -->
+
+<!-- <mat-icon class="menu-icon">{{menu.icon}}</mat-icon> -->
+<div class="menu-item">
+    <button mat-button style="text-align: left;" routerLink="/dashboard"> <span class="material-icons"> chrome_reader_mode</span>
+        Dashboard </button>
 </div>
+<div class="menu-item">
+    <button mat-button style="text-align: left;" routerLink="/Company"> <span class="material-icons"> local_convenience_store</span>
+        Company </button>
+</div>
+<div *ngIf="show_nav">
+<div class="menu-item" *ngIf="company.can_access_user_view || company.can_access_role_view">
+    <button mat-button style="text-align: left;" (click)="user_click()"> <span class="material-icons"> people</span>
+        Users <mat-icon class="menu-expand-icon transition-2">
+            arrow_drop_down</mat-icon></button>
+    <div *ngIf="user_clciks">
+        <button mat-button style="text-align: left; margin-left: 15px;" routerLink="/users/users" *ngIf="company.can_access_user_view"> <span class="material-icons">
+                account_circle</span> User</button>
+        <button mat-button style="text-align: left; margin-left: 15px;" routerLink="/users/role" *ngIf="company.can_access_role_view"> <span class="material-icons">
+                assignment_ind</span> User Role</button>
+        <button mat-button style="text-align: left; margin-left: 15px;" routerLink="/users/user_activity"> <span class="material-icons">
+                contacts</span> User Activity</button>
+    </div>
+</div>
+<div class="menu-item" *ngIf="company.can_access_enquiry_view || company.can_access_lead_view || company.can_access_client_view || company.can_access_task_view">
+    <button mat-button style="text-align: left;" (click)="enquiry_click()"> <span class="material-icons">
+            subtitles</span> Lead Management <mat-icon class="menu-expand-icon transition-2">
+            arrow_drop_down</mat-icon></button>
+    <div *ngIf="enquiry_clciks">
+        <button mat-button style="text-align: left; margin-left: 15px;" routerLink="/Lead/enquiry" *ngIf="company.can_access_enquiry_view"> <span class="material-icons">
+                developer_board</span> Enquiry</button>
+        <button mat-button style="text-align: left; margin-left: 15px;" routerLink="/Lead/lead" *ngIf="company.can_access_lead_view"> <span class="material-icons">
+                thumb_up_alt</span> Lead</button>
+        <button mat-button style="text-align: left; margin-left: 15px;" routerLink="/Lead/client" *ngIf="company.can_access_client_view"> <span class="material-icons">
+                perm_identity</span> Client</button>
+        <button mat-button style="text-align: left; margin-left: 15px;" routerLink="/Lead/task" *ngIf="company.can_access_task_view"> <span class="material-icons">
+                today</span> Task</button>
+    </div>
+</div>
+<div class="menu-item" *ngIf="company.can_access_country_view || company.can_access_region_view || company.can_access_city_view">
+    <button mat-button style="text-align: left;" (click)="location_click()"> <span class="material-icons">
+            gps_fixed</span> Location <mat-icon class="menu-expand-icon transition-2">
+            arrow_drop_down</mat-icon></button>
+    <div *ngIf="location_clciks">
+        <button mat-button style="text-align: left; margin-left: 15px;" routerLink="/Location/country" *ngIf="company.can_access_country_view"> <span class="material-icons">
+                gps_fixed</span> Country</button>
+        <button mat-button style="text-align: left; margin-left: 15px;" routerLink="/Location/region" *ngIf="company.can_access_region_view"> <span class="material-icons">
+                person_pin_circle</span> Region</button>
+        <button mat-button style="text-align: left; margin-left: 15px;" routerLink="/Location/city" *ngIf="company.can_access_city_view"> <span class="material-icons">
+                apartment</span> City</button>
+    </div>
+</div>
+<div class="menu-item" *ngIf="company.can_access_team_managemet_view || company.can_access_data_source_view || company.can_access_compaing_list_view || company.can_access_assing_compaing_view">
+    <button mat-button style="text-align: left;" (click)="compaing_click()"> <span class="material-icons">
+            account_tree</span> Compaign <mat-icon class="menu-expand-icon transition-2">
+            arrow_drop_down</mat-icon></button>
+    <div *ngIf="compaing_clciks">
+        <button mat-button style="text-align: left; margin-left: 15px;" routerLink="/Compaign/team_managment" *ngIf="company.can_access_team_managemet_view"> <span class="material-icons">
+                filter_9_plus</span> Team Management</button>
+        <button mat-button style="text-align: left; margin-left: 15px;" routerLink="/Compaign/data_sorce" *ngIf="company.can_access_data_source_view"> <span class="material-icons">
+                storage</span> Data Source</button>
+        <button mat-button style="text-align: left; margin-left: 15px;" routerLink="/Compaign/compaing_list" *ngIf="company.can_access_compaing_list_view"> <span class="material-icons">
+                ballot</span> Campaign List</button>
+        <button mat-button style="text-align: left; margin-left: 15px;" routerLink="/Compaign/create_comp" *ngIf="company.can_access_assing_compaing_view"> <span class="material-icons">
+                playlist_add_check</span> Assign Campaign</button>
+    </div>
+</div>
+<div class="menu-item" *ngIf="company.can_access_stage_view || company.can_access_discription_view || company.can_access_lead_probabliti_view || company.can_access_drop_resion_view || company.can_access_enquiry_type_view || company.can_access_enquiry_source_view">
+    <button mat-button style="text-align: left;" (click)="setting_click()"> <span class="material-icons">
+            settings_applications</span> Setting <mat-icon class="menu-expand-icon transition-2">
+            arrow_drop_down</mat-icon></button>
+    <div *ngIf="setting_clciks">
+        <button mat-button style="text-align: left; margin-left: 15px;" routerLink="/Setting/stage" *ngIf="company.can_access_stage_view"> <span class="material-icons">
+                videogame_asset</span> Stage</button>
+        <button mat-button style="text-align: left; margin-left: 15px;" routerLink="/Setting/despriction" *ngIf="company.can_access_discription_view"> <span class="material-icons">
+                rate_review</span> Description</button>
+        <button mat-button style="text-align: left; margin-left: 15px;" routerLink="/Setting/target"> <span class="material-icons">
+                event_available</span> Target</button>
+        <button mat-button style="text-align: left; margin-left: 15px;" routerLink="/Setting/forcast"> <span class="material-icons">
+                event_note</span> Forecasting</button>
+        <button mat-button style="text-align: left; margin-left: 15px;" routerLink="/Setting/lead_probility" *ngIf="company.can_access_lead_probabliti_view"> <span class="material-icons">
+                format_list_bulleted</span> Lead Probability</button>
+        <button mat-button style="text-align: left; margin-left: 15px;" routerLink="/Setting/drop_reason" *ngIf="company.can_access_drop_resion_view"> <span class="material-icons">
+                thumb_down_alt</span> Drop Reason</button>
+        <button mat-button style="text-align: left; margin-left: 15px;" routerLink="/Setting/enquiry_type" *ngIf="company.can_access_enquiry_type_view"> <span class="material-icons">
+                amp_stories</span> Enquiry Type</button>
+        <button mat-button style="text-align: left; margin-left: 15px;" routerLink="/Setting/enquiry_source" *ngIf="company.can_access_enquiry_source_view"> <span class="material-icons">
+                library_books</span> Enquiry Source</button>
+        <button mat-button style="text-align: left; margin-left: 15px;" routerLink="/Setting/customer_type"> <span class="material-icons">
+                contacts</span> Customer Type</button>
+        <button mat-button style="text-align: left; margin-left: 15px;" routerLink="/Setting/product"> <span class="material-icons">
+                add_shopping_cart</span> Products</button>
+    </div>
+</div>
+<div class="menu-item" *ngIf="company.can_access_QrCode_view">
+    <button mat-button style="text-align: left;" (click)="Aip_click()"> <span class="material-icons">
+            settings_input_composite</span> Api Configuration <mat-icon class="menu-expand-icon transition-2">
+            arrow_drop_down</mat-icon></button>
+    <div *ngIf="Api_clciks">
+        <button mat-button style="text-align: left; margin-left: 15px;" routerLink="/api-confrigation/qr-code" *ngIf="company.can_access_QrCode_view"> <span class="material-icons">
+                tab_unselected</span> QR-Code</button>
+        <button mat-button style="text-align: left; margin-left: 15px;" routerLink="/Lead/email"> <span class="material-icons">
+                email</span> Email</button>
+        <button mat-button style="text-align: left; margin-left: 15px;" routerLink="/Lead/sms"> <span class="material-icons">
+                sms</span> SMS</button>
+    </div>
+</div>
+<div class="menu-item" *ngIf="company.can_access_report_view">
+    <button mat-button style="text-align: left;" (click)="reports_click()"> <span class="material-icons">
+            recent_actors</span> Reports <mat-icon class="menu-expand-icon transition-2">
+            arrow_drop_down</mat-icon></button>
+    <div *ngIf="reports_clciks">
+        <button mat-button style="text-align: left; margin-left: 15px;" routerLink="/reports/report"> <span class="material-icons">
+                report</span>Report</button>
+    </div>
+</div>
+</div>
+<!-- <div class="menu-item">
+    <ng-template ngIf="true">
+        <button mat-button [matMenuTriggerFor]="menu" #matMenuTrigger="matMenuTrigger" style="text-align: left;"> <span
+                class="material-icons"> account_balance</span>Menu <mat-icon class="menu-expand-icon transition-2">
+                arrow_drop_down</mat-icon></button>
+        <mat-menu #menu="matMenu" [overlapTrigger]="false">
+            <div (mouseleave)="matMenuTrigger.closeMenu()">
+                <button mat-menu-item><span class="material-icons"> account_balance</span> Item 1</button>
+            </div>
+        </mat-menu>
+    </ng-template>
+</div> -->

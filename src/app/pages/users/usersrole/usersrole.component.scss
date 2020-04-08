@@ -17,6 +17,10 @@ th {
 	color: white; 
 	font-weight: bold; 
 	}
+	.scroll {
+		max-height: 60px;
+		overflow: auto;
+	  }
 
 /* 
 Max width before this PARTICULAR table gets nasty

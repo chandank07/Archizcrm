@@ -1,8 +1,12 @@
 <div fxLayout="row" fxLayoutAlign="space-between center" class="flex-p">
   <div fxLayout="row">
     <mat-button-toggle-group #controls="matButtonToggleGroup" appearance="legacy">
-      <mat-button-toggle value="add" (click)="openUserDialog(null)" [hidden]="add_role_enamable">
+      <mat-button-toggle value="add" (click)="openUserDialog()" [hidden]="add_role_enamable">
         <mat-icon>person_add</mat-icon>
+      </mat-button-toggle>
+      <mat-button-toggle value="keyboard_backspace" style="color: blue;" [hidden]="!add_role_enamable"
+        (click)="openUserDialog()">
+        <mat-icon>keyboard_backspace</mat-icon>
       </mat-button-toggle>
       <mat-button-toggle value="search">
         <mat-icon>search</mat-icon>
@@ -18,7 +22,7 @@
     <ng-container matColumnDef="position">
       <th mat-header-cell *matHeaderCellDef style="width: 20%;">Company</th>
       <td mat-cell *matCellDef="let element">
-        <b>{{element?.company?.company_name}}</b><br>{{element?.company?.company_id}} </td>
+        <b>{{element?.company?.company_name}}</b> </td>
     </ng-container>
 
     <!-- Name Column -->
@@ -71,14 +75,20 @@
     </mat-form-field>
     <mat-form-field appearance="outline" style="width: 300px; padding-left: 2%;">
       <mat-label>Parent</mat-label>
-      <mat-select placeholder="State"  (selectionChange)="onBookChange($event.value)">
+      <mat-select placeholder="State" (selectionChange)="onBookChange($event.value)">
         <mat-option *ngFor="let region of alluser_role ; let i = index" [value]="region._id">
           {{region?.user_role}}</mat-option>
       </mat-select>
     </mat-form-field>
-
-    <button mat-raised-button color="primary" style="margin-left: 20%;" (click)="submit()">Submit</button>
-    <button mat-raised-button color="warn" style="margin-left: 4px;" (click)="openUserDialog()" >Cancel</button>
+    <mat-form-field appearance="outline" style="width: 300px; padding-left: 2%;" *ngIf="super">
+      <mat-label>Parent</mat-label>
+      <mat-select placeholder="State" (selectionChange)="comany($event.value)">
+        <mat-option *ngFor="let region of all_comapny ; let i = index" [value]="region._id">
+          {{region?.company_name}}</mat-option>
+      </mat-select>
+    </mat-form-field>
+    <button mat-raised-button color="primary" style="margin-left: 2%;" (click)="submit()">Submit</button>
+    <button mat-raised-button color="warn" style="margin-left: 4px;" (click)="openUserDialog()">Cancel</button>
     <mat-divider></mat-divider>
     <table>
       <thead>
@@ -90,388 +100,528 @@
           <th style="width: 20%;">Delete</th>
         </tr>
       </thead>
-      <tbody>
-        <tr [hidden]="!User">
-          <td>User</td>
-          <td>
-            <mat-checkbox [(ngModel)]="can_access_user_add" [ngModelOptions]="{standalone: true}">User Add
-            </mat-checkbox>
-          </td>
-          <td>
-            <mat-checkbox [(ngModel)]="can_access_user_view" [ngModelOptions]="{standalone: true}">User Edit
-            </mat-checkbox>
-          </td>
-          <td>
-            <mat-checkbox [(ngModel)]="can_access_user_update" [ngModelOptions]="{standalone: true}">User Update
-            </mat-checkbox>
-          </td>
-          <td>
-            <mat-checkbox [(ngModel)]="can_access_user_delete" [ngModelOptions]="{standalone: true}">User Delete
-            </mat-checkbox>
-          </td>
-        </tr>
-        <tr [hidden]="!User_role">
-          <td>User Role</td>
-          <td>
-            <mat-checkbox [(ngModel)]="can_access_role_add" [ngModelOptions]="{standalone: true}">User Role Add
-            </mat-checkbox>
-          </td>
-          <td>
-            <mat-checkbox [(ngModel)]="can_access_role_view" [ngModelOptions]="{standalone: true}">User Role Edit
-            </mat-checkbox>
-          </td>
-          <td>
-            <mat-checkbox [(ngModel)]="can_access_role_update" [ngModelOptions]="{standalone: true}">User Role Update
-            </mat-checkbox>
-          </td>
-          <td>
-            <mat-checkbox [(ngModel)]="can_access_role_delete" [ngModelOptions]="{standalone: true}">User Role Delete
-            </mat-checkbox>
-          </td>
-        </tr>
-        <tr [hidden]="!enquiry">
-          <td>Enquiry</td>
-          <td>
-            <mat-checkbox [(ngModel)]="can_access_enquiry_add" [ngModelOptions]="{standalone: true}">Enquiry Add
-            </mat-checkbox>
-          </td>
-          <td>
-            <mat-checkbox [(ngModel)]="can_access_enquiry_view" [ngModelOptions]="{standalone: true}">Enquiry Edit
-            </mat-checkbox>
-          </td>
-          <td>
-            <mat-checkbox [(ngModel)]="can_access_enquiry_update" [ngModelOptions]="{standalone: true}">Enquiry Update
-            </mat-checkbox>
-          </td>
-          <td>
-            <mat-checkbox [(ngModel)]="can_access_enquiry_delete" [ngModelOptions]="{standalone: true}">Enquiry Delete
-            </mat-checkbox>
-          </td>
-        </tr>
-        <tr [hidden]="!lead">
-          <td>Lead</td>
-          <td>
-            <mat-checkbox [(ngModel)]="can_access_lead_add" [ngModelOptions]="{standalone: true}">Lead Add
-            </mat-checkbox>
-          </td>
-          <td>
-            <mat-checkbox [(ngModel)]="can_access_lead_view" [ngModelOptions]="{standalone: true}">Lead Edit
-            </mat-checkbox>
-          </td>
-          <td>
-            <mat-checkbox [(ngModel)]="can_access_lead_update" [ngModelOptions]="{standalone: true}">Lead Update
-            </mat-checkbox>
-          </td>
-          <td>
-            <mat-checkbox [(ngModel)]="can_access_lead_delete" [ngModelOptions]="{standalone: true}">Lead Delete
-            </mat-checkbox>
-          </td>
-        </tr>
-        <tr [hidden]="!client">
-          <td>Client</td>
-          <td>
-            <mat-checkbox [(ngModel)]="can_access_client_add" [ngModelOptions]="{standalone: true}">Client Add
-            </mat-checkbox>
-          </td>
-          <td>
-            <mat-checkbox [(ngModel)]="can_access_client_view" [ngModelOptions]="{standalone: true}">Client Edit
-            </mat-checkbox>
-          </td>
-          <td>
-            <mat-checkbox [(ngModel)]="can_access_client_update" [ngModelOptions]="{standalone: true}">Client Update
-            </mat-checkbox>
-          </td>
-          <td>
-            <mat-checkbox [(ngModel)]="can_access_client_delete" [ngModelOptions]="{standalone: true}">Client Delete
-            </mat-checkbox>
-          </td>
-        </tr>
-        <tr [hidden]="!task">
-          <td>Task</td>
-          <td>
-            <mat-checkbox [(ngModel)]="can_access_task_add" [ngModelOptions]="{standalone: true}">Task Add
-            </mat-checkbox>
-          </td>
-          <td>
-            <mat-checkbox [(ngModel)]="can_access_task_view" [ngModelOptions]="{standalone: true}">Task Edit
-            </mat-checkbox>
-          </td>
-          <td>
-            <mat-checkbox [(ngModel)]="can_access_task_update" [ngModelOptions]="{standalone: true}">Task Update
-            </mat-checkbox>
-          </td>
-          <td>
-            <mat-checkbox [(ngModel)]="can_access_task_delete" [ngModelOptions]="{standalone: true}">Task Delete
-            </mat-checkbox>
-          </td>
-        </tr>
-        <tr [hidden]="!country">
-          <td>Country</td>
-          <td>
-            <mat-checkbox [(ngModel)]="can_access_country_add" [ngModelOptions]="{standalone: true}">Country Add
-            </mat-checkbox>
-          </td>
-          <td>
-            <mat-checkbox [(ngModel)]="can_access_country_view" [ngModelOptions]="{standalone: true}">Country Edit
-            </mat-checkbox>
-          </td>
-          <td>
-            <mat-checkbox [(ngModel)]="can_access_country_update" [ngModelOptions]="{standalone: true}">Country Update
-            </mat-checkbox>
-          </td>
-          <td>
-            <mat-checkbox [(ngModel)]="can_access_country_delete" [ngModelOptions]="{standalone: true}">Country Delete
-            </mat-checkbox>
-          </td>
-        </tr>
-        <tr [hidden] ="!region">
-          <td>Region</td>
-          <td>
-            <mat-checkbox [(ngModel)]="can_access_region_add" [ngModelOptions]="{standalone: true}">Region Add
-            </mat-checkbox>
-          </td>
-          <td>
-            <mat-checkbox [(ngModel)]="can_access_region_view" [ngModelOptions]="{standalone: true}">Region Edit
-            </mat-checkbox>
-          </td>
-          <td>
-            <mat-checkbox [(ngModel)]="can_access_region_update" [ngModelOptions]="{standalone: true}">Region Update
-            </mat-checkbox>
-          </td>
-          <td>
-            <mat-checkbox [(ngModel)]="can_access_region_delete" [ngModelOptions]="{standalone: true}">Region Delete
-            </mat-checkbox>
-          </td>
-        </tr>
-        <tr [hidden] ="!city">
-          <td>City</td>
-          <td>
-            <mat-checkbox [(ngModel)]="can_access_city_add" [ngModelOptions]="{standalone: true}">City Add
-            </mat-checkbox>
-          </td>
-          <td>
-            <mat-checkbox [(ngModel)]="can_access_city_view" [ngModelOptions]="{standalone: true}">City Edit
-            </mat-checkbox>
-          </td>
-          <td>
-            <mat-checkbox [(ngModel)]="can_access_city_update" [ngModelOptions]="{standalone: true}">City Update
-            </mat-checkbox>
-          </td>
-          <td>
-            <mat-checkbox [(ngModel)]="can_access_city_delete" [ngModelOptions]="{standalone: true}">City Delete
-            </mat-checkbox>
-          </td>
-        </tr>
-        <tr [hidden] ="!team_management">
-          <td>Team Managment</td>
-          <td>
-            <mat-checkbox [(ngModel)]="can_access_team_managemet_add" [ngModelOptions]="{standalone: true}">Team Managment Add
-            </mat-checkbox>
-          </td>
-          <td>
-            <mat-checkbox [(ngModel)]="can_access_team_managemet_view" [ngModelOptions]="{standalone: true}">Team Managment Edit
-            </mat-checkbox>
-          </td>
-          <td>
-            <mat-checkbox [(ngModel)]="can_access_team_managemet_update" [ngModelOptions]="{standalone: true}">Team Managment Update
-            </mat-checkbox>
-          </td>
-          <td>
-            <mat-checkbox [(ngModel)]="can_access_team_managemet_delete" [ngModelOptions]="{standalone: true}">Team Managment Delete
-            </mat-checkbox>
-          </td>
-        </tr>
-        <tr [hidden] ="!data_source">
-          <td>Data Sourece</td>
-          <td>
-            <mat-checkbox [(ngModel)]="can_access_data_source_add" [ngModelOptions]="{standalone: true}">Data Sourece Add
-            </mat-checkbox>
-          </td>
-          <td>
-            <mat-checkbox [(ngModel)]="can_access_data_source_view" [ngModelOptions]="{standalone: true}">Data Sourece Edit
-            </mat-checkbox>
-          </td>
-          <td>
-            <mat-checkbox [(ngModel)]="can_access_data_source_update" [ngModelOptions]="{standalone: true}">Data Sourece Update
-            </mat-checkbox>
-          </td>
-          <td>
-            <mat-checkbox [(ngModel)]="can_access_data_source_delete" [ngModelOptions]="{standalone: true}">Data Sourece Delete
-            </mat-checkbox>
-          </td>
-        </tr>
-        <tr [hidden] ="!compaing_list">
-          <td>Compaing List</td>
-          <td>
-            <mat-checkbox [(ngModel)]="can_access_compaing_list_add" [ngModelOptions]="{standalone: true}">Compaing List Add
-            </mat-checkbox>
-          </td>
-          <td>
-            <mat-checkbox [(ngModel)]="can_access_compaing_list_view" [ngModelOptions]="{standalone: true}">Compaing List Edit
-            </mat-checkbox>
-          </td>
-          <td>
-            <mat-checkbox [(ngModel)]="can_access_compaing_list_update" [ngModelOptions]="{standalone: true}">Compaing List Update
-            </mat-checkbox>
-          </td>
-          <td>
-            <mat-checkbox [(ngModel)]="can_access_compaing_list_delete" [ngModelOptions]="{standalone: true}">Compaing List Delete
-            </mat-checkbox>
-          </td>
-        </tr>
-        <tr [hidden] ="!assing_compaing">
-          <td>Assing Compaing</td>
-          <td>
-            <mat-checkbox [(ngModel)]="can_access_assing_compaing_add" [ngModelOptions]="{standalone: true}">Assing Compaing Add
-            </mat-checkbox>
-          </td>
-          <td>
-            <mat-checkbox [(ngModel)]="can_access_assing_compaing_view" [ngModelOptions]="{standalone: true}">Assing Compaing Edit
-            </mat-checkbox>
-          </td>
-          <td>
-            <mat-checkbox [(ngModel)]="can_access_assing_compaing_update" [ngModelOptions]="{standalone: true}">Assing Compaing Update
-            </mat-checkbox>
-          </td>
-          <td>
-            <mat-checkbox [(ngModel)]="can_access_assing_compaing_delete" [ngModelOptions]="{standalone: true}">Assing Compaing Delete
-            </mat-checkbox>
-          </td>
-        </tr>
-        <tr [hidden] ="!stage">
-          <td>Stage</td>
-          <td>
-            <mat-checkbox [(ngModel)]="can_access_stage_add" [ngModelOptions]="{standalone: true}">Stage Add
-            </mat-checkbox>
-          </td>
-          <td>
-            <mat-checkbox [(ngModel)]="can_access_stage_add" [ngModelOptions]="{standalone: true}">Stage Edit
-            </mat-checkbox>
-          </td>
-          <td>
-            <mat-checkbox [(ngModel)]="can_access_stage_add" [ngModelOptions]="{standalone: true}">Stage Update
-            </mat-checkbox>
-          </td>
-          <td>
-            <mat-checkbox [(ngModel)]="can_access_stage_add" [ngModelOptions]="{standalone: true}">Stage Delete
-            </mat-checkbox>
-          </td>
-        </tr>
-        <tr [hidden] ="!discription">
-          <td>Description</td>
-          <td>
-            <mat-checkbox [(ngModel)]="can_access_discription_add" [ngModelOptions]="{standalone: true}">Description Add
-            </mat-checkbox>
-          </td>
-          <td>
-            <mat-checkbox [(ngModel)]="can_access_discription_view" [ngModelOptions]="{standalone: true}">Description Edit
-            </mat-checkbox>
-          </td>
-          <td>
-            <mat-checkbox [(ngModel)]="can_access_discription_update" [ngModelOptions]="{standalone: true}">Description Update
-            </mat-checkbox>
-          </td>
-          <td>
-            <mat-checkbox [(ngModel)]="can_access_discription_delete" [ngModelOptions]="{standalone: true}">Description Delete
-            </mat-checkbox>
-          </td>
-        </tr>
-        <tr [hidden] ="!lead_probabliti">
-          <td>Lead Probabliti</td>
-          <td>
-            <mat-checkbox [(ngModel)]="can_access_lead_probabliti_add" [ngModelOptions]="{standalone: true}">Lead Probabliti Add
-            </mat-checkbox>
-          </td>
-          <td>
-            <mat-checkbox [(ngModel)]="can_access_lead_probabliti_view" [ngModelOptions]="{standalone: true}">Lead Probabliti Edit
-            </mat-checkbox>
-          </td>
-          <td>
-            <mat-checkbox [(ngModel)]="can_access_lead_probabliti_update" [ngModelOptions]="{standalone: true}">Lead Probabliti Update
-            </mat-checkbox>
-          </td>
-          <td>
-            <mat-checkbox [(ngModel)]="can_access_lead_probabliti_delete" [ngModelOptions]="{standalone: true}">Lead Probabliti Delete
-            </mat-checkbox>
-          </td>
-        </tr>
-        <tr [hidden] ="!drop_resion">
-          <td>Drop Resion</td>
-          <td>
-            <mat-checkbox [(ngModel)]="can_access_drop_resion_add" [ngModelOptions]="{standalone: true}">Drop Resion Add
-            </mat-checkbox>
-          </td>
-          <td>
-            <mat-checkbox [(ngModel)]="can_access_drop_resion_view" [ngModelOptions]="{standalone: true}">Drop Resion Edit
-            </mat-checkbox>
-          </td>
-          <td>
-            <mat-checkbox [(ngModel)]="can_access_drop_resion_update" [ngModelOptions]="{standalone: true}">Drop Resion Update
-            </mat-checkbox>
-          </td>
-          <td>
-            <mat-checkbox [(ngModel)]="can_access_drop_resion_delete" [ngModelOptions]="{standalone: true}">Drop Resion Delete
-            </mat-checkbox>
-          </td>
-        </tr>
-        <tr [hidden] ="!enquiry_type">
-          <td>Enquiry Type</td>
-          <td>
-            <mat-checkbox [(ngModel)]="can_access_enquiry_type_add" [ngModelOptions]="{standalone: true}">Enquiry Type Add
-            </mat-checkbox>
-          </td>
-          <td>
-            <mat-checkbox [(ngModel)]="can_access_enquiry_type_view" [ngModelOptions]="{standalone: true}">Enquiry Type Edit
-            </mat-checkbox>
-          </td>
-          <td>
-            <mat-checkbox [(ngModel)]="can_access_enquiry_type_update" [ngModelOptions]="{standalone: true}">Enquiry Type Update
-            </mat-checkbox>
-          </td>
-          <td>
-            <mat-checkbox [(ngModel)]="can_access_enquiry_type_delete" [ngModelOptions]="{standalone: true}">Enquiry Type Delete
-            </mat-checkbox>
-          </td>
-        </tr>
-        <tr [hidden] ="!enquiry_source">
-          <td>Enquiry Source</td>
-          <td>
-            <mat-checkbox [(ngModel)]="can_access_enquiry_source_add" [ngModelOptions]="{standalone: true}">Enquiry Source Add
-            </mat-checkbox>
-          </td>
-          <td>
-            <mat-checkbox [(ngModel)]="can_access_enquiry_source_add" [ngModelOptions]="{standalone: true}">Enquiry Source Edit
-            </mat-checkbox>
-          </td>
-          <td>
-            <mat-checkbox [(ngModel)]="can_access_enquiry_source_add" [ngModelOptions]="{standalone: true}">Enquiry Source Update
-            </mat-checkbox>
-          </td>
-          <td>
-            <mat-checkbox [(ngModel)]="can_access_enquiry_source_add" [ngModelOptions]="{standalone: true}">Enquiry Source Delete
-            </mat-checkbox>
-          </td>
-        </tr>
-        <tr>
-          <td>QR Code</td>
-          <td>
-            <mat-checkbox [(ngModel)]="can_access_QrCode_add" [ngModelOptions]="{standalone: true}">QR Code Add
-            </mat-checkbox>
-          </td>
-          <td>
-            <mat-checkbox [(ngModel)]="can_access_QrCode_view" [ngModelOptions]="{standalone: true}">QR Code Edit
-            </mat-checkbox>
-          </td>
-          <td>
-            <mat-checkbox [(ngModel)]="can_access_QrCode_update" [ngModelOptions]="{standalone: true}">QR Code Update
-            </mat-checkbox>
-          </td>
-          <td>
-            <mat-checkbox [(ngModel)]="can_access_QrCode_delete" [ngModelOptions]="{standalone: true}">QR Code Delete
-            </mat-checkbox>
-          </td>
-        </tr>
-      </tbody>
+        <tbody>
+          <tr [hidden]="!position?.can_access_user_view">
+            <td>
+              <mat-checkbox (change)="user_change()">User</mat-checkbox>
+            </td>
+            <td>
+              <mat-checkbox [(ngModel)]="can_access_user_add" [ngModelOptions]="{standalone: true}">User Add
+              </mat-checkbox>
+            </td>
+            <td>
+              <mat-checkbox [(ngModel)]="can_access_user_view" [ngModelOptions]="{standalone: true}">User View
+              </mat-checkbox>
+            </td>
+            <td>
+              <mat-checkbox [(ngModel)]="can_access_user_update" [ngModelOptions]="{standalone: true}">User Update
+              </mat-checkbox>
+            </td>
+            <td>
+              <mat-checkbox [(ngModel)]="can_access_user_delete" [ngModelOptions]="{standalone: true}">User Delete
+              </mat-checkbox>
+            </td>
+          </tr>
+          <tr [hidden]="!position?.can_access_role_view">
+            <td>
+              <mat-checkbox (change)="userrole_change()">User Role</mat-checkbox>
+            </td>
+            <td>
+              <mat-checkbox [(ngModel)]="can_access_role_add" [ngModelOptions]="{standalone: true}">User Role Add
+              </mat-checkbox>
+            </td>
+            <td>
+              <mat-checkbox [(ngModel)]="can_access_role_view" [ngModelOptions]="{standalone: true}">User Role View
+              </mat-checkbox>
+            </td>
+            <td>
+              <mat-checkbox [(ngModel)]="can_access_role_update" [ngModelOptions]="{standalone: true}">User Role Update
+              </mat-checkbox>
+            </td>
+            <td>
+              <mat-checkbox [(ngModel)]="can_access_role_delete" [ngModelOptions]="{standalone: true}">User Role Delete
+              </mat-checkbox>
+            </td>
+          </tr>
+          <tr [hidden]="!position?.can_access_enquiry_view">
+            <td>
+              <mat-checkbox (change)="enquiry_change()">Enquiry</mat-checkbox>
+            </td>
+            <td>
+              <mat-checkbox [(ngModel)]="can_access_enquiry_add" [ngModelOptions]="{standalone: true}">Enquiry Add
+              </mat-checkbox>
+            </td>
+            <td>
+              <mat-checkbox [(ngModel)]="can_access_enquiry_view" [ngModelOptions]="{standalone: true}">Enquiry View
+              </mat-checkbox>
+            </td>
+            <td>
+              <mat-checkbox [(ngModel)]="can_access_enquiry_update" [ngModelOptions]="{standalone: true}">Enquiry Update
+              </mat-checkbox>
+            </td>
+            <td>
+              <mat-checkbox [(ngModel)]="can_access_enquiry_delete" [ngModelOptions]="{standalone: true}">Enquiry Delete
+              </mat-checkbox>
+            </td>
+          </tr>
+          <tr [hidden]="!position?.can_access_lead_view">
+            <td>
+              <mat-checkbox (change)="lead_change()">Lead</mat-checkbox>
+            </td>
+            <td>
+              <mat-checkbox [(ngModel)]="can_access_lead_add" [ngModelOptions]="{standalone: true}">Lead Add
+              </mat-checkbox>
+            </td>
+            <td>
+              <mat-checkbox [(ngModel)]="can_access_lead_view" [ngModelOptions]="{standalone: true}">Lead View
+              </mat-checkbox>
+            </td>
+            <td>
+              <mat-checkbox [(ngModel)]="can_access_lead_update" [ngModelOptions]="{standalone: true}">Lead Update
+              </mat-checkbox>
+            </td>
+            <td>
+              <mat-checkbox [(ngModel)]="can_access_lead_delete" [ngModelOptions]="{standalone: true}">Lead Delete
+              </mat-checkbox>
+            </td>
+          </tr>
+          <tr [hidden]="!position?.can_access_client_view">
+            <td>
+              <mat-checkbox (change)="client_change()">Client</mat-checkbox>
+            </td>
+            <td>
+              <mat-checkbox [(ngModel)]="can_access_client_add" [ngModelOptions]="{standalone: true}">Client Add
+              </mat-checkbox>
+            </td>
+            <td>
+              <mat-checkbox [(ngModel)]="can_access_client_view" [ngModelOptions]="{standalone: true}">Client View
+              </mat-checkbox>
+            </td>
+            <td>
+              <mat-checkbox [(ngModel)]="can_access_client_update" [ngModelOptions]="{standalone: true}">Client Update
+              </mat-checkbox>
+            </td>
+            <td>
+              <mat-checkbox [(ngModel)]="can_access_client_delete" [ngModelOptions]="{standalone: true}">Client Delete
+              </mat-checkbox>
+            </td>
+          </tr>
+          <tr [hidden]="!position?.can_access_task_view">
+            <td>
+              <mat-checkbox (change)="task_change()">Task</mat-checkbox>
+            </td>
+            <td>
+              <mat-checkbox [(ngModel)]="can_access_task_add" [ngModelOptions]="{standalone: true}">Task Add
+              </mat-checkbox>
+            </td>
+            <td>
+              <mat-checkbox [(ngModel)]="can_access_task_view" [ngModelOptions]="{standalone: true}">Task view
+              </mat-checkbox>
+            </td>
+            <td>
+              <mat-checkbox [(ngModel)]="can_access_task_update" [ngModelOptions]="{standalone: true}">Task Update
+              </mat-checkbox>
+            </td>
+            <td>
+              <mat-checkbox [(ngModel)]="can_access_task_delete" [ngModelOptions]="{standalone: true}">Task Delete
+              </mat-checkbox>
+            </td>
+          </tr>
+          <tr [hidden]="!position?.can_access_country_view">
+            <td>
+              <mat-checkbox (change)="country_change()">Country</mat-checkbox>
+            </td>
+            <td>
+              <mat-checkbox [(ngModel)]="can_access_country_add" [ngModelOptions]="{standalone: true}">Country Add
+              </mat-checkbox>
+            </td>
+            <td>
+              <mat-checkbox [(ngModel)]="can_access_country_view" [ngModelOptions]="{standalone: true}">Country View
+              </mat-checkbox>
+            </td>
+            <td>
+              <mat-checkbox [(ngModel)]="can_access_country_update" [ngModelOptions]="{standalone: true}">Country Update
+              </mat-checkbox>
+            </td>
+            <td>
+              <mat-checkbox [(ngModel)]="can_access_country_delete" [ngModelOptions]="{standalone: true}">Country Delete
+              </mat-checkbox>
+            </td>
+          </tr>
+          <tr [hidden]="!position?.can_access_region_view">
+            <td>
+              <mat-checkbox (change)="region_change()">Region</mat-checkbox>
+            </td>
+            <td>
+              <mat-checkbox [(ngModel)]="can_access_region_add" [ngModelOptions]="{standalone: true}">Region Add
+              </mat-checkbox>
+            </td>
+            <td>
+              <mat-checkbox [(ngModel)]="can_access_region_view" [ngModelOptions]="{standalone: true}">Region View
+              </mat-checkbox>
+            </td>
+            <td>
+              <mat-checkbox [(ngModel)]="can_access_region_update" [ngModelOptions]="{standalone: true}">Region Update
+              </mat-checkbox>
+            </td>
+            <td>
+              <mat-checkbox [(ngModel)]="can_access_region_delete" [ngModelOptions]="{standalone: true}">Region Delete
+              </mat-checkbox>
+            </td>
+          </tr>
+          <tr [hidden]="!position?.can_access_city_view">
+            <td>
+              <mat-checkbox (change)="city_change()">City</mat-checkbox>
+            </td>
+            <td>
+              <mat-checkbox [(ngModel)]="can_access_city_add" [ngModelOptions]="{standalone: true}">City Add
+              </mat-checkbox>
+            </td>
+            <td>
+              <mat-checkbox [(ngModel)]="can_access_city_view" [ngModelOptions]="{standalone: true}">City View
+              </mat-checkbox>
+            </td>
+            <td>
+              <mat-checkbox [(ngModel)]="can_access_city_update" [ngModelOptions]="{standalone: true}">City Update
+              </mat-checkbox>
+            </td>
+            <td>
+              <mat-checkbox [(ngModel)]="can_access_city_delete" [ngModelOptions]="{standalone: true}">City Delete
+              </mat-checkbox>
+            </td>
+          </tr>
+          <tr [hidden]="!position?.can_access_team_managemet_view">
+            <td>
+              <mat-checkbox (change)="team_mang_change()">Team Management</mat-checkbox>
+            </td>
+            <td>
+              <mat-checkbox [(ngModel)]="can_access_team_managemet_add" [ngModelOptions]="{standalone: true}">Team
+                Managment Add
+              </mat-checkbox>
+            </td>
+            <td>
+              <mat-checkbox [(ngModel)]="can_access_team_managemet_view" [ngModelOptions]="{standalone: true}">Team
+                Managment view
+              </mat-checkbox>
+            </td>
+            <td>
+              <mat-checkbox [(ngModel)]="can_access_team_managemet_update" [ngModelOptions]="{standalone: true}">Team
+                Managment Update
+              </mat-checkbox>
+            </td>
+            <td>
+              <mat-checkbox [(ngModel)]="can_access_team_managemet_delete" [ngModelOptions]="{standalone: true}">Team
+                Managment Delete
+              </mat-checkbox>
+            </td>
+          </tr>
+          <tr [hidden]="!position?.can_access_data_source_view">
+            <td>
+              <mat-checkbox (change)="data_sorc_change()">Data Source</mat-checkbox>
+            </td>
+            <td>
+              <mat-checkbox [(ngModel)]="can_access_data_source_add" [ngModelOptions]="{standalone: true}">Data Sourece
+                Add
+              </mat-checkbox>
+            </td>
+            <td>
+              <mat-checkbox [(ngModel)]="can_access_data_source_view" [ngModelOptions]="{standalone: true}">Data Sourece
+                View
+              </mat-checkbox>
+            </td>
+            <td>
+              <mat-checkbox [(ngModel)]="can_access_data_source_update" [ngModelOptions]="{standalone: true}">Data
+                Sourece Update
+              </mat-checkbox>
+            </td>
+            <td>
+              <mat-checkbox [(ngModel)]="can_access_data_source_delete" [ngModelOptions]="{standalone: true}">Data
+                Sourece Delete
+              </mat-checkbox>
+            </td>
+          </tr>
+          <tr [hidden]="!position?.can_access_compaing_list_view">
+            <td>
+              <mat-checkbox (change)="comp_list_change()">Campaign List</mat-checkbox>
+            </td>
+            <td>
+              <mat-checkbox [(ngModel)]="can_access_compaing_list_add" [ngModelOptions]="{standalone: true}">Compaing
+                List Add
+              </mat-checkbox>
+            </td>
+            <td>
+              <mat-checkbox [(ngModel)]="can_access_compaing_list_view" [ngModelOptions]="{standalone: true}">Compaing
+                List View
+              </mat-checkbox>
+            </td>
+            <td>
+              <mat-checkbox [(ngModel)]="can_access_compaing_list_update" [ngModelOptions]="{standalone: true}">Compaing
+                List Update
+              </mat-checkbox>
+            </td>
+            <td>
+              <mat-checkbox [(ngModel)]="can_access_compaing_list_delete" [ngModelOptions]="{standalone: true}">Compaing
+                List Delete
+              </mat-checkbox>
+            </td>
+          </tr>
+          <tr [hidden]="!position?.can_access_assing_compaing_view">
+            <td>
+              <mat-checkbox (change)="assing_comp_change()">Assign campaign</mat-checkbox>
+            </td>
+            <td>
+              <mat-checkbox [(ngModel)]="can_access_assing_compaing_add" [ngModelOptions]="{standalone: true}">Assing
+                Compaing Add
+              </mat-checkbox>
+            </td>
+            <td>
+              <mat-checkbox [(ngModel)]="can_access_assing_compaing_view" [ngModelOptions]="{standalone: true}">Assing
+                Compaing View
+              </mat-checkbox>
+            </td>
+            <td>
+              <mat-checkbox [(ngModel)]="can_access_assing_compaing_update" [ngModelOptions]="{standalone: true}">Assing
+                Compaing Update
+              </mat-checkbox>
+            </td>
+            <td>
+              <mat-checkbox [(ngModel)]="can_access_assing_compaing_delete" [ngModelOptions]="{standalone: true}">Assing
+                Compaing Delete
+              </mat-checkbox>
+            </td>
+          </tr>
+          <tr [hidden]="!position?.can_access_stage_view">
+            <td>
+              <mat-checkbox (change)="Stage_change()">Stage</mat-checkbox>
+            </td>
+            <td>
+              <mat-checkbox [(ngModel)]="can_access_stage_add" [ngModelOptions]="{standalone: true}">Stage Add
+              </mat-checkbox>
+            </td>
+            <td>
+              <mat-checkbox [(ngModel)]="can_access_stage_view" [ngModelOptions]="{standalone: true}">Stage View
+              </mat-checkbox>
+            </td>
+            <td>
+              <mat-checkbox [(ngModel)]="can_access_stage_update" [ngModelOptions]="{standalone: true}">Stage Update
+              </mat-checkbox>
+            </td>
+            <td>
+              <mat-checkbox [(ngModel)]="can_access_stage_delete" [ngModelOptions]="{standalone: true}">Stage Delete
+              </mat-checkbox>
+            </td>
+          </tr>
+          <tr [hidden]="!position?.can_access_discription_view">
+            <td>
+              <mat-checkbox (change)="Description_change()">Description</mat-checkbox>
+            </td>
+            <td>
+              <mat-checkbox [(ngModel)]="can_access_discription_add" [ngModelOptions]="{standalone: true}">Description
+                Add
+              </mat-checkbox>
+            </td>
+            <td>
+              <mat-checkbox [(ngModel)]="can_access_discription_view" [ngModelOptions]="{standalone: true}">Description
+                View
+              </mat-checkbox>
+            </td>
+            <td>
+              <mat-checkbox [(ngModel)]="can_access_discription_update" [ngModelOptions]="{standalone: true}">
+                Description Update
+              </mat-checkbox>
+            </td>
+            <td>
+              <mat-checkbox [(ngModel)]="can_access_discription_delete" [ngModelOptions]="{standalone: true}">
+                Description Delete
+              </mat-checkbox>
+            </td>
+          </tr>
+          <tr [hidden]="!position?.can_access_lead_probabliti_view">
+            <td>
+              <mat-checkbox (change)="lead_prob_change()">Lead Probability</mat-checkbox>
+            </td>
+            <td>
+              <mat-checkbox [(ngModel)]="can_access_lead_probabliti_add" [ngModelOptions]="{standalone: true}">Lead
+                Probabliti Add
+              </mat-checkbox>
+            </td>
+            <td>
+              <mat-checkbox [(ngModel)]="can_access_lead_probabliti_view" [ngModelOptions]="{standalone: true}">Lead
+                Probabliti View
+              </mat-checkbox>
+            </td>
+            <td>
+              <mat-checkbox [(ngModel)]="can_access_lead_probabliti_update" [ngModelOptions]="{standalone: true}">Lead
+                Probabliti Update
+              </mat-checkbox>
+            </td>
+            <td>
+              <mat-checkbox [(ngModel)]="can_access_lead_probabliti_delete" [ngModelOptions]="{standalone: true}">Lead
+                Probabliti Delete
+              </mat-checkbox>
+            </td>
+          </tr>
+          <tr [hidden]="!position?.can_access_drop_resion_view">
+            <td>
+              <mat-checkbox (change)="drop_reg_change()">Drop reason</mat-checkbox>
+            </td>
+            <td>
+              <mat-checkbox [(ngModel)]="can_access_drop_resion_add" [ngModelOptions]="{standalone: true}">Drop Resion
+                Add
+              </mat-checkbox>
+            </td>
+            <td>
+              <mat-checkbox [(ngModel)]="can_access_drop_resion_view" [ngModelOptions]="{standalone: true}">Drop Resion
+                View
+              </mat-checkbox>
+            </td>
+            <td>
+              <mat-checkbox [(ngModel)]="can_access_drop_resion_update" [ngModelOptions]="{standalone: true}">Drop
+                Resion Update
+              </mat-checkbox>
+            </td>
+            <td>
+              <mat-checkbox [(ngModel)]="can_access_drop_resion_delete" [ngModelOptions]="{standalone: true}">Drop
+                Resion Delete
+              </mat-checkbox>
+            </td>
+          </tr>
+          <tr [hidden]="!position?.can_access_enquiry_type_view">
+            <td>
+              <mat-checkbox (change)="enq_type_change()">Enquiry Type</mat-checkbox>
+            </td>
+            <td>
+              <mat-checkbox [(ngModel)]="can_access_enquiry_type_add" [ngModelOptions]="{standalone: true}">Enquiry Type
+                Add
+              </mat-checkbox>
+            </td>
+            <td>
+              <mat-checkbox [(ngModel)]="can_access_enquiry_type_view" [ngModelOptions]="{standalone: true}">Enquiry
+                Type View
+              </mat-checkbox>
+            </td>
+            <td>
+              <mat-checkbox [(ngModel)]="can_access_enquiry_type_update" [ngModelOptions]="{standalone: true}">Enquiry
+                Type Update
+              </mat-checkbox>
+            </td>
+            <td>
+              <mat-checkbox [(ngModel)]="can_access_enquiry_type_delete" [ngModelOptions]="{standalone: true}">Enquiry
+                Type Delete
+              </mat-checkbox>
+            </td>
+          </tr>
+          <tr [hidden]="!position?.can_access_enquiry_source_view">
+            <td>
+              <mat-checkbox (change)="enq_sorc_change()">Enquiry Source</mat-checkbox>
+            </td>
+            <td>
+              <mat-checkbox [(ngModel)]="can_access_enquiry_source_add" [ngModelOptions]="{standalone: true}">Enquiry
+                Source Add
+              </mat-checkbox>
+            </td>
+            <td>
+              <mat-checkbox [(ngModel)]="can_access_enquiry_source_view" [ngModelOptions]="{standalone: true}">Enquiry
+                Source View
+              </mat-checkbox>
+            </td>
+            <td>
+              <mat-checkbox [(ngModel)]="can_access_enquiry_source_update" [ngModelOptions]="{standalone: true}">Enquiry
+                Source Update
+              </mat-checkbox>
+            </td>
+            <td>
+              <mat-checkbox [(ngModel)]="can_access_enquiry_source_delete" [ngModelOptions]="{standalone: true}">Enquiry
+                Source Delete
+              </mat-checkbox>
+            </td>
+          </tr>
+          <tr [hidden]="!position?.can_access_QrCode_view">
+            <td>
+              <mat-checkbox (change)="qr_code_chnage()">QR Code</mat-checkbox>
+            </td>
+            <td>
+              <mat-checkbox [(ngModel)]="can_access_QrCode_add" [ngModelOptions]="{standalone: true}">QR Code Add
+              </mat-checkbox>
+            </td>
+            <td>
+              <mat-checkbox [(ngModel)]="can_access_QrCode_view" [ngModelOptions]="{standalone: true}">QR Code View
+              </mat-checkbox>
+            </td>
+            <td>
+              <mat-checkbox [(ngModel)]="can_access_QrCode_update" [ngModelOptions]="{standalone: true}">QR Code Update
+              </mat-checkbox>
+            </td>
+            <td>
+              <mat-checkbox [(ngModel)]="can_access_QrCode_delete" [ngModelOptions]="{standalone: true}">QR Code Delete
+              </mat-checkbox>
+            </td>
+          </tr>
+          <tr [hidden]="!position?.can_access_target_view">
+            <td>
+              <mat-checkbox (change)="Target_chnage()">Target</mat-checkbox>
+            </td>
+            <td>
+              <mat-checkbox [(ngModel)]="can_access_target_add" [ngModelOptions]="{standalone: true}">Target Add
+              </mat-checkbox>
+            </td>
+            <td>
+              <mat-checkbox [(ngModel)]="can_access_target_view" [ngModelOptions]="{standalone: true}">Target View
+              </mat-checkbox>
+            </td>
+            <td>
+              <mat-checkbox [(ngModel)]="can_access_target_update" [ngModelOptions]="{standalone: true}">Target Update
+              </mat-checkbox>
+            </td>
+            <td>
+              <mat-checkbox [(ngModel)]="can_access_target_delete" [ngModelOptions]="{standalone: true}">Target Delete
+              </mat-checkbox>
+            </td>
+          </tr>
+          <tr [hidden]="!position?.can_access_forcast_view">
+            <td>
+              <mat-checkbox (change)="Forecast_chnage()">Forecast</mat-checkbox>
+            </td>
+            <td>
+              <mat-checkbox [(ngModel)]="can_access_forcast_add" [ngModelOptions]="{standalone: true}">Forcast Add
+              </mat-checkbox>
+            </td>
+            <td>
+              <mat-checkbox [(ngModel)]="can_access_forcast_view" [ngModelOptions]="{standalone: true}">Forcast View
+              </mat-checkbox>
+            </td>
+            <td>
+              <mat-checkbox [(ngModel)]="can_access_forcast_update" [ngModelOptions]="{standalone: true}">Forcast Update
+              </mat-checkbox>
+            </td>
+            <td>
+              <mat-checkbox [(ngModel)]="can_access_forcast_delete" [ngModelOptions]="{standalone: true}">Forcast Delete
+              </mat-checkbox>
+            </td>
+          </tr>
+          <tr [hidden]="!position?.can_access_report_view">
+            <td>
+              <mat-checkbox (change)="Report_chnage()">Report</mat-checkbox>
+            </td>
+            <td>
+              <mat-checkbox [(ngModel)]="can_access_report_add" [ngModelOptions]="{standalone: true}">Report Add
+              </mat-checkbox>
+            </td>
+            <td>
+              <mat-checkbox [(ngModel)]="can_access_report_view" [ngModelOptions]="{standalone: true}">Report View
+              </mat-checkbox>
+            </td>
+            <td>
+              <mat-checkbox [(ngModel)]="can_access_report_update" [ngModelOptions]="{standalone: true}">Report Update
+              </mat-checkbox>
+            </td>
+            <td>
+              <mat-checkbox [(ngModel)]="can_access_report_delete" [ngModelOptions]="{standalone: true}">Report Delete
+              </mat-checkbox>
+            </td>
+          </tr>
+        </tbody>
+
     </table>
   </mat-card>
 </div>

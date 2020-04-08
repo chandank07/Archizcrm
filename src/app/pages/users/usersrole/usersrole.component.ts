@@ -8,7 +8,8 @@ import { MatPaginator } from '@angular/material/paginator';
 import { MatTableDataSource } from '@angular/material/table';
 import { UsersService } from '../users.service';
 import { AlertService } from 'ngx-alerts';
-
+import { CompanyService } from '../../../pages/companys/company.service';
+import { Location } from '@angular/common';
 @Component({
   selector: 'app-usersrole',
   templateUrl: './usersrole.component.html',
@@ -16,6 +17,7 @@ import { AlertService } from 'ngx-alerts';
 })
 export class UsersroleComponent implements OnInit {
   userRoleForm: FormGroup;
+  comany_id: any;
   settings: any;
   editable: Boolean = false;
   role_id: any;
@@ -120,6 +122,31 @@ export class UsersroleComponent implements OnInit {
   can_access_QrCode_update: boolean = false;
   can_access_QrCode_delete: boolean = false;
 
+  can_access_target_add: boolean = false;
+  can_access_target_view: boolean = false;
+  can_access_target_update: boolean = false;
+  can_access_target_delete: boolean = false;
+
+  can_access_forcast_add: boolean = false;
+  can_access_forcast_view: boolean = false;
+  can_access_forcast_update: boolean = false;
+  can_access_forcast_delete: boolean = false;
+
+  can_access_email_add: boolean = false;
+  can_access_email_view: boolean = false;
+  can_access_email_update: boolean = false;
+  can_access_email_delete: boolean = false;
+
+  can_access_sms_add: boolean = false;
+  can_access_sms_view: boolean = false;
+  can_access_sms_update: boolean = false;
+  can_access_sms_delete: boolean = false;
+
+  can_access_report_add: boolean = false;
+  can_access_report_view: boolean = false;
+  can_access_report_update: boolean = false;
+  can_access_report_delete: boolean = false;
+
   user_role: any
   parent_id: any
   function: any
@@ -150,9 +177,12 @@ export class UsersroleComponent implements OnInit {
   lead_probabliti: Boolean = false;
   drop_resion: Boolean = false;
   enquiry_source: Boolean = false;
+  super: Boolean = false;
   @ViewChild(MatPaginator, { static: true }) paginator: MatPaginator;
+  position: any;
   constructor(private formBuilder: FormBuilder, public appSettings: AppSettings,
-    public router: Router, private UsersService: UsersService, private alertService: AlertService, ) {
+    public router: Router, private UsersService: UsersService, private alertService: AlertService,
+    private CompanyService: CompanyService, private Location: Location) {
     this.settings = this.appSettings.settings;
     this.initForm();
   }
@@ -160,65 +190,38 @@ export class UsersroleComponent implements OnInit {
   ngOnInit() {
     this.get_role();
     this.get_comany();
+    this.get_me();
   }
 
   get_role() {
     this.UsersService.get_role().subscribe((res: any) => {
       console.log(res)
       this.alluser_role = res;
-      this.UsersService.user_activity({ routes: "/users/role", activity: "Get User Role" }).subscribe(res => {
-      })
+      // this.UsersService.user_activity({ routes: "/users/role", activity: "Get User Role" }).subscribe(res => {
+      // })
       this.dataSource = new MatTableDataSource(res)
       this.dataSource.paginator = this.paginator;
     })
   }
+
+  get_me() {
+    this.UsersService.get_me().subscribe((doc: any) => {
+      // if(doc.data.position)
+      console.log(doc.data.position._id)
+      if (doc.data.position._id == "5e7df0fc894f5d5980a65143") {
+        this.super = true;
+      } else {
+        this.super = false;
+      }
+      this.position = doc.data.position.privileges;
+      console.log(this.position)
+    })
+  }
+
   get_comany() {
     this.UsersService.get_company().subscribe((res: any) => {
       this.all_comapny = res;
-      console.log(this.all_comapny)
-      res[0].permission.forEach(element => {
-        if (element == 'user')
-          this.User = true;
-        else if (element == "user_role")
-          this.User_role = true;
-        else if (element == "user_activity")
-          this.User_active = true;
-        else if (element == "enquiry")
-          this.enquiry = true;
-        else if (element == "lead")
-          this.lead = true;
-        else if (element == "client")
-          this.client = true;
-        else if (element == "task")
-          this.task = true;
-        else if (element == "country")
-          this.country = true;
-        else if (element == "region")
-          this.region = true;
-        else if (element == "city")
-          this.city = true;
-        else if (element == "team_management")
-          this.team_management = true;
-        else if (element == "data_source")
-          this.data_source = true;
-        else if (element == "compaing_list")
-          this.compaing_list = true;
-        else if (element == "assing_compaing")
-          this.assing_compaing = true;
-        else if (element == "stage")
-          this.stage = true;
-        else if (element == "discription")
-          this.discription = true;
-        else if (element == "lead_probabliti")
-          this.lead_probabliti = true;
-        else if (element == "drop_resion")
-          this.drop_resion = true;
-        else if (element == "enquiry_type")
-          this.enquiry_type = true;
-        else if (element == "enquiry_source")
-          this.enquiry_source = true;
-
-      });
+      console.log(this.all_comapny, '+++++++')
     })
   }
 
@@ -351,11 +354,16 @@ export class UsersroleComponent implements OnInit {
     console.log(data)
     this.parent_id = data;
   }
+  comany(data) {
+    console.log(data)
+    this.comany_id = data;
+  }
   submit() {
     let obj = {
       user_role: this.user_role,
       parent_id: this.parent_id,
       function: this.function,
+      company: this.comany_id,
       privileges: {
         can_access_user_add: this.can_access_user_add,
         can_access_user_view: this.can_access_user_view,
@@ -456,6 +464,22 @@ export class UsersroleComponent implements OnInit {
         can_access_QrCode_view: this.can_access_QrCode_view,
         can_access_QrCode_update: this.can_access_QrCode_update,
         can_access_QrCode_delete: this.can_access_QrCode_delete,
+
+        can_access_target_add: this.can_access_target_add,
+        can_access_target_view: this.can_access_target_view,
+        can_access_target_update: this.can_access_target_update,
+        can_access_target_delete: this.can_access_target_delete,
+
+        can_access_forcast_add: this.can_access_forcast_add,
+        can_access_forcast_view: this.can_access_forcast_view,
+        can_access_forcast_update: this.can_access_forcast_update,
+        can_access_forcast_delete: this.can_access_forcast_delete,
+
+        can_access_report_add: this.can_access_report_add,
+        can_access_report_view: this.can_access_report_view,
+        can_access_report_update: this.can_access_report_update,
+        can_access_report_delete: this.can_access_report_delete,
+
       }
     }
     if (this.editable == false) {
@@ -585,6 +609,306 @@ export class UsersroleComponent implements OnInit {
     this.user_role = ''
     this.parent_id = ''
     this.function = ''
+  }
+  user_change() {
+    if (this.can_access_user_add == false) {
+      this.can_access_user_add = true
+      this.can_access_user_view = true
+      this.can_access_user_update = true
+      this.can_access_user_delete = true
+    } else {
+      this.can_access_user_add = false
+      this.can_access_user_view = false
+      this.can_access_user_update = false
+      this.can_access_user_delete = false
+    }
+  }
+  userrole_change() {
+    if (this.can_access_role_add == false) {
+      this.can_access_role_add = true
+      this.can_access_role_view = true
+      this.can_access_role_update = true
+      this.can_access_role_delete = true
+
+    } else {
+      this.can_access_role_add = false
+      this.can_access_role_view = false
+      this.can_access_role_update = false
+      this.can_access_role_delete = false
+    }
+  }
+  enquiry_change() {
+    if (this.can_access_enquiry_add == false) {
+      this.can_access_enquiry_add = true
+      this.can_access_enquiry_view = true
+      this.can_access_enquiry_update = true
+      this.can_access_enquiry_delete = true
+    } else {
+      this.can_access_enquiry_add = false
+      this.can_access_enquiry_view = false
+      this.can_access_enquiry_update = false
+      this.can_access_enquiry_delete = false
+    }
+  }
+  lead_change() {
+    if (this.can_access_lead_add == false) {
+      this.can_access_lead_add = true
+      this.can_access_lead_view = true
+      this.can_access_lead_update = true
+      this.can_access_lead_delete = true
+    } else {
+      this.can_access_lead_add = false
+      this.can_access_lead_view = false
+      this.can_access_lead_update = false
+      this.can_access_lead_delete = false
+    }
+  }
+  client_change() {
+    if (this.can_access_client_add == false) {
+      this.can_access_client_add = true
+      this.can_access_client_view = true
+      this.can_access_client_delete = true
+      this.can_access_client_update = true
+    } else {
+      this.can_access_client_add = false
+      this.can_access_client_view = false
+      this.can_access_client_delete = false
+      this.can_access_client_update = false
+    }
+  }
+  task_change() {
+    if (this.can_access_task_add == false) {
+      this.can_access_task_add = true
+      this.can_access_task_view = true
+      this.can_access_task_update = true
+      this.can_access_task_delete = true
+    } else {
+      this.can_access_task_add = false
+      this.can_access_task_view = false
+      this.can_access_task_update = false
+      this.can_access_task_delete = false
+    }
+  }
+  country_change() {
+    if (this.can_access_country_add == false) {
+      this.can_access_country_add = true
+      this.can_access_country_view = true
+      this.can_access_country_update = true
+      this.can_access_country_delete = true
+    } else {
+      this.can_access_country_add = false
+      this.can_access_country_view = false
+      this.can_access_country_update = false
+      this.can_access_country_delete = false
+    }
+  }
+  region_change() {
+    if (this.can_access_region_add == false) {
+      this.can_access_region_add = true
+      this.can_access_region_view = true
+      this.can_access_region_update = true
+      this.can_access_region_delete = true
+    } else {
+      this.can_access_region_add = false
+      this.can_access_region_view = false
+      this.can_access_region_update = false
+      this.can_access_region_delete = false
+    }
+  }
+  city_change() {
+    if (this.can_access_city_add == false) {
+      this.can_access_city_add = true
+      this.can_access_city_view = true
+      this.can_access_city_update = true
+      this.can_access_city_delete = true
+    } else {
+      this.can_access_city_add = false
+      this.can_access_city_view = false
+      this.can_access_city_update = false
+      this.can_access_city_delete = false
+    }
+  }
+  team_mang_change() {
+    if (this.can_access_team_managemet_add == false) {
+      this.can_access_team_managemet_add = true
+      this.can_access_team_managemet_view = true
+      this.can_access_team_managemet_update = true
+      this.can_access_team_managemet_delete = true
+    } else {
+      this.can_access_team_managemet_add = false
+      this.can_access_team_managemet_view = false
+      this.can_access_team_managemet_update = false
+      this.can_access_team_managemet_delete = false
+    }
+  }
+  data_sorc_change() {
+    if (this.can_access_data_source_add == false) {
+      this.can_access_data_source_add = true
+      this.can_access_data_source_view = true
+      this.can_access_data_source_update = true
+      this.can_access_data_source_delete = true
+    } else {
+      this.can_access_data_source_add = false
+      this.can_access_data_source_view = false
+      this.can_access_data_source_update = false
+      this.can_access_data_source_delete = false
+    }
+  }
+  comp_list_change() {
+    if (this.can_access_compaing_list_add == false) {
+      this.can_access_compaing_list_add = true
+      this.can_access_compaing_list_view = true
+      this.can_access_compaing_list_update = true
+      this.can_access_compaing_list_delete = true
+    } else {
+      this.can_access_compaing_list_add = false
+      this.can_access_compaing_list_view = false
+      this.can_access_compaing_list_update = false
+      this.can_access_compaing_list_delete = false
+    }
+  }
+  assing_comp_change() {
+    if (this.can_access_assing_compaing_add == false) {
+      this.can_access_assing_compaing_add = true
+      this.can_access_assing_compaing_view = true
+      this.can_access_assing_compaing_update = true
+      this.can_access_assing_compaing_delete = true
+    } else {
+      this.can_access_assing_compaing_add = false
+      this.can_access_assing_compaing_view = false
+      this.can_access_assing_compaing_update = false
+      this.can_access_assing_compaing_delete = false
+    }
+  }
+  Stage_change() {
+    if (this.can_access_stage_add == false) {
+      this.can_access_stage_add = true
+      this.can_access_stage_view = true
+      this.can_access_stage_update = true
+      this.can_access_stage_delete = true
+    } else {
+      this.can_access_stage_add = false
+      this.can_access_stage_view = false
+      this.can_access_stage_update = false
+      this.can_access_stage_delete = false
+    }
+  }
+
+  Description_change() {
+    if (this.can_access_discription_add == false) {
+      this.can_access_discription_add = true
+      this.can_access_discription_view = true
+      this.can_access_discription_update = true
+      this.can_access_discription_delete = true
+    } else {
+      this.can_access_discription_add = false
+      this.can_access_discription_view = false
+      this.can_access_discription_update = false
+      this.can_access_discription_delete = false
+    }
+  }
+  lead_prob_change() {
+    if (this.can_access_lead_probabliti_add == false) {
+      this.can_access_lead_probabliti_add = true
+      this.can_access_lead_probabliti_view = true
+      this.can_access_lead_probabliti_update = true
+      this.can_access_lead_probabliti_delete = true
+    } else {
+      this.can_access_lead_probabliti_add = false
+      this.can_access_lead_probabliti_view = false
+      this.can_access_lead_probabliti_update = false
+      this.can_access_lead_probabliti_delete = false
+    }
+  }
+  drop_reg_change() {
+    if (this.can_access_drop_resion_add == false) {
+      this.can_access_drop_resion_add = true
+      this.can_access_drop_resion_view = true
+      this.can_access_drop_resion_update = true
+      this.can_access_drop_resion_delete = true
+    } else {
+      this.can_access_drop_resion_add = false
+      this.can_access_drop_resion_view = false
+      this.can_access_drop_resion_update = false
+      this.can_access_drop_resion_delete = false
+    }
+  }
+  enq_type_change() {
+    if (this.can_access_enquiry_type_add == false) {
+      this.can_access_enquiry_type_add = true
+      this.can_access_enquiry_type_view = true
+      this.can_access_enquiry_type_update = true
+      this.can_access_enquiry_type_delete = true
+    } else {
+      this.can_access_enquiry_type_add = false
+      this.can_access_enquiry_type_view = false
+      this.can_access_enquiry_type_update = false
+      this.can_access_enquiry_type_delete = false
+    }
+  }
+  enq_sorc_change() {
+    if (this.can_access_enquiry_source_add == false) {
+      this.can_access_enquiry_source_add = true
+      this.can_access_enquiry_source_view = true
+      this.can_access_enquiry_source_update = true
+      this.can_access_enquiry_source_delete = true
+    } else {
+      this.can_access_enquiry_source_add = false
+      this.can_access_enquiry_source_view = false
+      this.can_access_enquiry_source_update = false
+      this.can_access_enquiry_source_delete = false
+    }
+  }
+  qr_code_chnage() {
+    if (this.can_access_QrCode_add == false) {
+      this.can_access_QrCode_add = true
+      this.can_access_QrCode_view = true
+      this.can_access_QrCode_update = true
+      this.can_access_QrCode_delete = true
+    } else {
+      this.can_access_QrCode_add = false
+      this.can_access_QrCode_view = false
+      this.can_access_QrCode_update = false
+      this.can_access_QrCode_delete = false
+    }
+  }
+  Target_chnage() {
+    if (this.can_access_target_add == false) {
+      this.can_access_target_add = true;
+      this.can_access_target_view = true;
+      this.can_access_target_update = true;
+      this.can_access_target_delete = true;
+    } else {
+      this.can_access_target_add = false;
+      this.can_access_target_view = false;
+      this.can_access_target_update = false;
+      this.can_access_target_delete = false;
+    }
+  } Forecast_chnage() {
+    if (this.can_access_forcast_add == false) {
+      this.can_access_forcast_add = true;
+      this.can_access_forcast_view = true;
+      this.can_access_forcast_update = true;
+      this.can_access_forcast_delete = true;
+    } else {
+      this.can_access_forcast_add = false;
+      this.can_access_forcast_view = false;
+      this.can_access_forcast_update = false;
+      this.can_access_forcast_delete = false;
+    }
+  }
+  Report_chnage() {
+    if (this.can_access_report_add == false) {
+      this.can_access_report_add = true;
+      this.can_access_report_view = true;
+      this.can_access_report_update = true;
+      this.can_access_report_delete = true;
+    } else {
+      this.can_access_report_add = false;
+      this.can_access_report_view = false;
+      this.can_access_report_update = false;
+      this.can_access_report_delete = false;
+    }
   }
 
 }

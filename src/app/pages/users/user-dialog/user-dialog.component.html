@@ -1,4 +1,4 @@
-<h1 mat-dialog-title><span *ngIf="!user.id">Add</span><span *ngIf="user.id">Edit</span> user</h1>
+<h1 mat-dialog-title><span *ngIf="!editing">Add</span><span *ngIf="editing">Edit</span> user</h1>
 
 
 <div mat-dialog-content *ngIf="!role">
@@ -15,7 +15,7 @@
                         <mat-error *ngIf="form.controls.username.hasError('minlength')">Username isn't long enough,
                             minimum of 5 characters</mat-error>
                     </mat-form-field>
-                    <mat-form-field class="w-100">
+                    <mat-form-field class="w-100" *ngIf="!editing">
                         <mat-placeholder>
                             <mat-icon>vpn_key</mat-icon> Password
                         </mat-placeholder>
@@ -45,17 +45,38 @@
                         <mat-radio-button value="male" labelPosition="before">Male</mat-radio-button>
                         <mat-radio-button value="female" labelPosition="before">Female</mat-radio-button>
                     </mat-radio-group>
-                    <mat-form-field class="w-100">
+                    <div fxLayout="row" fxLayoutAlign="space-between center" class="flex-p">
+                            <button type="button" mat-raised-button (click)="fileInput.click()" style="margin-left: -6px;">Choose File <i
+                                    class="material-icons"> attach_file</i></button>
+                            <input hidden (change)="handleFileInput($event)" #fileInput type="file" id="file">
+                            <p style="color: green;">{{file?.name}}</p>
+                            <img *ngIf="editing && !file"
+                            src="https://meancrm.s3.ap-south-1.amazonaws.com/{{user?.user?.profile?.image}}"
+                            class="img-thumbnail" style="height: 90px; width: 90px;" />
+                            <!-- <img *ngIf="!filename"
+                            src="https://encrypted-tbn0.gstatic.com/images?q=tbn%3AANd9GcTN9tHISb9bl8HzQMx8YF0_xqgdzt4e75IfAK56T3WXAYqPZQV6&usqp=CAU"
+                            class="img-thumbnail" style="height: 90px; width: 90px;" />
+                            <img *ngIf="filename" [src]="filename" alt="{{filename}}" class="img-thumbnail"
+                            style="height: 90px; width: 90px;" /> -->
+                            <!-- <p style="color: green;">{{parsedCSV?.name}}</p> -->
+                    </div>
+                    <!-- <mat-form-field class="w-100">
                         <input matInput placeholder="Image url" formControlName="image">
-                    </mat-form-field>
+                    </mat-form-field> -->
                 </div>
             </mat-tab>
             <mat-tab label="work">
                 <div fxLayout="column" class="form-field-outer">
+                    <mat-form-field class="w-100">
                     <mat-select placeholder="Select Company" formControlName="company">
-                        <mat-option *ngFor="let company of all_comapny ; let i = index" [value]="company._id">{{company?.company_name}}
+                        <mat-option *ngFor="let company of all_comapny ; let i = index" [value]="company._id">
+                            {{company?.company_name}}
                         </mat-option>
                     </mat-select>
+                </mat-form-field>
+                    <mat-form-field class="w-100">
+                        <input matInput placeholder="Designation" formControlName="designation">
+                    </mat-form-field>
                 </div>
             </mat-tab>
             <!-- <mat-tab label="Work" formGroupName="work">
@@ -99,6 +120,16 @@
                     </mat-form-field>
                 </div>
             </mat-tab>
+            <mat-tab label="Position">
+                <div fxLayout="column" class="form-field-outer">
+                    <mat-form-field class="w-100">
+                    <mat-select placeholder="Select Role" formControlName="position">
+                        <mat-option *ngFor="let role of userRole ; let i = index" [value]="role._id">{{role?.user_role}}
+                        </mat-option>
+                    </mat-select>
+                    </mat-form-field>
+                </div>
+            </mat-tab>
             <mat-tab label="Settings" formGroupName="settings">
                 <div fxLayout="column" class="form-field-outer">
                     <mat-checkbox formControlName="isActive">Active</mat-checkbox>
@@ -109,14 +140,7 @@
                         <i>{{user.settings.joinedDate | date:"dd MMMM, yyyy 'at' HH:mm" }}</i> </p>
                 </div>
             </mat-tab>
-            <mat-tab label="position">
-                <div fxLayout="column" class="form-field-outer">
-                    <mat-select placeholder="Select Role" formControlName="position">
-                        <mat-option *ngFor="let role of userRole ; let i = index" [value]="role._id">{{role?.user_role}}
-                        </mat-option>
-                    </mat-select>
-                </div>
-            </mat-tab>
+           
         </mat-tab-group>
     </form>
 </div>
@@ -125,16 +149,16 @@
     <form [formGroup]="roleForm" fxLayout="row wrap" class="user-form">
         <div fxLayout="column" class="form-field-outer" style="width: 900px; height: 500px;">
             <mat-grid-list cols="3" rowHeight="5:1">
-                    <mat-form-field style="width: 33%;">
-                        <input matInput placeholder="Role Name" formControlName="user_role">
-                    </mat-form-field>
-                    <mat-form-field style="width: 33%;">
-                        <input matInput placeholder="Function" formControlName="function">
-                    </mat-form-field>
-                    <mat-select placeholder="Select Parents" formControlName="parent_id" style="width: 33%;">
-                        <mat-option *ngFor="let role of userRole ; let i = index" [value]="role._id">{{role?.user_role}}
-                        </mat-option>
-                    </mat-select>
+                <mat-form-field style="width: 33%;">
+                    <input matInput placeholder="Role Name" formControlName="user_role">
+                </mat-form-field>
+                <mat-form-field style="width: 33%;">
+                    <input matInput placeholder="Function" formControlName="function">
+                </mat-form-field>
+                <mat-select placeholder="Select Parents" formControlName="parent_id" style="width: 33%;">
+                    <mat-option *ngFor="let role of userRole ; let i = index" [value]="role._id">{{role?.user_role}}
+                    </mat-option>
+                </mat-select>
             </mat-grid-list>
             <mat-grid-list cols="1" rowHeight="15:1" *ngIf="user_active">
                 <mat-grid-tile>
@@ -153,7 +177,8 @@
             <mat-grid-list cols="1" rowHeight="15:1" *ngIf="user_active">
                 <mat-grid-tile>
                     <h5 style="text-align: left;">User Role</h5>
-                    <mat-checkbox [(ngModel)]="can_access_user_list" [ngModelOptions]="{standalone: true}">User Role View
+                    <mat-checkbox [(ngModel)]="can_access_user_list" [ngModelOptions]="{standalone: true}">User Role
+                        View
                     </mat-checkbox>
                     <mat-checkbox [(ngModel)]="can_access_role" [ngModelOptions]="{standalone: true}">User Role Add
                     </mat-checkbox>
@@ -320,9 +345,10 @@
                    
                 </mat-tab>
               </mat-tab-group> -->
-              <div mat-dialog-actions fxLayout="row" fxLayoutAlign="space-between center" *ngIf="role">
-                <button mat-raised-button color="primary" [mat-dialog-close]="roleForm.value" [disabled]="!roleForm.valid"
-                    (click)="user_role()"><span *ngIf="editing">Update</span> <span *ngIf="!editing">Save</span></button>
+            <div mat-dialog-actions fxLayout="row" fxLayoutAlign="space-between center" *ngIf="role">
+                <button mat-raised-button color="primary" [mat-dialog-close]="roleForm.value"
+                    [disabled]="!roleForm.valid" (click)="user_role()"><span *ngIf="editing">Update</span> <span
+                        *ngIf="!editing">Save</span></button>
                 <button mat-raised-button color="warn" (click)="close()">Cancel</button>
             </div>
         </div>
@@ -348,6 +374,8 @@
 
 <div mat-dialog-actions fxLayout="row" fxLayoutAlign="space-between center" *ngIf="!role">
     <button mat-raised-button color="primary" [mat-dialog-close]="form.value" [disabled]="!form.valid"
-        (click)="user_list()"><span *ngIf="!user.id">Save</span><span *ngIf="user.id">Update</span></button>
+        (click)="user_list()"><span *ngIf="!editing">Save</span><span *ngIf="editing">Update</span></button>
     <button mat-raised-button color="warn" (click)="close()">Cancel</button>
 </div>
+
+<ngx-alerts></ngx-alerts>

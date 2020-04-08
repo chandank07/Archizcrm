@@ -10,6 +10,9 @@ import { TaskDilogComponent } from '../task-dilog/task-dilog.component';
 import { CalendarEvent, CalendarEventAction, CalendarEventTimesChangedEvent } from 'angular-calendar';
 import { SettingService } from '../../seting/setting.service';
 import { SmsDilogComponent } from '../sms-dilog/sms-dilog.component';
+import { AlertService } from 'ngx-alerts';
+import { UsersService } from '../../users/users.service';
+
 
 const colors: any = {
   red: {
@@ -42,13 +45,18 @@ export class EnquiryFormComponent implements OnInit {
   enableEdit = false;
   enableEditIndex = null;
   editing: Boolean = false;
-  desprioction:any;
-  stage:any;
+  desprioction: any;
+  stage: any;
   id: String;
   data: any;
   dateshow: any;
   comment: any;
   newarr: any[] = [];
+  enquiry_type: any;
+  customer_type: any;
+  user_id: any;
+  source: any;
+  product: any;
   actions: CalendarEventAction[] = [{
     label: '<i class="material-icons icon-sm white">edit</i>',
     onClick: ({ event }: { event: CalendarEvent }): void => {
@@ -69,14 +77,20 @@ export class EnquiryFormComponent implements OnInit {
   snackBar: any;
   constructor(private formBuilder: FormBuilder, private LocationService: LocationService,
     public enquiryService: EnquiryServiceService, private router: Router, private r: ActivatedRoute,
-    public dialog: MatDialog, private settingService: SettingService) {
+    public dialog: MatDialog, private settingService: SettingService, private AlertService: AlertService,
+    private UsersService: UsersService) {
     this.insialform();
     this.commentForm();
   }
 
   ngOnInit() {
+    this.get_me()
     this.get_region();
     this.get_stage();
+    this.get_active_equiry_type();
+    this.get_active_customer_type();
+    this.get_source()
+    this.get_product();
     this.id = this.r.snapshot.paramMap.get('id')
     if (this.id) {
       this.get_enqury()
@@ -97,16 +111,40 @@ export class EnquiryFormComponent implements OnInit {
     // });
 
   }
-
-  get_stage() {
-    this.settingService.get_stage().subscribe((res: any) => {
-      this.stage = res.data;
+  get_product() {
+    this.settingService.get_prduct().subscribe((doc: any) => {
+      this.product = doc.data;
+    })
+  }
+  get_me() {
+    this.UsersService.get_me().subscribe((doc: any) => {
+      this.user_id = doc.data
+    })
+  }
+  get_active_equiry_type() {
+    this.settingService.get_enquiry_type().subscribe((doc: any) => {
+      this.enquiry_type = doc.data;
+    })
+  }
+  get_active_customer_type() {
+    this.settingService.Active_customer_type().subscribe((doc: any) => {
+      this.customer_type = doc.data;
     })
   }
 
-  stage_cahange(id){
+  get_stage() {
+    this.settingService.get_active_stage().subscribe((res: any) => {
+      this.stage = res.data;
+    })
+  }
+  get_source() {
+    this.settingService.get_enquiry_source().subscribe((doc: any) => {
+      this.source = doc.data
+    })
+  }
+  stage_cahange(id) {
     console.log(id)
-    this.settingService.get_stage_wise_desp(id).subscribe((res:any) =>{
+    this.settingService.get_stage_wise_desp(id).subscribe((res: any) => {
       this.desprioction = res.data;
       console.log(this.desprioction)
     })
@@ -136,6 +174,7 @@ export class EnquiryFormComponent implements OnInit {
       console.log(res, "====================");
       this.dateshow = res;
       this.setenquiry(this.data)
+      this.onBookChange(this.data.state._id)
     })
   }
 
@@ -153,8 +192,10 @@ export class EnquiryFormComponent implements OnInit {
   }
 
   setenquiry(data) {
+    console.log(data)
     this.form.patchValue(data);
     this.form.get('state').patchValue(data.state._id);
+    this.form.get('city').patchValue(data.city._id)
   }
   insialform() {
     this.form = this.formBuilder.group({
@@ -173,6 +214,8 @@ export class EnquiryFormComponent implements OnInit {
       requrment_product: [''],
       is_active: true,
       status: [0],
+      product: [''],
+      remark: [''],
       lead: this.formBuilder.group({
         expected_closer_date: [''],
         conversion_probability: [''],
@@ -197,9 +240,15 @@ export class EnquiryFormComponent implements OnInit {
   save() {
     console.log(this.form.value)
     let data = this.form.value;
-    this.enquiryService.add_enquiry(data).subscribe((doc: any) => {
+    this.enquiryService.update_enquiry(this.data._id, data).subscribe((doc: any) => {
       if (doc.errors == false) {
-        this.router.navigate(['/Lead/enquiry'])
+        this.AlertService.success('Update Enqury successfull')
+        let obj = {
+          status: 0
+        }
+        this.enquiryService.update_status(this.data._id, obj).subscribe((res: any) => {
+          this.router.navigate(['/Lead/enquiry'])
+        })
       }
     })
   }
@@ -225,11 +274,25 @@ export class EnquiryFormComponent implements OnInit {
       }
     })
   }
-  openSmsDialog(sms){
+  remainder(sms) {
     let dialogRef = this.dialog.open(SmsDilogComponent, {
       data: {
-        user:this.data,
-        type:"send_email"
+        user: this.user_id,
+        type: "remainder"
+
+      }
+    });
+    dialogRef.afterClosed().subscribe((data: any) => {
+      console.log(data)
+      if (data != null) {
+      }
+    })
+  }
+  openSmsDialog(sms) {
+    let dialogRef = this.dialog.open(SmsDilogComponent, {
+      data: {
+        user: this.data,
+        type: "send_email"
       }
     });
     dialogRef.afterClosed().subscribe((data: any) => {
@@ -238,6 +301,35 @@ export class EnquiryFormComponent implements OnInit {
       }
     })
 
+  }
+  comment_delete(i) {
+    if (this.comment[i].user_id._id == this.user_id._id) {
+      var r = confirm("Are you sure you want to Delete thie Chat.?");
+      if (r == true) {
+        this.enquiryService.delete_comment(this.comment[i]._id).subscribe((doc:any) =>{
+          if(doc){
+            this.AlertService.success("This comment is Delete Successfull.!")
+            this.get_comment();
+          }
+        })
+      } else {
+      }
+    } else {
+      alert("this message not delete")
+    }
+  }
+  openemailDialog() {
+    let dialogRef = this.dialog.open(SmsDilogComponent, {
+      data: {
+        user: this.data,
+        type: "send_sms"
+      }
+    });
+    dialogRef.afterClosed().subscribe((data: any) => {
+      console.log(data)
+      if (data != null) {
+      }
+    })
   }
   Drop() {
     this.enquiryService.drop_enquiry(this.id).subscribe((res: any) => {
@@ -256,7 +348,7 @@ export class EnquiryFormComponent implements OnInit {
       comment: [''],
     })
   }
-  
+
   //]==========================
   commentAdd() {
     if (this.commentform.value.comment == "") {
@@ -267,6 +359,7 @@ export class EnquiryFormComponent implements OnInit {
       this.enquiryService.post_commment(this.commentform.value).subscribe((doc: any) => {
         if (doc.errors) {
         } else {
+          this.AlertService.success('Comment Add Successfull.')
           this.get_comment();
           this.commentform.reset()
         }

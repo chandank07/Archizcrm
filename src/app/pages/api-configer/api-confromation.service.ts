@@ -11,7 +11,7 @@ export class ApiConfromationService {
     'Content-Type': 'application/json',
     'Token': localStorage.getItem('Token')
   });
-  url = "http://localhost:5000/api/qr_code"
+  url = "https://newmeanstrakapi.herokuapp.com/api/qr_code"
   // url2 ="https://newmeanstrakapi.herokuapp.com/api/despriction"
 
   constructor(private http: HttpClient) { }

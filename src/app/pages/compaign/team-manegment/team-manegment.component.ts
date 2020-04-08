@@ -24,15 +24,15 @@ export class TeamManegmentComponent implements OnInit {
       console.log(res.data)
       this.user = res.data;
       this.user.forEach(element => {
-        this.items.push({ name: element.profile.name + " " + element.profile.surname, id: element._id });
+        this.items.push({ name: element.profile.name + " " + element.profile.surname, id: element._id ,position:element.position.user_role });
       });
     })
   }
   team_managment_form() {
     this.form = this.fb.group({
-      ceo: [''],
-      ctm: [''],
-      pd: [''],
+      // ceo: [''],
+      // ctm: [''],
+      // pd: [''],
       team_name: ['']
     });
   }
@@ -53,9 +53,9 @@ export class TeamManegmentComponent implements OnInit {
       newarr.push({id:element.id})
     });
     let data ={
-      ceo: this.form.value.ceo,
-      ctm: this.form.value.ctm,
-      pd: this.form.value.pd,
+      // ceo: this.form.value.ceo,
+      // ctm: this.form.value.ctm,
+      // pd: this.form.value.pd,
       team_name: this.form.value.team_name,
       selectd_member :newarr
     }

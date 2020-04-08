@@ -5,7 +5,7 @@ import { FormGroup, FormBuilder } from '@angular/forms';
 import { CompaingDilogComponent } from '../compaing-dilog/compaing-dilog.component'
 import { MatDialog } from '@angular/material';
 import { CompaignServiceService } from '../compaign-service.service';
-
+import { AlertService } from 'ngx-alerts';
 
 @Component({
   selector: 'app-compaing-list',
@@ -13,7 +13,7 @@ import { CompaignServiceService } from '../compaign-service.service';
   styleUrls: ['./compaing-list.component.scss']
 })
 export class CompaingListComponent implements OnInit {
-  displayedColumns: string[] = ['company', 'source_name'];
+  displayedColumns: string[] = ['company', 'source_name','action'];
   dataSource :any;
   panelOpenState = false;
   show_form:Boolean= false;
@@ -21,7 +21,7 @@ export class CompaingListComponent implements OnInit {
   datasource:any;
   @ViewChild(MatPaginator, {static: true}) paginator: MatPaginator;
   constructor(private fb: FormBuilder ,public dialog: MatDialog,
-    private CompaignServiceService: CompaignServiceService,) { }
+    private CompaignServiceService: CompaignServiceService,private AlertService:AlertService) { }
   ngOnInit() {
     this.get_datasource()
   }
@@ -43,10 +43,25 @@ export class CompaingListComponent implements OnInit {
     dialogRef.afterClosed().subscribe((data: any) => {
       console.log(data)
       if (data != null) {
+        this.get_datasource()
       }
     })
 
   }
+  data_sorceDelete(id){
+    var x = confirm("Are you sure you want to delete?");
+    if (x) {
+      this.CompaignServiceService.delete_camp(id).subscribe((res:any) =>{
+        if(!res.errors){
+          this.AlertService.success('Data Source Delete Successfull.!')
+          this.get_datasource()
+        }
+      })
+    }else{
+
+    }
+  }
+
 }
 
 export interface PeriodicElement {

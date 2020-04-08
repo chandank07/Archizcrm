@@ -1,12 +1,12 @@
-<div [fxLayout]="(menuParentId == 0) ? 'row' : 'column'" fxLayoutAlign="start center">
-    <div *ngFor="let menu of menuItems" class="horizontal-menu-item w-100">
+<!-- <div [fxLayout]="(menuParentId == 0) ? 'row' : 'column'" fxLayoutAlign="start center">
+    <div *ngFor="let menu of menuItems; let i = index" [attr.data-index]="i" class="horizontal-menu-item w-100">
         <a *ngIf="menu.routerLink && !menu.hasSubMenu" mat-button 
             fxLayout="row" [fxLayoutAlign]="(settings.menuType=='default') ? 'start center' : 'center center'"
             [routerLink]="[menu.routerLink]" routerLinkActive="active-link" [routerLinkActiveOptions]="{exact:true}"
             [matTooltip]="menu.title" matTooltipPosition="above" [matTooltipDisabled]="(settings.menuType=='mini') ? 'false' : 'true'"
             [id]="'horizontal-menu-item-'+menu.id">
             <mat-icon class="horizontal-menu-icon">{{menu.icon}}</mat-icon>
-            <span class="horizontal-menu-title">{{menu.title}}</span>
+            <span class="horizontal-menu-title" >{{menu.title}}</span>
         </a>
         <a *ngIf="menu.href && !menu.subMenu" mat-button 
             fxLayout="row" [fxLayoutAlign]="(settings.menuType=='default') ? 'start center' : 'center center'"
@@ -21,11 +21,82 @@
             [matTooltip]="menu.title" matTooltipPosition="above" [matTooltipDisabled]="(settings.menuType=='mini') ? 'false' : 'true'"
             [id]="'horizontal-menu-item-'+menu.id">
             <mat-icon class="horizontal-menu-icon">{{menu.icon}}</mat-icon>
-            <span class="horizontal-menu-title">{{menu.title}}</span>
+            <span class="horizontal-menu-title">{{menu?.title}}</span>
         </a>
 
         <div *ngIf="menu.hasSubMenu" class="horizontal-sub-menu" [id]="'horizontal-sub-menu-'+menu.id">
             <app-horizontal-menu [menuParentId]="menu.id"></app-horizontal-menu>
         </div>
     </div>
+</div> -->
+<div *ngIf="show_nav">
+  <div class="dropdown">
+    <button class="dropbtn" routerLink ="/dashboard"> <i class="far fa-address-card"></i> Dashboard</button>
+  </div>
+  <div class="dropdown">
+    <button class="dropbtn" routerLink ="/Company"> <i class="fas fa-building"></i> Company</button>
+  </div>
+  <div class="dropdown" *ngIf="company.can_access_user_view || company.can_access_role_view">
+    <button class="dropbtn"><i class="fas fa-users"></i> Users</button>
+    <div class="dropdown-content">
+    <a routerLink="/users/users" *ngIf="company.can_access_user_view"><i class="fas fa-user-circle"></i> User</a>
+    <a routerLink="/users/role" *ngIf="company.can_access_role_view"><i class="fas fa-chalkboard-teacher"></i> User Role</a>
+    <a routerLink="/users/user_activity" ><i class="fas fa-users-cog"></i> User Activity</a>
+    </div>
+  </div>
+  <div class="dropdown" *ngIf="company.can_access_enquiry_view || company.can_access_lead_view || company.can_access_client_view || company.can_access_task_view">
+    <button class="dropbtn"><i class="fas fa-digital-tachograph"></i> Lead Management</button>
+    <div class="dropdown-content">
+    <a routerLink="/Lead/enquiry" *ngIf="company.can_access_enquiry_view"><i class="fas fa-address-card"></i> Enquiry</a>
+    <a routerLink="/Lead/lead" *ngIf="company.can_access_lead_view"><i class="fas fa-thumbs-up"></i> Lead</a>
+    <a routerLink="/Lead/client" *ngIf="company.can_access_client_view"><i class="far fa-user"></i> Client</a>
+    <a routerLink="/Lead/task" *ngIf="company.can_access_task_view"><i class="fas fa-tasks"></i> Task</a>
+    </div>
+  </div>
+  <div class="dropdown" *ngIf="company.can_access_country_view || company.can_access_region_view || company.can_access_city_view">
+    <button class="dropbtn"><i class="fas fa-globe-americas"></i> Location</button>
+    <div class="dropdown-content">
+    <a routerLink="/Location/country" *ngIf="company.can_access_country_view"><i class="fas fa-globe-asia"></i> Country</a>
+    <a routerLink="/Location/region" *ngIf="company.can_access_region_view"><i class="fas fa-street-view"></i> Region</a>
+    <a routerLink="/Location/city" *ngIf="company.can_access_city_view"><i class="fas fa-city"></i> City</a>
+    </div>
+  </div>
+  <div class="dropdown" *ngIf="company.can_access_team_managemet_view || company.can_access_data_source_view || company.can_access_compaing_list_view || company.can_access_assing_compaing_view">
+    <button class="dropbtn"><i class="fas fa-bezier-curve"></i> Campaign</button>
+    <div class="dropdown-content">
+    <a routerLink="/Compaign/team_managment" *ngIf="company.can_access_team_managemet_view"><i class="fas fa-user-plus"></i> Team Management</a>
+    <a routerLink="/Compaign/data_sorce" *ngIf="company.can_access_data_source_view"> <i class="fas fa-database"></i> Data Source</a>
+    <a routerLink="/Compaign/compaing_list" *ngIf="company.can_access_compaing_list_view"><i class="fas fa-clipboard-list"></i> Campaign List</a>
+    <a routerLink="/Compaign/create_comp" *ngIf="company.can_access_assing_compaing_view"><i class="fas fa-vote-yea"></i> Assign Campaign</a>
+    </div>
+  </div>
+  <div class="dropdown" *ngIf="company.can_access_stage_view || company.can_access_discription_view || company.can_access_lead_probabliti_view || company.can_access_drop_resion_view || company.can_access_enquiry_type_view || company.can_access_enquiry_source_view">
+    <button class="dropbtn"> <i class="fas fa-cogs"></i> Settings</button>
+    <div class="dropdown-content">
+    <a routerLink="/Setting/stage" *ngIf="company.can_access_stage_view"><i class="fas fa-hourglass-half"></i> Stage</a>
+    <a routerLink="/Setting/despriction" *ngIf="company.can_access_discription_view"><i class="fas fa-notes-medical"></i> Description</a>
+    <a routerLink="/Setting/target"><i class="fas fa-tasks"></i> Target</a>
+    <a routerLink="/Setting/forcast"><i class="fas fa-calendar-plus"></i> Forecasting</a>
+    <a routerLink="/Setting/lead_probility" *ngIf="company.can_access_lead_probabliti_view"><i class="fas fa-exclamation-circle"></i> Lead Probability</a>
+    <a routerLink="/Setting/drop_reason" *ngIf="company.can_access_drop_resion_view"> <i class="fas fa-thumbs-down"></i> Drop Reason</a>
+    <a routerLink="/Setting/enquiry_type" *ngIf="company.can_access_enquiry_type_view"><i class="fas fa-swatchbook"></i> Enquiry Type</a>
+    <a routerLink="/Setting/enquiry_source" *ngIf="company.can_access_enquiry_source_view"><i class="fas fa-fax"></i> Enquiry Source</a>
+    <a routerLink="/Setting/customer_type"><i class="fas fa-id-card-alt"></i> Customer Type</a>
+    <a routerLink="/Setting/product"><i class="fas fa-cart-arrow-down"></i> Product</a>
+    </div>
+  </div>
+  <div class="dropdown" *ngIf="company.can_access_QrCode_view">
+    <button class="dropbtn"><i class="fas fa-network-wired"></i> Api Configuration</button>
+    <div class="dropdown-content">
+    <a routerLink="/api-confrigation/qr-code" *ngIf="company.can_access_QrCode_view"> <i class="fas fa-qrcode"></i> QR-Code</a>
+    <a routerLink="/Lead/email"><i class="fas fa-mail-bulk"></i> Email</a>
+    <a routerLink="/Lead/sms"><i class="fas fa-sms"></i> SMS</a>
+    </div>
+  </div>
+  <div class="dropdown" *ngIf="company.can_access_report_view">
+    <button class="dropbtn"><i class="far fa-address-card"></i> Reports</button>
+    <div class="dropdown-content">
+    <a routerLink="/reports/report"><i class="fas fa-poll-h"></i> Report</a>
+    </div>
+  </div>
 </div>

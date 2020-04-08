@@ -7,6 +7,7 @@ import { EnquiryServiceService } from '../../enquiry/enquiry_Service/enquiry-ser
 import { EnquiryDilogComponent } from '../enquiry-dilog/enquiry-dilog.component'
 import { MAT_DIALOG_DATA, MatDialogRef } from "@angular/material";
 import { Router } from '@angular/router';
+import { CookieService } from 'ngx-cookie-service';
 
 @Component({
   selector: 'app-client',
@@ -23,18 +24,30 @@ export class ClientComponent implements OnInit {
   public settings: Settings;
   client_length: Number;
   enquiry_id:any[]=[];
+  comp:any;
   constructor(public appSettings: AppSettings,
     public dialog: MatDialog,
-    public enquiryService: EnquiryServiceService, private router: Router, ) {
+    public enquiryService: EnquiryServiceService, private router: Router,private CookieService:CookieService ) {
     this.settings = this.appSettings.settings;
   }
 
   ngOnInit() {
-    this.get_client()
+    this.get_assing()
   }
-
-  get_client() {
-    this.enquiryService.get_client().subscribe((res: any) => {
+  get_assing() {
+    let arr =[]
+    this.comp = JSON.parse(this.CookieService.get('compain'))
+    console.log(this.comp);
+    this.comp.forEach(element => {
+      if(element.active == true){
+        arr.push(element._id);
+      }
+    });
+    this.get_client(arr);
+    console.log(arr,"active arrr")
+  }
+  get_client(data) {
+    this.enquiryService.get_team_wise_client(data).subscribe((res: any) => {
       this.users = res.data
       console.log(this.users)
       this.client_length = res.data.length;

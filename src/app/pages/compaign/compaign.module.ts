@@ -15,6 +15,7 @@ import { CompaingDilogComponent } from './compaing-dilog/compaing-dilog.componen
 import { CompaignServiceService } from './compaign-service.service';
 import { LocationService } from '../locations/location.service';
 import { CreateCampComponent } from './create-camp/create-camp.component';
+import { AlertModule } from 'ngx-alerts';
 
 export const routes = [
   { path: '', redirectTo: 'TeamManegmentComponent', pathMatch: 'full'},
@@ -35,7 +36,8 @@ export const routes = [
     NgxPaginationModule,
     SharedModule,
     PipesModule,
-    DragDropModule
+    DragDropModule,
+    AlertModule
   ],
   providers: [UsersService ,CompaignServiceService,LocationService],
   entryComponents:[

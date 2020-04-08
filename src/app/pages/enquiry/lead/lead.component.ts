@@ -8,6 +8,7 @@ import { EnquiryDilogComponent } from '../enquiry-dilog/enquiry-dilog.component'
 import { MAT_DIALOG_DATA, MatDialogRef } from "@angular/material";
 import { Router } from '@angular/router';
 import { AlertService } from 'ngx-alerts';
+import { CookieService } from 'ngx-cookie-service';
 
 @Component({
   selector: 'app-lead',
@@ -28,19 +29,37 @@ export class LeadComponent implements OnInit {
   update_lead_langth: Number;
   update_lead: any;
   enquiry_id: any[] = [];
+  comp:any;
   constructor(public appSettings: AppSettings,
     public dialog: MatDialog, private router: Router,
-    public enquiryService: EnquiryServiceService, public alertService: AlertService) {
+    public enquiryService: EnquiryServiceService, public alertService: AlertService,private CookieService:CookieService) {
     this.settings = this.appSettings.settings;
   }
 
   ngOnInit() {
-    this.get_all_lead();
+    this.get_assing();
     this.get_todaylead();
     this.get_today_update_lead();
   }
-  get_all_lead() {
-    this.enquiryService.get_lead().subscribe((res: any) => {
+  get_assing() {
+    let arr =[]
+    this.comp = JSON.parse(this.CookieService.get('compain'))
+    console.log(this.comp);
+    this.comp.forEach(element => {
+      if(element.active == true){
+        arr.push(element._id);
+      }
+    });
+    this.get_all_lead(arr);
+    console.log(arr,"active arrr")
+  
+    
+    // this.CompaignServiceService.get_assing_comp().subscribe((doc:any) =>{
+    //   this.comp =doc.data;
+    // })
+  }
+  get_all_lead(data) {
+    this.enquiryService.get_team_wise_lead(data).subscribe((res: any) => {
       this.users = res.data
       this.all_lead_length = this.users.length
       console.log(this.users)
@@ -71,7 +90,7 @@ export class LeadComponent implements OnInit {
   all_enquiry() {
     if (this.users)
       this.users.length = 0;
-    this.get_all_lead()
+    // this.get_all_lead()
     this.users = this.users;
   }
   today_enquiry() {
@@ -179,7 +198,7 @@ export class LeadComponent implements OnInit {
       }
       this.enquiryService.bulk_client_convert(obj).subscribe((res: any) => {
         if (res.errors == false) {
-          this.get_all_lead();
+          // this.get_all_lead();
           this.enquiry_id.forEach(element => {
             let obj = {
               enquiry_id: element,

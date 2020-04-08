@@ -3,6 +3,7 @@ import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { User, UserProfile, UserWork, UserContacts, UserSocial, UserSettings } from '../user.model';
 import { UsersService } from '../users.service';
+import { AlertService } from 'ngx-alerts';
 
 @Component({
   selector: 'app-user-dialog',
@@ -25,23 +26,31 @@ export class UserDialogComponent implements OnInit {
   panelOpenState = false;
   public passwordHide: boolean = true;
   role: boolean = false;
-  user_active:Boolean = false;
-  enquiry:Boolean = false;
+  user_active: Boolean = false;
+  enquiry: Boolean = false;
   userRole: any;
   all_comapny: any;
+  id: any;
+  file: any;
+  filename: any;
+  keyProfileImage: any;
+  urlProfileImage: any;
   //   data =[{id:true,name:"User"},{id:true,name:"User Role"},{id:true,name:"Enquiry"},
   //   {id:true,name:"Lead"},{id:true,name:"Client"},{id:true,name:"Task"},{id:true,name:"Country"},{id:true,name:"region"},
   //   {id:true,name:"City"},{id:true,name:"team Manegmant"},{id:true,name:"data Source"} ,{id:true,name:"Compaing List"},{id:true,name:"Assing Compaing"}
   // ,{id:true,name:"Stage"},{id:true,name:"Discription"},{id:true,name:"Taregt"},{id:true,name:"Forcast"},
   // {id:true,name:"Lead Problity"},{id:true,name:"Drop Reasion"}]
   constructor(public dialogRef: MatDialogRef<UserDialogComponent>, private UsersService: UsersService,
+    private AlertService: AlertService,
     @Inject(MAT_DIALOG_DATA) public user: any,
     public fb: FormBuilder) {
     this.form = this.fb.group({
       username: [null, Validators.compose([Validators.required, Validators.minLength(5)])],
-      password: [null, Validators.compose([Validators.required, Validators.minLength(6)])],
+      password: [''],
+      // password: [null, Validators.compose([Validators.required, Validators.minLength(6)])],
       position: [''],
       company: [''],
+      designation: [''],
       profile: this.fb.group({
         name: null,
         surname: null,
@@ -89,12 +98,14 @@ export class UserDialogComponent implements OnInit {
     } else if (this.user.type == "user") {
       this.role = false;
       if (this.user.user) {
-        delete this.user.user._id
+        this.editing = true;
+        this.id = this.user.user._id
+        // delete this.user.user._id
         this.form.patchValue(this.user.user);
         this.form.get('company').patchValue(this.user.user.company._id)
         this.form.get('position').patchValue(this.user.user.position._id)
-      }
-      else {
+      } else {
+        this.editing = false;
         this.user = new User();
         this.user.profile = new UserProfile();
         this.user.work = new UserWork();
@@ -110,19 +121,31 @@ export class UserDialogComponent implements OnInit {
       this.userRole = res;
     })
   }
-
+  handleFileInput(event: any) {
+    var image = event.target.value
+    if (event.target.files && event.target.files[0]) {
+      var reader = new FileReader();
+      reader.readAsDataURL(event.target.files[0]); // read file as data url
+      this.file = event.target.files[0];
+      // reader.onload = (event) => { // called once readAsDataURL is completed
+      //   this.filename = event.target.result;
+      // }
+      // console.log(this.file ,event.target ,image);
+    }
+  }
   get_comany() {
     this.UsersService.get_company().subscribe((res: any) => {
       this.all_comapny = res;
       console.log(this.all_comapny, "//////////////////////")
-      res[0].permission.forEach(element => {
-        if(element == 'user')
-        this.user_active = true;
-        else if(element == "enquiry")
-        this.enquiry =true;
-      });
+      // res[0].permission.forEach(element => {
+      //   if (element == 'user')
+      //     this.user_active = true;
+      //   else if (element == "enquiry")
+      //     this.enquiry = true;
+      // });
     })
   }
+
   initForm() {
     this.roleForm = this.fb.group({
       user_role: [''],
@@ -145,17 +168,65 @@ export class UserDialogComponent implements OnInit {
   }
 
   user_list() {
-    console.log(this.form.value)
+    if (this.editing == false) {
+      if (this.file) {
+        this.UsersService.getUrl().subscribe((res: any) => {
+          this.keyProfileImage = res.data.key;
+          this.urlProfileImage = res.data.url;
+          if (this.urlProfileImage) {
+            this.UsersService.sendUrl(this.urlProfileImage, this.file).then(resp => {
+              if (resp.status === 200) {
+                this.form.value.profile.image = this.keyProfileImage;
+                this.add_user()
+              }
+            }).catch(err => {
+            })
+          }
+        });
+      } else {
+        this.add_user();
+      }
+    } else {
+      delete this.form.value.password
+      console.log(this.form.value);
+      if (this.file) {
+        this.UsersService.getUrl().subscribe((res: any) => {
+          this.keyProfileImage = res.data.key;
+          this.urlProfileImage = res.data.url;
+          if (this.urlProfileImage) {
+            this.UsersService.sendUrl(this.urlProfileImage, this.file).then(resp => {
+              if (resp.status === 200) {
+                this.form.value.profile.image = this.keyProfileImage;
+                this.update_user()
+              }
+            }).catch(err => {
+            })
+          }
+        });
+      } else {
+        this.update_user()
+      }
+    }
+  }
+  add_user() {
     this.UsersService.create_user(this.form.value).subscribe((res: any) => {
       console.log(res)
       if (!res.errors) {
         this.UsersService.user_activity({ routes: "/users", activity: "Add User" }).subscribe(res => {
-          console.log(res)
+          this.dialogRef.close(res);
         })
       }
     })
   }
-
+  update_user() {
+    this.UsersService.update_user(this.id, this.form.value).subscribe((doc: any) => {
+      if (!doc.errors)
+        this.AlertService.success("User Update successfull")
+      setInterval(a => {
+        this.dialogRef.close(doc);
+      }, 1000, []);
+    })
+  }
 
   add_userrole(data) {
     let privileges = ({

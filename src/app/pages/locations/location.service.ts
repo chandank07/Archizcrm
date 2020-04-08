@@ -11,10 +11,10 @@ export class LocationService {
     'Token': localStorage.getItem('Token')
   });
 
-  url = "http://localhost:5000/api/country"
+  url = "https://newmeanstrakapi.herokuapp.com/api/country"
   url2 = "https://newmeanstrakapi.herokuapp.com/api/enquiryForm"
-  url3 = "http://localhost:5000/api/region"
-  url4 = "http://localhost:5000/api/city"
+  url3 = "https://newmeanstrakapi.herokuapp.com/api/region"
+  url4 = "https://newmeanstrakapi.herokuapp.com/api/city"
 
   constructor(private http: HttpClient) { }
 

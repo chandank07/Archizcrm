@@ -23,6 +23,7 @@ import { EnquiryTypeComponent } from './enquiry-type/enquiry-type.component';
 import { EnquirySourceComponent } from './enquiry-source/enquiry-source.component';
 import { AlertModule } from 'ngx-alerts';
 import { CustomerTypeComponent } from './customer-type/customer-type.component';
+import { ProductComponent } from './product/product.component';
 
 
 export const routes = [
@@ -37,10 +38,11 @@ export const routes = [
   { path: 'enquiry_type', component: EnquiryTypeComponent, data: { breadcrumb: 'Enquiry Type' } },
   { path: 'enquiry_source', component: EnquirySourceComponent, data: { breadcrumb: 'Enquiry Source' } },
   { path: 'customer_type', component: CustomerTypeComponent, data: { breadcrumb: 'Customer Type' } },
+  { path: 'product', component: ProductComponent, data: { breadcrumb: 'Product' } },
 ]
 
 @NgModule({
-  declarations: [SatageComponent, SetingDilogComponent, DesprictionComponent, TargetComponent, ForcastComponent, InvoiceComponent, LeadProbilityComponent, DropReasonComponent, EnquiryTypeComponent, EnquirySourceComponent, CustomerTypeComponent],
+  declarations: [SatageComponent, SetingDilogComponent, DesprictionComponent, TargetComponent, ForcastComponent, InvoiceComponent, LeadProbilityComponent, DropReasonComponent, EnquiryTypeComponent, EnquirySourceComponent, CustomerTypeComponent, ProductComponent],
 
   imports: [
     CommonModule,

@@ -9,15 +9,17 @@ export class SettingService {
     'Content-Type': 'application/json',
     'Token': localStorage.getItem('Token')
   });
-  url = "http://localhost:5000/api/stage"
-  url2 = "http://localhost:5000/api/despriction";
+  url = "https://newmeanstrakapi.herokuapp.com/api/stage"
+  url2 = "https://newmeanstrakapi.herokuapp.com/api/despriction";
   taregt = "https://newmeanstrakapi.herokuapp.com/api/target";
   forcast = "https://newmeanstrakapi.herokuapp.com/api/forcast";
-  lead_probility ="http://localhost:5000/api/lead_probility";
-  drop_reason ="http://localhost:5000/api/drop_reason";
-  enquiry_type ="http://localhost:5000/api/enquiry_type";
-  enquiry_source ="http://localhost:5000/api/enquiry_source";
+  lead_probility ="https://newmeanstrakapi.herokuapp.com/api/lead_probility";
+  drop_reason ="https://newmeanstrakapi.herokuapp.com/api/drop_reason";
+  enquiry_type ="https://newmeanstrakapi.herokuapp.com/api/enquiry_type";
+  enquiry_source ="https://newmeanstrakapi.herokuapp.com/api/enquiry_source";
   // url="https://newmeanstrakapi.herokuapp.com/api/company"
+  customer_type ="https://newmeanstrakapi.herokuapp.com/api/customer_type";
+  product ="https://newmeanstrakapi.herokuapp.com/api/product"
   constructor(private http: HttpClient) { }
 
   Create_stage(data) {
@@ -120,5 +122,28 @@ export class SettingService {
       update_enquiry_source(id, data){
         return this.http.put(this.enquiry_source + "/update_enquiry_source/" + id ,data, { headers: this.headers })
       }
+// =============customer type ==================================
 
+      creat_custmer_type(data){
+        return this.http.post(this.customer_type +"/create_customer_type" ,data ,{ headers: this.headers })
+      }
+      get_customer_type(){
+        return this.http.get(this.customer_type + "/get_customer_type" , { headers: this.headers })
+      }
+      update_customer_type(id , data){
+        return this.http.put(this.customer_type + "/update_customer_type/" + id, data ,{ headers: this.headers })
+      }
+      delete_customer_type(id){
+        return this.http.delete(this.customer_type + "/delete/"+ id , { headers: this.headers })
+      }
+      Active_customer_type(){
+        return this.http.get(this.customer_type + "/get_active_customer_type" , { headers: this.headers })
+      }
+      // product ========================
+      crate_product(data){
+        return this.http.post(this.product + "/create_product" , data , { headers: this.headers })
+      }
+      get_prduct(){
+        return this.http.get(this.product +"/get_active_product" , { headers: this.headers })
+      }
 }

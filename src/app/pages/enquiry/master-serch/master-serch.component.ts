@@ -49,7 +49,7 @@ export class MasterSerchComponent implements OnInit, OnDestroy {
     this.get_enquiry();
     this.get_todayenquiry();
     this.today_update_enquiry();
-    this.get_all_drop_enquiry1();
+    // this.get_all_drop_enquiry1();
     // // this.get_source()
     // this.enquiryService.get_componay_wise_enquiry().subscribe((res: any) => {
     //   this.users = res.data
@@ -64,17 +64,17 @@ export class MasterSerchComponent implements OnInit, OnDestroy {
   initializeView(id: number) {
     // Make HTTP call and reset this.myData
 }
-  get_all_drop_enquiry1() {
-    this.enquiryService.get_all_drop_enquiry().subscribe((doc: any) => {
-      console.log(doc);
-      if (doc.data != null) {
-        this.all_drop_enquiry = doc.data;
-        this.all_drop_enquiry_length = doc.data.length;
-      } else {
-        this.all_drop_enquiry_length = 0;
-      }
-    })
-  }
+  // get_all_drop_enquiry1() {
+  //   this.enquiryService.get_all_drop_enquiry().subscribe((doc: any) => {
+  //     console.log(doc);
+  //     if (doc.data != null) {
+  //       this.all_drop_enquiry = doc.data;
+  //       this.all_drop_enquiry_length = doc.data.length;
+  //     } else {
+  //       this.all_drop_enquiry_length = 0;
+  //     }
+  //   })
+  // }
 
   get_enquiry() {
     this.enquiryService.get_all_data().subscribe((res: any) => {
@@ -109,7 +109,7 @@ export class MasterSerchComponent implements OnInit, OnDestroy {
   T_D_E_D() {
     if (this.users)
       this.users.length = 0;
-    this.get_all_drop_enquiry1()
+    // this.get_all_drop_enquiry1()
     this.users = this.all_drop_enquiry;
   }
   today_enquiry() {
@@ -132,7 +132,7 @@ export class MasterSerchComponent implements OnInit, OnDestroy {
     // console.log(data._id, data.is_active)
     this.enquiryService.block_enquiry(data._id, obj).subscribe((res: any) => {
       console.log(res);
-      this.get_all_drop_enquiry1();
+      // this.get_all_drop_enquiry1();
       // this.alertService.warning('Enquiry Drop Successfull!');
     })
 

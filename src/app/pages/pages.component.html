@@ -16,6 +16,19 @@
                     <a *ngIf="settings.menu == 'horizontal'" class="logo" routerLink="/" (click)="closeSubMenus()">GRADUS</a>  
                 </div>            
                 <div fxLayout="row" fxLayoutAlign="end center">
+                     <!-- <div style="font-size: 12px;">
+                        <mat-form-field>
+                            <mat-label>Toppings</mat-label>
+                            <mat-select multiple (selectionChange)="select($event.value)">
+                              <mat-option *ngFor="let topping of camp_list" [value]="topping._id" aria-selected="topping._id">{{topping?.caompaing_name}}</mat-option>
+                            </mat-select>
+                          </mat-form-field>
+                    </div>  -->
+                    <!-- <button mat-button [matMenuTriggerFor]="menu">Menu</button>
+                    <mat-menu #menu="matMenu">
+                      <button mat-menu-item *ngFor="let topping of get_camps" (click)="check12(topping)"><mat-checkbox [checked]="topping.active" [(ngModel)]="topping.active"> {{topping?.caompaing_name}}   </mat-checkbox></button>
+                     
+                    </mat-menu> -->
                     <div fxLayout="row" fxLayoutAlign="start center" fxShow="false" fxShow.gt-xs class="search-bar">
                         <form method="get">
                             <input type="text" placeholder="All type search..." [(ngModel)]="searchText" (input)="valuechange()" class="mat-elevation-z3"  [class.show]="toggleSearchBar" [ngModelOptions]="{standalone: true}">
@@ -23,7 +36,7 @@
                                 <mat-icon (click)="serch()">search</mat-icon>
                             </button> 
                         </form>
-                    </div>                
+                    </div> 
                     <app-flags-menu fxShow="false" fxShow.gt-sm></app-flags-menu>
                     <app-fullscreen></app-fullscreen> 
                     <app-applications fxShow="false" fxShow.gt-sm></app-applications>
@@ -63,6 +76,14 @@
         </div>  
 
         <div perfectScrollbar>
+            
+            <div fxLayout="column" class="control">
+                <h4>Caompaing</h4>
+                <div fxLayout="row" fxLayoutAlign="space-between center" *ngFor="let topping of camp_list; index as i">
+                    <span>{{topping?.caompaing_name}}</span>
+                    <mat-slide-toggle [checked]="camp_list[i].active" (change)="select_cam(topping ,i)" labelPosition="before"></mat-slide-toggle>
+                </div>
+            </div>
 
             <div fxLayout="column" class="control">
                 <h4>Layout</h4>        
@@ -83,12 +104,12 @@
                 </mat-radio-group>
             </div>
 
-            <div fxLayout="column" class="control">
+            <!-- <div fxLayout="column" class="control">
                 <h4>Choose menu type</h4>
                 <mat-radio-group [(ngModel)]="menuTypeOption" (change)="chooseMenuType()">
                     <mat-radio-button *ngFor="let menuType of menuTypes" [value]="menuType">{{menuType}}</mat-radio-button>
                 </mat-radio-group>
-            </div>
+            </div> -->
 
             <div fxLayout="column" class="control">
                 <h4>Choose theme skin</h4>        

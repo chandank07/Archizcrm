@@ -27,6 +27,10 @@ import { AlertModule } from 'ngx-alerts';
 import { MasterSerchComponent } from './master-serch/master-serch.component';
 import { SettingService } from '../seting/setting.service';
 import { QuillModule } from 'ngx-quill'
+import { SocketService } from '../../../app/socket.service';
+import { UsersService } from './../users/users.service';
+import { CompaignServiceService } from '../../pages/compaign/compaign-service.service';
+
 
 export const routes = [
   { path: '', redirectTo: 'EnquiryComponent', pathMatch: 'full'},
@@ -69,9 +73,9 @@ export const routes = [
      SharedModule,
      PipesModule,
     RouterModule.forChild(routes),
-    AlertModule.forRoot({maxMessages: 5, timeout: 5000, position: 'left'})
+    AlertModule.forRoot({maxMessages: 5, timeout: 5000, position: 'right'})
   ],
-  providers: [EnquiryServiceService ,LocationService,SettingService],
+  providers: [EnquiryServiceService ,LocationService,SettingService ,UsersService,SocketService,CompaignServiceService],
   entryComponents:[
     EnquiryDilogComponent,
     TaskDilogComponent,

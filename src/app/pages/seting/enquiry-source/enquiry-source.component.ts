@@ -12,7 +12,7 @@ import { SetingDilogComponent } from '../seting-dilog/seting-dilog.component';
   styleUrls: ['./enquiry-source.component.scss']
 })
 export class EnquirySourceComponent implements OnInit {
-  displayedColumns: string[] = ['index','source_name','active'];
+  displayedColumns: string[] = ['index','source_name','option','active'];
   dataSource :any;
   panelOpenState = false;
   show_form:Boolean= false;

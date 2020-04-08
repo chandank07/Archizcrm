@@ -15,19 +15,21 @@ export class SetingDilogComponent implements OnInit {
   public csvForm: FormGroup;
   public lead_Probility: FormGroup;
   public desprictionform: FormGroup;
-  public Drop_reasons:FormGroup;
-  public enquiry_type_form:FormGroup;
+  public Drop_reasons: FormGroup;
+  public enquiry_type_form: FormGroup;
   public enquiry_source_form: FormGroup;
-  checked:Boolean = false;
+  public customer_type_form: FormGroup;
+  public products:FormGroup;
+  checked: Boolean = false;
   // checked = false;
   csv: Boolean = false;
   satege_edit: Boolean = false;
   list: boolean = false;
   datasorce: Boolean = false;
   lead_probility: Boolean = false;
-  drop_reason:Boolean = false;
-  enquiry_type:Boolean = false;
-  active:Boolean=false;
+  drop_reason: Boolean = false;
+  enquiry_type: Boolean = false;
+  active: Boolean = false;
   srcResult: any;
   datasource: any;
   country: any;
@@ -36,9 +38,11 @@ export class SetingDilogComponent implements OnInit {
   parsedCSV;
   all_stage: any;
   product: Boolean = false;
-  enquiry_source:Boolean = false;
+  Product_fild:Boolean = false;
+  enquiry_source: Boolean = false;
+  Customertype: Boolean = false;
   constructor(public fb: FormBuilder, public dialogRef: MatDialogRef<SetingDilogComponent>,
-    public router: Router, private settingService: SettingService, private AlertService:AlertService,
+    public router: Router, private settingService: SettingService, private AlertService: AlertService,
     @Inject(MAT_DIALOG_DATA) public user: any, ) { }
 
   ngOnInit() {
@@ -48,7 +52,9 @@ export class SetingDilogComponent implements OnInit {
     this.lead_probility_form();
     this.Drop_reason();
     this.enquiry_types();
+    this.customer_type();
     this.enquiry_sources();
+    this.product_form();
     console.log(this.user)
 
     if (this.user.type == "stage") {
@@ -72,8 +78,6 @@ export class SetingDilogComponent implements OnInit {
       }
     } else if (this.user.type == "datasorce") {
       this.datasorce = true;
-    } else if (this.user.type == "product") {
-      this.product = true;
     } else if (this.user.type == "lead_probility") {
       this.lead_probility = true;
       if (this.user.user == null) {
@@ -84,7 +88,7 @@ export class SetingDilogComponent implements OnInit {
         this.lead_Probility.get("probility").patchValue(this.user.user.probility);
         this.checked = this.user.user.isActive
       }
-    }  else if (this.user.type == "drop_reason") {
+    } else if (this.user.type == "drop_reason") {
       this.drop_reason = true;
       if (this.user.user == null) {
         this.satege_edit = false;
@@ -111,9 +115,34 @@ export class SetingDilogComponent implements OnInit {
         this.enquiry_source_form.get("source").patchValue(this.user.user.source);
         this.checked = this.user.user.isActive
       }
+    } else if (this.user.type == "customer_type") {
+      this.Customertype = true;
+      if (this.user.user == null) {
+        this.satege_edit = false;
+      } else {
+        this.satege_edit = true;
+        this.customer_type_form.patchValue(this.user.user);
+        this.checked = this.user.user.isActive
+      }
+    } else if (this.user.type == "Product") {
+      this.Product_fild = true;
+      if (this.user.user == null) {
+        this.satege_edit = false;
+      } else {
+        this.satege_edit = true;
+        this.products.patchValue(this.user.user)
+        // this.customer_type_form.patchValue(this.user.user);
+        // this.checked = this.user.user.isActive
+      }
     }
   }
 
+  product_form(){
+    this.products = this.fb.group({
+      product_name: [''],
+      rate: [''],
+    });
+  }
   email_form() {
     this.emailForm = this.fb.group({
       stage_name: [''],
@@ -136,12 +165,17 @@ export class SetingDilogComponent implements OnInit {
       reason: [''],
     });
   }
-  enquiry_types(){
+  enquiry_types() {
     this.enquiry_type_form = this.fb.group({
       enquiry_type: [''],
     });
   }
-  enquiry_sources(){
+  customer_type() {
+    this.customer_type_form = this.fb.group({
+      customer_type: [''],
+    })
+  }
+  enquiry_sources() {
     this.enquiry_source_form = this.fb.group({
       source: [''],
     });
@@ -162,15 +196,15 @@ export class SetingDilogComponent implements OnInit {
       this.emailForm.value
       let data = {
         stage_name: this.emailForm.value.stage_name,
-        isActive:this.checked
+        isActive: this.checked
       }
       this.settingService.Create_stage(data).subscribe((res: any) => {
         console.log(res);
         if (res.errors == false) {
           this.AlertService.success("Stage Add Successfull.")
-          setInterval(a=>{
+          setInterval(a => {
             this.dialogRef.close(data);
-          },1000,[]);
+          }, 1000, []);
         } else {
           this.AlertService.warning("Error")
         }
@@ -181,10 +215,10 @@ export class SetingDilogComponent implements OnInit {
       this.settingService.Create_desp(this.desprictionform.value).subscribe((res: any) => {
         if (res.errors == false) {
           this.AlertService.success("Description Add Successfull.")
-          setInterval(a=>{
+          setInterval(a => {
             this.dialogRef.close(res.data);
-          },1000,[]);
-        }else{
+          }, 1000, []);
+        } else {
           this.AlertService.warning("Error")
         }
       })
@@ -193,12 +227,12 @@ export class SetingDilogComponent implements OnInit {
       this.lead_Probility.value.isActive = this.checked
       this.settingService.Create_lead_probility(this.lead_Probility.value).subscribe((doc: any) => {
         console.log(doc);
-        if(doc){
+        if (doc) {
           this.AlertService.success("Lead Probability Add Successfull.")
-          setInterval(a=>{
+          setInterval(a => {
             this.dialogRef.close(doc);
-          },1000,[]);
-        }else{
+          }, 1000, []);
+        } else {
           this.AlertService.warning("Error")
         }
       })
@@ -206,42 +240,68 @@ export class SetingDilogComponent implements OnInit {
       this.Drop_reasons.value.isActive = this.checked
       this.settingService.Create_drop_reason(this.Drop_reasons.value).subscribe((doc: any) => {
         console.log(doc);
-        if(doc){
+        if (doc) {
           this.AlertService.success("Drop Reasion Add Successfull.")
-          setInterval(a=>{
+          setInterval(a => {
             this.dialogRef.close(doc);
-          },1000,[]);
-        }else{
+          }, 1000, []);
+        } else {
           this.AlertService.warning("Error")
         }
       })
     } else if (this.enquiry_type == true) {
-      let obj ={
-        enquiry_type : this.enquiry_type_form.value.enquiry_type,
+      let obj = {
+        enquiry_type: this.enquiry_type_form.value.enquiry_type,
         active: this.checked
       }
       console.info(obj)
       this.settingService.Create_enquiry_type(obj).subscribe((doc: any) => {
         console.log(doc);
-        if(doc){
+        if (doc) {
           this.AlertService.success("Enquiry Type Add Successfull.")
-          setInterval(a=>{
+          setInterval(a => {
             this.dialogRef.close(doc);
-          },1000,[]);
-        }else{
+          }, 1000, []);
+        } else {
           this.AlertService.warning("Error")
         }
       })
     } else if (this.enquiry_source == true) {
       this.enquiry_source_form.value.isActive = this.checked
       this.settingService.Create_enquiry_source(this.enquiry_source_form.value).subscribe((doc: any) => {
-        if(doc){
+        if (doc) {
           this.AlertService.success("Enquiry Source Add Successfull.")
-          setInterval(a=>{
+          setInterval(a => {
             this.dialogRef.close(doc);
-          },1000,[]);
-        }else{
+          }, 1000, []);
+        } else {
           this.AlertService.warning("Error")
+        }
+      })
+    } else if (this.Customertype == true) {
+      this.customer_type_form.value.isActive = this.checked
+      console.log(this.customer_type_form.value)
+      this.settingService.creat_custmer_type(this.customer_type_form.value).subscribe((doc: any) => {
+        if (doc.errors) {
+          this.AlertService.danger('Error')
+        } else {
+          this.AlertService.success('Customer Type Add Successfull.')
+          setInterval(a => {
+            this.dialogRef.close(doc.data);
+          }, 1000, []);
+        }
+      })
+    } else if (this.Product_fild == true) {
+      this.products.value.is_active = this.checked
+      console.log(this.products.value)
+      this.settingService.crate_product(this.products.value).subscribe((doc: any) => {
+        if (doc.errors) {
+          this.AlertService.danger('Error')
+        } else {
+          this.AlertService.success('Customer Type Add Successfull.')
+          setInterval(a => {
+            this.dialogRef.close(doc.data);
+          }, 1000, []);
         }
       })
     }
@@ -255,10 +315,10 @@ export class SetingDilogComponent implements OnInit {
         console.log(res)
         if (res.errors == false) {
           this.AlertService.success("Stage update Successfull.")
-          setInterval(a=>{
+          setInterval(a => {
             this.dialogRef.close(res.data);
-          },1000,[]);
-        }else{
+          }, 1000, []);
+        } else {
           this.AlertService.warning("Error")
         }
       })
@@ -269,10 +329,10 @@ export class SetingDilogComponent implements OnInit {
         console.log(res)
         if (res.errors == false) {
           this.AlertService.success("Description update Successfull.")
-          setInterval(a=>{
+          setInterval(a => {
             this.dialogRef.close(res.data);
-          },1000,[]);
-        }else{
+          }, 1000, []);
+        } else {
           this.AlertService.success("Error")
         }
       })
@@ -282,52 +342,65 @@ export class SetingDilogComponent implements OnInit {
         console.log(res)
         if (res.errors == false) {
           this.AlertService.success("lead Probability update Successfull.")
-          setInterval(a=>{
+          setInterval(a => {
             this.dialogRef.close(res.data);
-          },1000,[]);
+          }, 1000, []);
 
         }
       })
     } else if (this.drop_reason == true) {
       console.log(this.lead_Probility.value)
       this.Drop_reasons.value.isActive = this.checked;
-      this.settingService.update_drop_reason(this.user.user._id,this.Drop_reasons.value).subscribe((doc: any) => {
+      this.settingService.update_drop_reason(this.user.user._id, this.Drop_reasons.value).subscribe((doc: any) => {
         console.log(doc);
-        if(doc.errors){
+        if (doc.errors) {
           this.AlertService.warning("Drop Reasion not Update")
-        }else{
+        } else {
           this.AlertService.success("Drop reasion update Successfull.")
-          setInterval(a=>{
+          setInterval(a => {
             this.dialogRef.close(doc.data);
-          },1000,[]);
+          }, 1000, []);
         }
       })
     } else if (this.enquiry_type == true) {
-      let obj ={
-        enquiry_type : this.enquiry_type_form.value.enquiry_type,
+      let obj = {
+        enquiry_type: this.enquiry_type_form.value.enquiry_type,
         active: this.checked
       }
-      this.settingService.update_enquiry_type(this.user.user._id,obj).subscribe((doc: any) => {
+      this.settingService.update_enquiry_type(this.user.user._id, obj).subscribe((doc: any) => {
         console.log(doc);
-        if(doc){
+        if (doc) {
           this.AlertService.success("Enquiry Type update Successfull.")
-          setInterval(a=>{
+          setInterval(a => {
             this.dialogRef.close(doc.data);
-          },1000,[]);
-        }else{
+          }, 1000, []);
+        } else {
           this.AlertService.warning("Error")
         }
       })
     } else if (this.enquiry_source == true) {
       this.enquiry_source_form.value.isActive = this.checked;
-      this.settingService.update_enquiry_source(this.user.user._id,this.enquiry_source_form.value).subscribe((doc: any) => {
-        if(doc){
+      this.settingService.update_enquiry_source(this.user.user._id, this.enquiry_source_form.value).subscribe((doc: any) => {
+        if (doc) {
           this.AlertService.success("Enquiry Source update Successfull.")
-          setInterval(a=>{
+          setInterval(a => {
             this.dialogRef.close(doc.data);
-          },1000,[]);
-        }else{
+          }, 1000, []);
+        } else {
           this.AlertService.warning("Error")
+        }
+      })
+    } else if (this.Customertype == true) {
+      this.customer_type_form.value.isActive = this.checked
+      console.log(this.customer_type_form.value)
+      this.settingService.update_customer_type(this.user.user._id, this.customer_type_form.value).subscribe((doc: any) => {
+        if (doc.errors) {
+          this.AlertService.danger('Error')
+        } else {
+          this.AlertService.success('Customer Type Update Successfull.')
+          setInterval(a => {
+            this.dialogRef.close(doc.data);
+          }, 1000, []);
         }
       })
     }

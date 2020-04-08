@@ -1,4 +1,6 @@
 import { Menu } from './menu.model';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
+
 
 export const verticalMenuItems = [ 
     new Menu (1, 'Dashboard', '/dashboard', null, 'dashboard', null, false, 0),
@@ -91,18 +93,18 @@ export const horizontalMenuItems = [
     new Menu (13, 'Region', '/Location/region/', null, 'location_on', null, false, 11),
     // new Menu (11, 'State', '/Location/country/', null, 'home', null, false, 8),
     new Menu (14, 'City', '/Location/city/', null, 'location_city', null, false, 11),
-    new Menu (15, 'Compaign', null, null, 'recent_actors', null, true, 0),
+    new Menu (15, 'Campaign', null, null, 'recent_actors', null, true, 0),
     new Menu (16, 'Team Management', '/Compaign/team_managment', null, 'ballot', null, false, 15),
-    new Menu (17, 'Data Sorce', '/Compaign/data_sorce', null, 'ballot', null, false, 15),
-    new Menu (18, 'Compaing List', '/Compaign/compaing_list', null, 'ballot', null, false, 15),
-    new Menu (19, 'Assing Compaing', '/Compaign/create_comp', null, 'ballot', null, false, 15),
+    new Menu (17, 'Data Source', '/Compaign/data_sorce', null, 'ballot', null, false, 15),
+    new Menu (18, 'Campaign List', '/Compaign/compaing_list', null, 'ballot', null, false, 15),
+    new Menu (19, 'Assign Campaign', '/Compaign/create_comp', null, 'ballot', null, false, 15),
 
     new Menu (20, 'Setting', null, null, 'settings_applications', null, true, 0),
     new Menu (21, 'Stage', '/Setting/stage', null, 'new_releases', null, false, 20),
     new Menu (22, 'Description', '/Setting/despriction', null, 'new_releases', null, false, 20),
     new Menu (25, 'Target', '/Setting/target', null, 'new_releases', null, false, 20),
-    new Menu (26, 'Forcast', '/Setting/forcast', null, 'new_releases', null, false, 20),
-    new Menu (27, 'Lead probility', '/Setting/lead_probility', null, 'fiber_new', null, false, 20),
+    new Menu (26, 'Forecasting', '/Setting/forcast', null, 'new_releases', null, false, 20),
+    new Menu (27, 'Lead Probability', '/Setting/lead_probility', null, 'fiber_new', null, false, 20),
     new Menu (28, 'Drop Reason', '/Setting/drop_reason', null, 'fiber_new', null, false, 20),
     new Menu (29, 'Enquiry Type', '/Setting/enquiry_type', null, 'fiber_new', null, false, 20),
     new Menu (30, 'Enquiry Source', '/Setting/enquiry_source', null, 'fiber_new', null, false, 20),
@@ -112,6 +114,9 @@ export const horizontalMenuItems = [
     new Menu (24, 'QR-Code', '/api-confrigation/qr-code', null, 'tab_unselected', null, false, 23),
     new Menu (32, 'Email', '/Lead/email', null, 'email', null, false, 23),
     new Menu (33, 'SMS', '/Lead/sms', null, 'sms', null, false, 23),
+
+    new Menu (35, 'Reports', null, null, 'report', null, true, 0),
+    new Menu (36, 'Report', '/reports/report', null, 'report', null, false, 35),
     // new Menu (20, 'Form Controls', null, null, 'dvr', null, true, 0), 
     // new Menu (3, 'UI Features', null, null, 'computer', null, true, 0),   
     // new Menu (4, 'Buttons', '/ui/buttons', null, 'keyboard', null, false, 3),  
@@ -154,16 +159,23 @@ export const horizontalMenuItems = [
     // new Menu (68, 'Leaflet Maps', '/maps/leafletmaps', null, 'my_location', null, false, 66),
     // new Menu (81, 'Drag & Drop', '/drag-drop', null, 'mouse', null, false, 3), 
     // new Menu (85, 'Material Icons', '/icons', null, 'insert_emoticon', null, false, 3),
-    new Menu (40, 'Pages', null, null, 'library_books', null, true, 0),
-    new Menu (43, 'Login', '/login', null, 'exit_to_app', null, false, 40),    
-    new Menu (44, 'Register', '/register', null, 'person_add', null, false, 40),
-    new Menu (45, 'Blank', '/blank', null, 'check_box_outline_blank', null, false, 40),
+    // new Menu (40, 'Pages', null, null, 'library_books', null, true, 0),
+    // new Menu (43, 'Login', '/login', null, 'exit_to_app', null, false, 40),    
+    // new Menu (44, 'Register', '/register', null, 'person_add', null, false, 40),
+    // new Menu (45, 'Blank', '/blank', null, 'check_box_outline_blank', null, false, 40),
     // new Menu (46, 'Page Not Found', '/pagenotfound', null, 'error_outline', null, false, 40),
     // new Menu (47, 'Error', '/error', null, 'warning', null, false, 40),
     // new Menu (48, 'Landing', '/landing', null, 'filter', null, false, 40),
-    new Menu (49, 'Profile', null, null, 'person', null, true, 40),
+    // new Menu (49, 'Profile', null, null, 'person', null, true, 40),
     // new Menu (50, 'Projects', '/profile/projects', null, 'note', null, false, 49),    
     // new Menu (51, 'User Info', '/profile/user-info', null, 'perm_contact_calendar', null, false, 49),
     // new Menu (55, 'Schedule', '/schedule', null, 'event', null, false, 40),
     // new Menu (200, 'External Link', null, 'http://themeseason.com', 'open_in_new', '_blank', false, 40)
 ]
+// horizontalMenuItems.forEach(element => {
+    // console.log(element)
+    // console.log(element.title , localStorage.getItem('role'))
+    // if(element.title == localStorage.getItem('role')){
+    //     console.log(element)
+    // }
+// });

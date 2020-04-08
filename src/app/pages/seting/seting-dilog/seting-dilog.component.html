@@ -3,6 +3,7 @@
 <h1 mat-dialog-title *ngIf="lead_probility">Add Lead_probility</h1>
 <h1 mat-dialog-title *ngIf="drop_reason">Add Drop Reason</h1>
 <h1 mat-dialog-title *ngIf="enquiry_type">Add Enquiry Type</h1>
+<h1 mat-dialog-title *ngIf="Customertype">Add Customer Type</h1>
 <h1 mat-dialog-title *ngIf="enquiry_source">Add Enquiry Source</h1>
 
 <div mat-dialog-content style="width: 500px;" *ngIf="csv">
@@ -80,6 +81,34 @@
     </div>
   </form>
 </div>
+
+<div mat-dialog-content style="width: 500px;" *ngIf="Customertype">
+  <form [formGroup]="customer_type_form" fxLayout="row wrap" class="user-form">
+    <div fxLayout="column" class="form-field-outer">
+      <div fxFlex="100">
+        <mat-form-field style="width: 100%;">
+          <input matInput formControlName="customer_type" placeholder="Customer Type">
+        </mat-form-field>
+      </div>
+    </div>
+  </form>
+</div>
+
+<div mat-dialog-content style="width: 500px;" *ngIf="Product_fild">
+  <form [formGroup]="products" fxLayout="row wrap" class="user-form">
+    <div fxLayout="column" class="form-field-outer">
+      <div fxFlex="100">
+        <mat-form-field style="width: 100%;">
+          <input matInput formControlName="product_name" placeholder="Product Name">
+        </mat-form-field>
+        <mat-form-field style="width: 100%;">
+          <input type="number" matInput formControlName="rate" placeholder="Price">
+        </mat-form-field>
+      </div>
+    </div>
+  </form>
+</div>
+
 <div style="padding-left: 30%;">
   <mat-slide-toggle [checked]="checked" [(ngModel)]="checked">
     Active/Inactive!
@@ -90,7 +119,7 @@
 
 <div mat-dialog-actions fxLayout="row" fxLayoutAlign="space-between center">
   <button mat-raised-button color="primary" type="button" (click)="submit()" *ngIf="!satege_edit">Save</button>
-  <button mat-raised-button color="primary" type="button" (click)="Uplode()" *ngIf="satege_edit">Uplode</button>
+  <button mat-raised-button color="primary" type="button" (click)="Uplode()" *ngIf="satege_edit">Update</button>
   <button mat-raised-button color="warn" (click)="close()">Cancel</button>
 </div>
 

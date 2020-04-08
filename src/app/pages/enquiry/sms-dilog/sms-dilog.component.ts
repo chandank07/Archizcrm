@@ -3,6 +3,8 @@ import { MatSnackBar, MAT_DIALOG_DATA, MatDialogRef } from '@angular/material';
 import { Router } from '@angular/router';
 import { FormGroup, FormBuilder, Validators, FormArray } from '@angular/forms';
 import { EnquiryServiceService } from '../../enquiry/enquiry_Service/enquiry-service.service'
+import { SocketService } from '../../../../app/socket.service';
+import * as moment from 'moment'; 
 
 @Component({
   selector: 'app-sms-dilog',
@@ -13,26 +15,34 @@ export class SmsDilogComponent implements OnInit {
   public form: FormGroup;
   public templateForm: FormGroup;
   public emailForm: FormGroup;
+  public sms_send_form: FormGroup;
   public templateEmailForm: FormGroup;
   public email_send_form: FormGroup;
+  public remainders: FormGroup;
   emails_tempalte: any;
   intrigation: boolean = false;
   template: boolean = false;
   email: boolean = false;
   template_email: boolean = false;
   send_email: Boolean = false;
+  send_sms: Boolean = false;
+  remainder:Boolean = false;
   intrigation_email: any;
+  sms_tem:any;
   constructor(public dialogRef: MatDialogRef<SmsDilogComponent>, public router: Router,
     @Inject(MAT_DIALOG_DATA) public data: any, public snackBar: MatSnackBar, public fb: FormBuilder,
-    public enquiryService: EnquiryServiceService, ) {
+    public enquiryService: EnquiryServiceService,private srv: SocketService ) {
     this.smsform();
     this.templatesmsform();
     this.templateemailform();
     this.email_form();
     this.email_send();
+    this.sms_send();
+    this.test_remainder();
   }
 
   ngOnInit() {
+    console.log(moment().toDate())
     if (this.data.type == "intrigation") {
       this.intrigation = true;
       this.set_smsform()
@@ -50,9 +60,30 @@ export class SmsDilogComponent implements OnInit {
       console.log(this.data.user)
       this.get_email_template();
       this.get_intrigation_email();
+    } else if (this.data.type == "send_sms") {
+      this.send_sms = true;
+      console.log(this.data.user)
+      this.get_sms();
+      // this.get_email_template();
+      // this.get_intrigation_email();
+    }else if (this.data.type == "remainder") {
+      console.log(this.data)
+      this.remainder = true;
     }
-  }
 
+  }
+  get_sms(){
+    this.enquiryService.gwt_templatesms().subscribe((doc:any) =>{
+      this.sms_tem = doc.data
+      console.log(this.sms_tem)
+    })
+  }
+  test_remainder() {
+    this.remainders = this.fb.group({
+      date_time: [''],
+      message: [''],
+    });
+  }
   get_email_template() {
     this.enquiryService.gwt_tempemail().subscribe((res: any) => {
       console.log(res)
@@ -106,6 +137,12 @@ export class SmsDilogComponent implements OnInit {
   email_send() {
     this.email_send_form = this.fb.group({
       email_template: [''],
+      message: ['']
+    })
+  }
+  sms_send() {
+    this.sms_send_form = this.fb.group({
+      sms_template: [''],
       message: ['']
     })
   }
@@ -219,6 +256,21 @@ export class SmsDilogComponent implements OnInit {
 
       }else{
         this.dialogRef.close(doc.data);
+      }
+    })
+  }
+  set_remainder(){
+    this.remainders.value.user_id = this.data.user._id
+    this.remainders.value.company_id = this.data.user.company._id
+    let remaind_date = moment(this.remainders.value.date_time).subtract(7 ,'hours').add(30 , 'minutes').toDate()
+    this.remainders.value.date_time = remaind_date
+    console.log(this.remainders.value ,remaind_date)
+    this.srv.creat_remainder(this.remainders.value).subscribe((res:any) =>{
+      console.log(res)
+      if (res) {
+        setInterval(a => {
+          this.dialogRef.close(res);
+        }, 1000, []);
       }
     })
   }

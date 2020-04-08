@@ -5,6 +5,7 @@ import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material';
 import { Router } from '@angular/router';
 import { CompaignServiceService } from '../compaign-service.service';
 import { LocationService } from '../../locations/location.service';
+import { AlertService } from 'ngx-alerts';
 
 @Component({
   selector: 'app-compaing-dilog',
@@ -25,8 +26,9 @@ export class CompaingDilogComponent implements OnInit {
   region:any;
   city:any;
   parsedCSV;
+  editing:Boolean = false;
   constructor(public fb: FormBuilder, public dialogRef: MatDialogRef<EnquiryDilogComponent>,
-    public router: Router,private CompaignServiceService: CompaignServiceService,
+    public router: Router,private CompaignServiceService: CompaignServiceService,private AlertService:AlertService,
     @Inject(MAT_DIALOG_DATA) public user: any,public locationservice: LocationService , ) { }
 
   ngOnInit() {
@@ -42,6 +44,11 @@ export class CompaingDilogComponent implements OnInit {
       this.list = true;
     }else if(this.user.type == "datasorce"){
       this.datasorce = true;
+      if(this.user.user){
+        this.editing = true;
+        this.emailForm.patchValue(this.user.user);
+        this.checked = this.user.user.active
+      }
     }
   }
 
@@ -115,6 +122,21 @@ export class CompaingDilogComponent implements OnInit {
     console.log(data)
     this.CompaignServiceService.create_data_source(data).subscribe((res:any) =>{
       console.log(res)
+    })
+  }
+  update_data(){
+    this.user.user._id
+    let obj ={
+      source_name: this.emailForm.value.source_name,
+      active: this.checked,
+    }
+    this.CompaignServiceService.update_data_source(this.user.user._id , obj).subscribe((doc:any) =>{
+      if(!doc.errors){
+        this.AlertService.success('upadte Successfull.')
+        setInterval(a=>{
+          this.dialogRef.close(doc);
+        },1000,[]);
+      }
     })
   }
   uploadCSV(fileInput: any) {

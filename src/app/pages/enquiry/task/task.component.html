@@ -28,7 +28,7 @@
                       <button mat-icon-button (click)="view = 'day'">
                           <mat-icon>view_day</mat-icon>
                       </button>
-                      <button mat-icon-button (click)="openScheduleDialog(null)">
+                      <button mat-icon-button (click)="openScheduleDialog(null)" *ngIf="buttonshow">
                           <mat-icon>add</mat-icon>
                       </button>
                   </div>

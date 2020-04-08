@@ -8,6 +8,7 @@ import { LoginService } from './Services/login.service';
 import { MatSnackBar } from '@angular/material';
 import { MatDialog, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material';
 import { AlertService } from 'ngx-alerts';
+import { SocketService } from '../../socket.service';
 
 @Component({
   selector: 'app-login',
@@ -25,7 +26,7 @@ export class LoginComponent {
   public settings: Settings;
   constructor(public appSettings: AppSettings,public snackBar: MatSnackBar,
      private loginservice: LoginService, public fb: FormBuilder, private alertService:AlertService,
-     public dialog: MatDialog,
+     public dialog: MatDialog,private soc :SocketService,
       public router: Router) {
     this.settings = this.appSettings.settings;
     this.form = this.fb.group({
@@ -59,14 +60,16 @@ export class LoginComponent {
         this.users = res;
         console.log(this.users)
         if (!this.users.errors) {
-          localStorage.setItem('Token', this.users.data.token);
+          // localStorage.setItem('Token', this.users.data.token);
           if (this.users.status == 200 && this.users.errors == false) {
+            this.loginservice.saveToken(this.users.data.token);
             // let message = "Login Successfull.!";
             // let action ="OK"
             // this.snackBar.open(message, action, {
             //   duration: 2000,
             // });
-            this.router.navigate(['/dashboard'],{ skipLocationChange: true });
+            window.open( 'http://growthhack360.com/#/dashboard',"_self")
+            // this.router.navigate(['/dashboard'],{ skipLocationChange: true });
             this.Wating_button = false;
             this.alertService.success("User Login Successfull.")
           }else{

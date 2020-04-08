@@ -1,5 +1,5 @@
 
-import { Component, OnInit, Inject } from '@angular/core';
+import { Component, OnInit, Inject , Input } from '@angular/core';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material';
 import { FormGroup, FormBuilder, Validators, FormArray } from '@angular/forms';
 import { User, UserProfile, UserWork, UserContacts, UserSocial, UserSettings } from '../enquiry.model';
@@ -8,6 +8,8 @@ import { MatSnackBar } from '@angular/material';
 import { Router } from '@angular/router';
 import { LocationService } from '../../locations/location.service';
 import { SettingService } from '../../seting/setting.service';
+import { CompaignServiceService } from '../../../pages/compaign/compaign-service.service';
+import { CookieService } from 'ngx-cookie-service';
 
 @Component({
   selector: 'app-enquiry-dilog',
@@ -15,6 +17,8 @@ import { SettingService } from '../../seting/setting.service';
   styleUrls: ['./enquiry-dilog.component.scss']
 })
 export class EnquiryDilogComponent implements OnInit {
+  @Input() childmessage;
+  @Input() childMessage: string;
   public form: FormGroup;
   public commentform: FormGroup;
   public passwordHide: boolean = true;
@@ -32,15 +36,18 @@ export class EnquiryDilogComponent implements OnInit {
   all_city: any;
   enquiry: boolean = false;
   comment: boolean = false;
-  enquiry_type:any;
-  probility:any;
-  stage:any;
-  discription:any;
-  enquiry_source:any;
+  enquiry_type: any;
+  probility: any;
+  stage: any;
+  discription: any;
+  enquiry_source: any;
+  active_customer_type: any;
+  product: any;
+  remark: any;
   constructor(public dialogRef: MatDialogRef<EnquiryDilogComponent>, public router: Router,
     @Inject(MAT_DIALOG_DATA) public user: any, public snackBar: MatSnackBar,
-    public fb: FormBuilder, public enquiryService: EnquiryServiceService,
-    private LocationService: LocationService, private SettingService: SettingService) {
+    public fb: FormBuilder, public enquiryService: EnquiryServiceService, private CompaignServiceService: CompaignServiceService,
+    private LocationService: LocationService, private SettingService: SettingService ,private CookieService:CookieService) {
     this.commentForm();
 
     this.form = this.fb.group({
@@ -59,6 +66,8 @@ export class EnquiryDilogComponent implements OnInit {
       requrment_product: [''],
       is_active: true,
       status: [0],
+      product: [''],
+      remark: [''],
       lead: this.fb.group({
         expected_closer_date: [''],
         conversion_probability: [''],
@@ -79,16 +88,19 @@ export class EnquiryDilogComponent implements OnInit {
   }
 
   ngOnInit() {
+    this.get_active_customer_type();
     this.get_region()
     this.get_enquiry_type();
     this.get_stage();
     this.get_probility()
     this.get_source();
+    this.get_camp();
     console.log(this.user)
     switch (this.user.type) {
       case "enquiry":
         console.log("enquiry")
         this.enquiry = true;
+        this.get_product();
         if (this.user.user == null) {
           console.log("add")
         } else {
@@ -109,8 +121,24 @@ export class EnquiryDilogComponent implements OnInit {
 
 
   }
+  get_camp() {
+    this.CompaignServiceService.get_camp_list().subscribe((doc: any) => {
+      console.log(doc, "}}}}}}}}}}}")
+    })
+  }
+  get_product() {
+    this.SettingService.get_prduct().subscribe((doc: any) => {
+      this.product = doc.data
+    })
+  }
+  get_active_customer_type(): void {
+    this.SettingService.Active_customer_type().subscribe((doc: any) => {
+      this.active_customer_type = doc.data;
+      console.warn(this.active_customer_type)
+    })
+  }
   get_region() {
-    this.LocationService.get_region().subscribe((res: any) => {
+    this.LocationService.get_active_region().subscribe((res: any) => {
       console.log(res)
       this.All_region = res.data
     })
@@ -121,7 +149,7 @@ export class EnquiryDilogComponent implements OnInit {
     })
   }
   get_stage() {
-    this.SettingService.get_stage().subscribe((doc: any) => {
+    this.SettingService.get_active_stage().subscribe((doc: any) => {
       console.log(doc)
       this.stage = doc.data
       // this.enquiry_type = doc.data
@@ -139,15 +167,15 @@ export class EnquiryDilogComponent implements OnInit {
       this.probility = doc.data
     })
   }
-  get_source(){
-    this.SettingService.get_enquiry_source().subscribe((doc:any) =>{
+  get_source() {
+    this.SettingService.get_enquiry_source().subscribe((doc: any) => {
       console.log(doc);
       this.enquiry_source = doc.data
     })
   }
-  stage_chnage(id){
+  stage_chnage(id) {
     console.warn(id)
-    this.SettingService.get_stage_wise_desp(id).subscribe((doc:any)=>{
+    this.SettingService.get_stage_wise_desp(id).subscribe((doc: any) => {
       console.info(doc)
       this.discription = doc.data
     })
@@ -200,7 +228,7 @@ export class EnquiryDilogComponent implements OnInit {
 
     console.log("============...........", this.user.user, this.user.user.city)
 
-    this.form.setValue(this.user.user)
+    this.form.patchValue(this.user.user)
 
   }
 
@@ -243,6 +271,7 @@ export class EnquiryDilogComponent implements OnInit {
     if (this.form.invalid) {
       return;
     } else {
+      this.form.value.camp_list = this.user.user[0]._id;
       let data = this.form.value;
       console.log(data)
       this.enquiryService.add_enquiry(data).subscribe((doc: any) => {
@@ -330,7 +359,6 @@ export class EnquiryDilogComponent implements OnInit {
     if (this.form_field == false) {
       // while (this.formarr.length !== 0) { this.formarr.removeAt(0); }
       this.form_field = true;
-
     } else {
       this.form_field = false;
     }

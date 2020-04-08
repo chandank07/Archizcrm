@@ -1,5 +1,6 @@
-<h1 mat-dialog-title><span *ngIf="enquiry && !comment">Add Enquiry</span><span *ngIf="!enquiry && !comment">Add Lead</span>
+<h1 mat-dialog-title><span *ngIf="enquiry && !comment">Add Enquiry</span><span *ngIf="!enquiry && !comment">Convert To Lead</span>
   <span *ngIf="!enquiry && comment">Add Comment</span>
+  {{childMessage}}
   <!-- <button mat-raised-button color="primary" type="button" (click)="add_form()" style="float: right; color: white;">
     <mat-icon>add_to_queue</mat-icon>
   </button> -->
@@ -17,12 +18,11 @@
         </mat-form-field>
         <mat-form-field style="width: 24%; padding-left: 1%;">
           <mat-select placeholder="Customer type" formControlName="customer_type">
-            <mat-option value="type1">Customer type1</mat-option>
-            <mat-option value="type2">Customer type2</mat-option>
+            <mat-option *ngFor="let type of active_customer_type ; let i = index" [value]="type._id">{{type?.customer_type}}</mat-option>
           </mat-select>
         </mat-form-field>
         <mat-form-field style="width: 24%; padding-left: 1%;">
-          <input matInput placeholder="organisation_name" formControlName="organisation_name">
+          <input matInput placeholder="Organisation_name" formControlName="organisation_name">
         </mat-form-field>
         <mat-form-field style="width: 24%;padding-left: 1%;">
           <mat-select placeholder="Source" formControlName="source">
@@ -35,7 +35,7 @@
           <input matInput placeholder="Mobile Number" formControlName="mobile_no">
         </mat-form-field>
         <mat-form-field style="width: 24%; padding-left: 1%;">
-          <input matInput placeholder="Fist Name" formControlName="fist_name">
+          <input matInput placeholder="First Name" formControlName="fist_name">
         </mat-form-field>
         <mat-form-field style="width: 24%; padding-left: 1%;">
           <input matInput placeholder="Last Name" formControlName="last_name">
@@ -60,11 +60,21 @@
         </mat-form-field>
       </div>
       <div fxFlex="100">
-        <mat-form-field style="width: 50%;">
+        <mat-form-field style="width: 32%;;">
           <textarea matInput placeholder="Address" formControlName="address"></textarea>
         </mat-form-field>
-        <mat-form-field style="width: 49%; padding-left: 1%;">
-          <textarea matInput placeholder="Requrments/Products" formControlName="requrment_product"></textarea>
+        <mat-form-field style="width: 32%;; padding-left: 1%;">
+          <mat-select placeholder="Products" formControlName="product">
+            <mat-option *ngFor="let region of product ; let i = index" [value]="region._id">{{region?.product_name}}</mat-option>
+          </mat-select>
+        </mat-form-field>
+        <mat-form-field style="width: 32%;padding-left: 1%;">
+          <input matInput placeholder="Remark" formControlName="remark">
+        </mat-form-field>
+      </div>
+      <div fxFlex="100">
+        <mat-form-field style="width: 98%;">
+          <textarea matInput placeholder="Requirements" formControlName="requrment_product"></textarea>
         </mat-form-field>
       </div>
     </div>
@@ -77,7 +87,7 @@
     <div fxLayout="column" class="form-field-outer" formGroupName="lead">
       <div fxFlex="100">
         <mat-form-field style="width: 50%;">
-          <input matInput [matDatepicker]="picker" formControlName="expected_closer_date" placeholder="Expected Closer Date*">
+          <input matInput [matDatepicker]="picker" formControlName="expected_closer_date" placeholder="Expected Closure Date*">
           <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
           <mat-datepicker #picker></mat-datepicker>
         </mat-form-field>

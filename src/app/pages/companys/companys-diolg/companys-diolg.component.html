@@ -1,21 +1,79 @@
 <h1 mat-dialog-title>Company Add</h1>
 
-<div mat-dialog-content style="width: 500px;">
+<div mat-dialog-content style="width: 500px;" *ngIf="!enquiry_Form">
   <form [formGroup]="company" fxLayout="row wrap" class="user-form">
     <div fxLayout="column" class="form-field-outer">
       <div fxFlex="100">
-        <mat-form-field style="width: 100%;">
+        <mat-form-field style="width: 100%;" *ngIf="company_option1">
           <input matInput formControlName="company_name" placeholder="Company Name">
         </mat-form-field>
-        <mat-form-field style="width: 100%;" *ngIf="!company_option">
+        <!-- <mat-form-field style="width: 100%;" *ngIf="!company_option">
           <mat-select placeholder="Select permission" formControlName="permission" multiple>
             <mat-option *ngFor="let role of data ; let i = index" [value]="role">{{role}}
             </mat-option>
           </mat-select>
-        </mat-form-field>
+        </mat-form-field> -->
       </div>
     </div>
   </form>
+</div>
+<div mat-dialog-content style="width: 500px;" *ngIf="enquiry_Form && (!select_option)">
+  <form [formGroup]="orderForm" class="mx-1 my-1">
+  <div formArrayName="items"
+  *ngFor="let item of orderForm.get('items')['controls']; let i = index;">
+  <div [formGroupName]="i">
+    <input formControlName="name" placeholder="Item name">
+    <input formControlName="placeholder" placeholder="Item description">
+    <!-- <input formControlName="type" placeholder="Item price"> -->
+    <select class="form-control" formControlName="type" (change)="someMethod($event)">
+      <option value="text">Text</option>
+      <option value="number">number</option>
+      <option value="date">date</option>
+      <option value="select">Select</option>
+
+    </select>
+    <mat-slide-toggle [checked]="checked" formControlName="active">
+    </mat-slide-toggle>
+  </div>
+  <!-- <button mat-raised-button color="primary" type="button" (click)="addItem()">add</button> -->
+</div>
+</form>
+</div>
+
+<div mat-dialog-content style="width: 500px;" *ngIf="select_option">
+  <form [formGroup]="orderForm1" class="mx-1 my-1">
+    <input formControlName="name" placeholder="Item name">
+    <input formControlName="placeholder" placeholder="Item description">
+    <!-- <input formControlName="type" placeholder="Item price"> -->
+    <select class="form-control" formControlName="type" (change)="someMethod($event)">
+      <option value="text">Text</option>
+      <option value="number">number</option>
+      <option value="date">date</option>
+      <option value="select">Select</option>
+
+    </select>
+    <mat-slide-toggle [checked]="checked" formControlName="active">
+    </mat-slide-toggle>
+  <div formArrayName="items1"
+  *ngFor="let item of orderForm1.get('items1')['controls']; let i = index;">
+  <div [formGroupName]="i">
+    <input formControlName="value1" placeholder="Item description">
+  </div>
+  <button mat-raised-button color="primary" type="button" (click)="addItem1()">add</button>
+</div>
+</form>
+</div>
+
+<div mat-dialog-content style="width: 500px;" *ngIf="enquiry_Form1">
+  <form [formGroup]="orderForm" class="mx-1 my-1">
+  <div formArrayName="items"
+  *ngFor="let item of orderForm.get('items')['controls']; let i = index;">
+  <div [formGroupName]="i">
+    <label>{{forms[i].name}}</label>
+    <input type="{{forms[i].type}}" formControlName="value" placeholder="{{forms[i].placeholder}}">
+  </div>
+</div>
+</form>
 </div>
 
 <div mat-dialog-actions fxLayout="row" fxLayoutAlign="space-between center">
@@ -23,3 +81,5 @@
   <button mat-raised-button color="primary" type="button" (click)="Uplode()" *ngIf="editing">Update</button>
   <button mat-raised-button color="warn" (click)="close()">Cancel</button>
 </div>
+
+<ngx-alerts></ngx-alerts>

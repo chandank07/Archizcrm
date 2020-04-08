@@ -7,7 +7,35 @@
   overflow-y: auto;
 }
 
-
+.bubble.left:after {
+  top:40%;
+  left:-20px;
+  bottom:auto;
+  border-width:10px 20px 10px 0;
+  border-color:transparent #00B4CC;
+}
+.bubble.left{
+  margin-left: 20px;
+}
+.bubble{
+  position: relative;
+  padding: 5px;
+  margin: 1em 0 3em;
+  color: #343838;
+  background: #00B4CC;
+  border-radius: 10px;
+}
+.bubble:after{
+  content:"";
+  position:absolute;
+  bottom:-15px;
+  left:48%;
+  border-width:15px 15px 0;
+  border-style:solid;
+  border-color:#00B4CC transparent;
+  display:block;
+  width:0;
+}
 // time lene css ============================
 
 
